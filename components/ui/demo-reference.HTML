@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Concierge Admin - Product Creation Wizard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#474746",
+                    "primary-fixed": "#ffdada",
+                    "on-primary-container": "#fffbff",
+                    "surface-bright": "#f9f9f9",
+                    "inverse-primary": "#ffb2b6",
+                    "inverse-on-surface": "#f1f1f1",
+                    "tertiary-fixed": "#e3e2e2",
+                    "on-tertiary-fixed": "#1b1c1c",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "primary": "#ba0036",
+                    "outline-variant": "#e5bdbe",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#5c3f41",
+                    "on-secondary-container": "#636262",
+                    "background": "#f9f9f9",
+                    "tertiary": "#5c5c5c",
+                    "surface-container-low": "#f4f3f3",
+                    "surface-container-high": "#e8e8e8",
+                    "tertiary-fixed-dim": "#c7c6c6",
+                    "surface-container": "#eeeeee",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed-variant": "#920029",
+                    "error-container": "#ffdad6",
+                    "surface": "#f9f9f9",
+                    "on-tertiary-container": "#fefcfc",
+                    "outline": "#906f70",
+                    "tertiary-container": "#747474",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#e5e2e1",
+                    "surface-variant": "#e2e2e2",
+                    "on-primary-fixed": "#40000d",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#464747",
+                    "on-secondary-fixed": "#1b1c1c",
+                    "inverse-surface": "#2f3131",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#e21e4a",
+                    "surface-dim": "#dadada",
+                    "on-surface": "#1a1c1c",
+                    "on-background": "#1a1c1c",
+                    "surface-tint": "#be0038",
+                    "secondary-container": "#e2dfde",
+                    "secondary": "#5f5e5e",
+                    "primary-fixed-dim": "#ffb2b6",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#e2e2e2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "xl": "32px",
+                    "base": "8px",
+                    "xxl": "48px",
+                    "margin-mobile": "24px",
+                    "sm": "8px",
+                    "gutter": "24px",
+                    "md": "16px",
+                    "margin-desktop": "80px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["26px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "38px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav-border {
+            border-right: 4px solid #ba0036;
+        }
+        .drag-drop-area {
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%23BA0036FF' stroke-width='2' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #e2e2e2;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden">
+<!-- Sidebar Layout -->
+<aside class="fixed left-0 top-0 h-full z-40 bg-surface-container-lowest border-r border-secondary-container w-64 flex flex-col">
+<div class="p-lg">
+<div class="flex items-center gap-base mb-xxl">
+<span class="material-symbols-outlined text-primary text-headline-md" style="font-variation-settings: 'FILL' 1;">auto_fix_high</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">Concierge Admin</span>
+</div>
+<nav class="space-y-xs">
+<a class="flex items-center gap-md p-md font-label-md text-label-md text-secondary hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Overview
+                </a>
+<a class="flex items-center gap-md p-md font-label-md text-label-md text-secondary hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                    Inventory
+                </a>
+<a class="flex items-center gap-md p-md font-label-md text-label-md text-primary font-bold border-r-4 border-primary bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="auto_fix_high" style="font-variation-settings: 'FILL' 1;">auto_fix_high</span>
+                    Styling Queue
+                </a>
+<a class="flex items-center gap-md p-md font-label-md text-label-md text-secondary hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                    Analytics
+                </a>
+</nav>
+</div>
+<div class="mt-auto p-lg border-t border-secondary-container">
+<nav class="space-y-xs">
+<a class="flex items-center gap-md p-md font-label-md text-label-md text-secondary hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+<a class="flex items-center gap-md p-md font-label-md text-label-md text-secondary hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                    Support
+                </a>
+</nav>
+<div class="mt-lg flex items-center gap-md px-md">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-secondary" data-icon="account_circle">account_circle</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Admin User</p>
+<p class="text-[11px] text-secondary">Luxury Fashion AI</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Bar -->
+<header class="fixed top-0 right-0 z-30 flex items-center justify-between px-margin-desktop h-16 w-[calc(100%-16rem)] ml-64 bg-surface shadow-sm">
+<div class="flex items-center gap-md">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Admin Portal</h1>
+<span class="text-outline-variant">/</span>
+<span class="font-label-md text-label-md text-secondary">New Collection Wizard</span>
+</div>
+<div class="flex items-center gap-lg">
+<div class="relative group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-secondary text-body-md" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-label-md focus:ring-1 focus:ring-primary w-64 transition-all" placeholder="Search inventory..." type="text"/>
+</div>
+<button class="relative p-2 text-secondary hover:text-primary transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="p-2 text-secondary hover:text-primary transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-16 h-screen flex flex-col bg-background">
+<!-- Stepper -->
+<div class="w-full bg-surface-container-lowest px-margin-desktop py-lg border-b border-secondary-container">
+<div class="max-w-5xl mx-auto flex items-center justify-between">
+<!-- Step 1: Active -->
+<div class="flex flex-col items-center gap-sm relative flex-1">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-label-md">1</div>
+<span class="font-label-md text-label-md text-primary">Upload Images</span>
+<div class="absolute top-5 left-[calc(50%+24px)] w-[calc(100%-48px)] h-[2px] bg-secondary-container"></div>
+</div>
+<!-- Step 2: Inactive -->
+<div class="flex flex-col items-center gap-sm relative flex-1">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-secondary flex items-center justify-center font-bold text-label-md">2</div>
+<span class="font-label-md text-label-md text-secondary">Product Information</span>
+<div class="absolute top-5 left-[calc(50%+24px)] w-[calc(100%-48px)] h-[2px] bg-secondary-container"></div>
+</div>
+<!-- Step 3: Inactive -->
+<div class="flex flex-col items-center gap-sm flex-1">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-secondary flex items-center justify-center font-bold text-label-md">3</div>
+<span class="font-label-md text-label-md text-secondary">AI Metadata Review</span>
+</div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto custom-scroll px-margin-desktop py-xxl">
+<div class="max-w-5xl mx-auto space-y-xxl">
+<!-- Upload Section -->
+<section>
+<div class="drag-drop-area h-64 flex flex-col items-center justify-center gap-md bg-surface-container-lowest rounded-xl group transition-all hover:bg-primary/5 cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-display-lg" data-icon="cloud_upload">cloud_upload</span>
+</div>
+<div class="text-center">
+<p class="font-headline-md text-headline-md text-on-surface">Drag and drop collection images</p>
+<p class="text-secondary body-md mt-xs">Support for high-resolution PNG, JPG (Max 20MB each)</p>
+</div>
+<button class="bg-primary text-on-primary px-xl py-md rounded-xl font-label-md text-label-md hover:opacity-90 transition-all shadow-md active:scale-95">
+                            Upload Images
+                        </button>
+</div>
+</section>
+<!-- Preview Grid -->
+<section class="space-y-lg">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-on-surface">Selected Media (3)</h2>
+<button class="text-primary font-label-md text-label-md hover:underline">Clear all</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Card 1 -->
+<div class="relative group aspect-[0.73] bg-surface-container-high rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
+<img alt="Luxury suede loafers" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLvLL6pm-reCPtRqMuprVJq4uYIgYkhYYLqHWsE0UA6esWCrdw_zH-fh_LniYZdGk-ouobVfNHzV74tZoBdHtBSKqh4OCjfxz9QNJAhvkuxHhxyv3VIigNXUqpF6ojbWql1J8BEF3oz1BK7luzIchjg4Gfw4jDd7wZ1M3OVo5RtsfB4UC2FpEyv22L67TslEsiK9VeXGf8hDTYZU_hS2ru9gopffwK26WF6J955O-XdvsR83YvANEwRPTg"/>
+<div class="absolute top-3 left-3 bg-primary/90 text-on-primary px-sm py-xs rounded text-label-sm uppercase tracking-wider">Cover</div>
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-on-surface/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm hover:bg-error">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+<div class="absolute bottom-0 inset-x-0 p-md bg-gradient-to-t from-black/60 to-transparent">
+<p class="text-white font-label-sm">img_40_loafers.jpg</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="relative group aspect-[0.73] bg-surface-container-high rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
+<img alt="Tailored structured blazer" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLsQghMlatk0qLvdifNv-eRmUT7jPcKw8zlG2CNyMmEbSlCP1JPOdRX5Q_yODT-sD4iLahd7mrEnO-Z6XnGI9JXulqZtlYwuD_PCLuriQKR2kfblt-_4bvdHGRtb-FduRu71BJyndpMDL2TkI-LKpg3u3aJcJEF5t6916UBMnmwq1O9JugihwIpg3gue-Ujh9wwKbG2y1_7ohC_hXGC93BEnwLoxzQ1r6XpsEXMjew5Z8GGgda7eLF86AS4"/>
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-on-surface/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm hover:bg-error">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+<div class="absolute bottom-0 inset-x-0 p-md bg-gradient-to-t from-black/60 to-transparent">
+<p class="text-white font-label-sm">img_41_blazer.jpg</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="relative group aspect-[0.73] bg-surface-container-high rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
+<img alt="Silk midi dress" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLsreLbgcSyWouFKHuiglA9tn94pmUeeLgotdRjogVghL9b_FL-5_cBHd3aVlFA7I8F0dq_fUTQLsXKv7ZjtMmksRexoxW43TOFt4YUR3-CE04oFucNYgILnLtuZCQh_bbNiFMeCjPQxXWaIL7_cE3-zMAGtL2YhCeKvIu8cAH9bSlI4HcNge-MENdrGqUZqMIqUISUyIqBt5ZrxziEb7SA0kVMXWZ769t4u2wu-JGt8aEjDpIZkxgNDDg"/>
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-on-surface/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm hover:bg-error">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+<div class="absolute bottom-0 inset-x-0 p-md bg-gradient-to-t from-black/60 to-transparent">
+<p class="text-white font-label-sm">img_42_dress.jpg</p>
+</div>
+</div>
+<!-- Add More Slot -->
+<div class="aspect-[0.73] border-2 border-dashed border-secondary-container rounded-xl flex flex-col items-center justify-center gap-sm text-secondary hover:border-primary hover:text-primary transition-all cursor-pointer bg-surface-container-low">
+<span class="material-symbols-outlined text-headline-lg" data-icon="add">add</span>
+<span class="font-label-md text-label-md">Add More</span>
+</div>
+</div>
+</section>
+<!-- AI Processing State -->
+<section class="bg-primary/5 rounded-2xl p-xl border border-primary/10">
+<div class="flex items-start gap-lg">
+<div class="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0 animate-pulse">
+<span class="material-symbols-outlined text-on-primary" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="flex-1 space-y-md">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface">AI Concierge Engine</h3>
+<span class="text-primary font-label-md text-label-md">75% Complete</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-2 bg-primary/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-3/4 transition-all duration-1000 ease-in-out"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md pt-md">
+<div class="flex items-center gap-md text-on-surface-variant font-label-md">
+<span class="material-symbols-outlined text-primary text-body-md" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    Analyzing product image...
+                                </div>
+<div class="flex items-center gap-md text-on-surface-variant font-label-md">
+<span class="material-symbols-outlined text-primary text-body-md" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    Detecting clothing attributes...
+                                </div>
+<div class="flex items-center gap-md text-on-surface-variant font-label-md">
+<span class="material-symbols-outlined text-primary text-body-md animate-spin" data-icon="sync">sync</span>
+                                    Extracting style information...
+                                </div>
+<div class="flex items-center gap-md text-secondary font-label-md">
+<span class="material-symbols-outlined text-secondary-container text-body-md" data-icon="pending">pending</span>
+                                    Generating product draft...
+                                </div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Sticky Footer Navigation -->
+<footer class="bg-surface-container-lowest border-t border-secondary-container px-margin-desktop py-lg flex items-center justify-between">
+<button class="px-xl py-md text-secondary font-label-md text-label-md hover:bg-surface-container-high rounded-xl transition-all">
+                Cancel
+            </button>
+<div class="flex items-center gap-md">
+<button class="px-xl py-md text-on-secondary-container bg-secondary-container font-label-md text-label-md rounded-xl opacity-50 cursor-not-allowed">
+                    Back
+                </button>
+<button class="bg-primary/50 text-on-primary px-xxl py-md rounded-xl font-label-md text-label-md transition-all cursor-not-allowed flex items-center gap-sm" disabled="">
+                    Continue
+                    <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</footer>
+</main>
+<script>
+        // Minimal interaction logic for demo
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.querySelector('.bg-primary.rounded-full.w-3\\/4');
+            const continueBtn = document.querySelector('button[disabled]');
+            
+            // Simulate AI finishing processing
+            setTimeout(() => {
+                if(progressBar) {
+                    progressBar.style.width = '100%';
+                    const percentText = document.querySelector('.text-primary.font-label-md');
+                    if(percentText) percentText.innerText = '100% Complete';
+                    
+                    const extractionItem = document.querySelectorAll('.flex.items-center.gap-md')[2];
+                    if(extractionItem) {
+                        extractionItem.innerHTML = `<span class="material-symbols-outlined text-primary text-body-md" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span> Extracting style information...`;
+                    }
+                    
+                    const draftItem = document.querySelectorAll('.flex.items-center.gap-md')[3];
+                    if(draftItem) {
+                        draftItem.classList.remove('text-secondary');
+                        draftItem.classList.add('text-on-surface-variant');
+                        draftItem.innerHTML = `<span class="material-symbols-outlined text-primary text-body-md" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span> Generating product draft...`;
+                    }
+
+                    // Enable continue button
+                    if(continueBtn) {
+                        continueBtn.disabled = false;
+                        continueBtn.classList.remove('bg-primary/50', 'cursor-not-allowed');
+                        continueBtn.classList.add('bg-primary', 'hover:opacity-90', 'active:scale-95');
+                    }
+                }
+            }, 3000);
+        });
+    </script>
+</body></html>

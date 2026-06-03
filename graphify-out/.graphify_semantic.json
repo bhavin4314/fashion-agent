@@ -1,0 +1,357 @@
+{
+  "nodes": [
+    {
+      "id": "design_vistra",
+      "label": "Vistra Design System",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "design_warm_precision",
+      "label": "Warm Precision Brand Direction",
+      "file_type": "rationale",
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "design_radical_coral",
+      "label": "Radical Coral Accent Color",
+      "file_type": "concept",
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "design_tonal_layers",
+      "label": "Tonal Layering & Depth",
+      "file_type": "concept",
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "design_rounded_corners",
+      "label": "12px Rounded Corner Radius",
+      "file_type": "concept",
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agents_agents_rules",
+      "label": "Antigravity Codebase Rules",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agents_typescript_strict",
+      "label": "Strict TypeScript Standards",
+      "file_type": "concept",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agents_form_stack",
+      "label": "Form System Architecture Stack",
+      "file_type": "concept",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agents_rsc_default",
+      "label": "RSC-First Component Rules",
+      "file_type": "concept",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_readme",
+      "label": "Project Documentation",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "claude_claude",
+      "label": "Claude Agent References",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "design_vistra",
+      "target": "design_warm_precision",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "design_vistra",
+      "target": "design_radical_coral",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "design_vistra",
+      "target": "design_tonal_layers",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "design_vistra",
+      "target": "design_rounded_corners",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DESIGN.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "components_loginform_loginform",
+      "target": "design_vistra",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/login/_components/LoginForm.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "components_loginform_loginform",
+      "target": "design_radical_coral",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/login/_components/LoginForm.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "components_loginform_loginform",
+      "target": "design_rounded_corners",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/login/_components/LoginForm.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "components_loginform_loginform",
+      "target": "agents_form_stack",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "app/login/_components/LoginForm.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "login_page_loginpage",
+      "target": "design_vistra",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/login/page.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "forms_form",
+      "target": "agents_form_stack",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/forms/Form.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "forms_formcheckbox",
+      "target": "agents_form_stack",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/forms/FormCheckbox.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "forms_forminput",
+      "target": "agents_form_stack",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/forms/FormInput.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "forms_formpassword",
+      "target": "agents_form_stack",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/forms/FormPassword.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "forms_formradiogroup",
+      "target": "agents_form_stack",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/forms/FormRadioGroup.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "forms_formselect",
+      "target": "agents_form_stack",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/forms/FormSelect.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "forms_formtextarea",
+      "target": "agents_form_stack",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/forms/FormTextarea.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agents_agents_rules",
+      "target": "agents_typescript_strict",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agents_agents_rules",
+      "target": "agents_form_stack",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agents_agents_rules",
+      "target": "agents_rsc_default",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "claude_claude",
+      "target": "agents_agents_rules",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "vistra_design_tokens",
+      "label": "Vistra Design Tokens",
+      "nodes": [
+        "design_radical_coral",
+        "design_tonal_layers",
+        "design_rounded_corners"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DESIGN.md"
+    },
+    {
+      "id": "ai_agent_architecture_rules",
+      "label": "AI Agent Architecture Rules",
+      "nodes": [
+        "agents_typescript_strict",
+        "agents_form_stack",
+        "agents_rsc_default"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md"
+    }
+  ],
+  "input_tokens": 12000,
+  "output_tokens": 1500
+}
