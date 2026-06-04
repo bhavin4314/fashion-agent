@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export function SidebarNav() {
   const pathname = usePathname();
@@ -12,11 +13,11 @@ export function SidebarNav() {
   return (
     <nav className="flex-1 space-y-xs px-md select-none">
       {/* Overview */}
-      <a
+      <Link
         className={`flex items-center gap-sm px-lg py-md rounded-xl transition-all duration-200 ${
           isOverviewActive
-            ? "text-[#ba0036] font-bold border-r-4 border-[#ba0036] bg-[#f4f3f3]"
-            : "text-[#5c3f41] hover:bg-[#f4f3f3]"
+            ? "text-primary font-bold border-r-4 border-primary bg-surface-container-low"
+            : "text-on-surface-variant hover:bg-surface-container-low"
         }`}
         href="/admin"
       >
@@ -24,14 +25,14 @@ export function SidebarNav() {
           dashboard
         </span>
         <span className="text-xs font-bold uppercase tracking-wider">Overview</span>
-      </a>
+      </Link>
 
       {/* Inventory */}
-      <a
+      <Link
         className={`flex items-center gap-sm px-lg py-md rounded-xl transition-all duration-200 ${
           isInventoryActive
-            ? "text-[#ba0036] font-bold border-r-4 border-[#ba0036] bg-[#f4f3f3]"
-            : "text-[#5c3f41] hover:bg-[#f4f3f3]"
+            ? "text-primary font-bold border-r-4 border-primary bg-surface-container-low"
+            : "text-on-surface-variant hover:bg-surface-container-low"
         }`}
         href="/admin/inventory"
       >
@@ -39,33 +40,7 @@ export function SidebarNav() {
           inventory_2
         </span>
         <span className="text-xs font-bold uppercase tracking-wider">Inventory</span>
-      </a>
-
-      {/* Styling Queue */}
-      <a
-        className="flex items-center gap-sm px-lg py-md text-[#5c3f41] hover:bg-[#f4f3f3] rounded-xl transition-all duration-200"
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          alert("Styling queue feature integration is currently handled by active concierge curators.");
-        }}
-      >
-        <span className="material-symbols-outlined text-[20px]">reorder</span>
-        <span className="text-xs font-bold uppercase tracking-wider">Stylist Queue</span>
-      </a>
-
-      {/* Analytics */}
-      <a
-        className="flex items-center gap-sm px-lg py-md text-[#5c3f41] hover:bg-[#f4f3f3] rounded-xl transition-all duration-200"
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          alert("Analytical dashboard is securely integrated with high-end telemetry curation tools.");
-        }}
-      >
-        <span className="material-symbols-outlined text-[20px]">analytics</span>
-        <span className="text-xs font-bold uppercase tracking-wider">Analytics</span>
-      </a>
+      </Link>
     </nav>
   );
 }

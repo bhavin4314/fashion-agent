@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { Search, Bell, HelpCircle, Filter, ChevronDown, ChevronRight, ChevronLeft, Plus, Edit, Archive, MoreVertical, X, Check, Loader2, Sparkles } from "lucide-react";
 
 interface InventoryItem {
@@ -253,21 +254,21 @@ export function InventoryClient() {
     <div className="flex flex-col flex-grow select-none w-full min-h-screen">
       
       {/* TopAppBar Navigation (Horizontal) */}
-      <header className="flex justify-between items-center w-full px-margin-desktop py-md bg-white border-b border-[#e2dfde] z-40 select-none">
+      <header className="flex justify-between items-center w-full px-margin-desktop py-md bg-white border-b border-secondary-container z-40 select-none">
         <div className="flex items-center flex-1">
           <div
-            className={`relative w-96 flex items-center bg-[#f4f3f3] rounded-xl px-md transition-all duration-200 border ${
-              isSearchFocused ? "border-[#ba0036] ring-2 ring-[#ba0036]/10 bg-white" : "border-transparent"
+            className={`relative w-96 flex items-center bg-surface-container-low rounded-xl px-md transition-all duration-200 border ${
+              isSearchFocused ? "border-primary ring-2 ring-primary/10 bg-white" : "border-transparent"
             }`}
           >
-            <Search className="h-4 w-4 text-[#5c3f41] shrink-0" />
+            <Search className="h-4 w-4 text-on-surface-variant shrink-0" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
-              className="flex-1 min-w-0 pl-sm pr-md bg-transparent border-none text-xs font-semibold text-charcoal focus:outline-none focus:ring-0 placeholder:text-[#5c3f41]/50 h-10"
+              className="flex-1 min-w-0 pl-sm pr-md bg-transparent border-none text-xs font-semibold text-charcoal focus:outline-none focus:ring-0 placeholder:text-on-surface-variant/50 h-10"
               placeholder="Search product collection or SKU..."
             />
           </div>
@@ -277,37 +278,36 @@ export function InventoryClient() {
           <div className="flex items-center gap-sm shrink-0">
             <button
               onClick={() => alert("Notification log represents clean system states.")}
-              className="p-2 hover:bg-[#f4f3f3] rounded-full transition-all text-[#5c3f41] border-none bg-transparent cursor-pointer shrink-0"
+              className="p-2 hover:bg-surface-container-low rounded-full transition-all text-on-surface-variant border-none bg-transparent cursor-pointer shrink-0"
             >
               <Bell className="h-5 w-5" />
             </button>
             <button
-              onClick={() => alert("Concierge Help Portal. Contact milan-admin@vistra.ai")}
-              className="p-2 hover:bg-[#f4f3f3] rounded-full transition-all text-[#5c3f41] border-none bg-transparent cursor-pointer shrink-0"
+              onClick={() => alert("Curator Support Center. Contact milan-concierge@vistra.ai")}
+              className="p-2 hover:bg-surface-container-low rounded-full transition-all text-on-surface-variant border-none bg-transparent cursor-pointer shrink-0"
             >
               <HelpCircle className="h-5 w-5" />
             </button>
           </div>
-          <div className="h-8 w-px bg-[#e2dfde] mx-sm"></div>
+          <div className="h-8 w-px bg-secondary-container mx-sm"></div>
           
-          <a
+          <Link
             href="/admin/inventory/create"
-            className="bg-[#ba0036] hover:bg-[#a0002e] text-white px-lg py-2.5 rounded-xl text-xs font-bold hover:shadow-lg transition-all active:scale-[0.98] border-none cursor-pointer tracking-wider flex items-center justify-center no-underline"
+            className="bg-primary hover:bg-primary-dark text-white px-lg py-2.5 rounded-xl text-xs font-bold hover:shadow-lg transition-all active:scale-[0.98] border-none cursor-pointer tracking-wider flex items-center justify-center no-underline"
           >
             Create Item
-          </a>
+          </Link>
         </div>
       </header>
 
       {/* Canvas Area container */}
-      <div className="flex-grow overflow-y-auto p-xl bg-[#f9f9f9] w-full select-none">
+      <div className="flex-grow overflow-y-auto p-xl bg-background w-full select-none">
         <div className="max-w-7xl mx-auto space-y-xl">
           
-          {/* Header page titles and filter configurations */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-lg select-none">
-            <div>
-              <h2 className="text-3xl font-extrabold text-[#1a1c1c] tracking-tight">Product Inventory</h2>
-              <p className="text-xs font-semibold text-[#5f5e5e] uppercase tracking-wider mt-1">
+          {/* Section Header */}
+          <div className="flex flex-col gap-xs mb-lg select-none">
+            <h2 className="text-3xl font-extrabold text-on-surface tracking-tight">Product Inventory</h2>
+            <p className="text-xs font-semibold text-secondary uppercase tracking-wider mt-1">
                 Manage your luxury product catalog and stock levels.
               </p>
             </div>
@@ -318,7 +318,7 @@ export function InventoryClient() {
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="appearance-none pr-8 pl-md py-2.5 bg-white border border-[#e2dfde] rounded-xl text-xs font-bold text-charcoal hover:border-[#ba0036] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#ba0036]"
+                  className="appearance-none pr-8 pl-md py-2.5 bg-white border border-secondary-container rounded-xl text-xs font-bold text-charcoal hover:border-primary cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="All">Category: All</option>
                   <option value="Evening Wear">Evening Wear</option>
@@ -337,7 +337,7 @@ export function InventoryClient() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="appearance-none pr-8 pl-md py-2.5 bg-white border border-[#e2dfde] rounded-xl text-xs font-bold text-charcoal hover:border-[#ba0036] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#ba0036]"
+                  className="appearance-none pr-8 pl-md py-2.5 bg-white border border-secondary-container rounded-xl text-xs font-bold text-charcoal hover:border-primary cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="All">Stock: All</option>
                   <option value="In Stock">In Stock</option>
@@ -351,7 +351,7 @@ export function InventoryClient() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="appearance-none pr-8 pl-md py-2.5 bg-white border border-[#e2dfde] rounded-xl text-xs font-bold text-charcoal hover:border-[#ba0036] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#ba0036]"
+                  className="appearance-none pr-8 pl-md py-2.5 bg-white border border-secondary-container rounded-xl text-xs font-bold text-charcoal hover:border-primary cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="Newest">Sort: Newest</option>
                   <option value="Price: Low to High">Price: Low to High</option>
@@ -359,36 +359,35 @@ export function InventoryClient() {
                 </select>
               </div>
             </div>
-          </div>
 
           {/* Table Container Card */}
-          <div className="bg-white border border-[#e2dfde] rounded-2xl overflow-hidden shadow-sm select-none">
-            <table className="w-full text-left border-collapse min-w-[700px]">
+          <div className="bg-white border border-secondary-container rounded-2xl overflow-hidden shadow-sm select-none">
+            <table className="w-full text-left border-collapse select-none">
               <thead>
-                <tr className="border-b border-[#e2dfde] bg-[#f4f3f3] select-none">
-                  <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-[#5c3f41] w-1/3">
-                    Product Details
+                <tr className="border-b border-secondary-container bg-surface-container-low select-none">
+                  <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant w-1/3">
+                    Product Detail
                   </th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-[#5c3f41]">
-                    Category
+                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+                    SKU Code
                   </th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-[#5c3f41] text-right">
-                    Price
+                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">
+                    Retail Price
                   </th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-[#5c3f41]">
-                    Status
+                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+                    Stock Level
                   </th>
-                  <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-[#5c3f41] text-right">
-                    Actions
+                  <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">
+                    Curation
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#eeeeee]">
+              <tbody className="divide-y divide-surface-container">
                 {paginatedItems.map((item) => (
-                  <tr key={item.id} className="hover:bg-[#f4f3f3]/50 transition-colors duration-150 group">
+                  <tr key={item.id} className="hover:bg-surface-container-low/50 transition-colors duration-150 group">
                     <td className="px-xl py-lg">
                       <div className="flex items-center gap-md">
-                        <div className="w-14 h-14 rounded-lg overflow-hidden bg-stone-100 shadow-sm border border-[#e2dfde]/50 shrink-0 select-none">
+                        <div className="w-14 h-14 rounded-lg overflow-hidden bg-stone-100 shadow-sm border border-secondary-container/50 shrink-0 select-none">
                           <Image
                             alt={item.title}
                             className="w-full h-full object-cover pointer-events-none"
@@ -407,7 +406,7 @@ export function InventoryClient() {
                       </div>
                     </td>
                     <td className="px-lg py-lg">
-                      <span className="px-sm py-1 bg-[#eeeeee] rounded-lg text-[10px] font-bold uppercase tracking-wider text-[#5c3f41] select-none">
+                      <span className="px-sm py-1 bg-surface-container rounded-lg text-[10px] font-bold uppercase tracking-wider text-on-surface-variant select-none">
                         {item.category}
                       </span>
                     </td>
@@ -417,35 +416,35 @@ export function InventoryClient() {
                     <td className="px-lg py-lg">
                       <div className="flex items-center gap-sm select-none">
                         {item.status === "In Stock" ? (
-                          <>
-                            <span className="w-2 h-2 rounded-full bg-[#008545]"></span>
-                            <span className="text-xs font-bold text-[#008545]">In Stock</span>
-                          </>
+                          <div className="flex items-center gap-xs select-none">
+                            <span className="w-2 h-2 rounded-full bg-success-green"></span>
+                            <span className="text-xs font-bold text-success-green">In Stock</span>
+                          </div>
                         ) : item.status === "Low Stock" ? (
-                          <>
-                            <span className="w-2 h-2 rounded-full bg-[#ba0036] animate-pulse"></span>
-                            <span className="text-xs font-bold text-[#ba0036]">Low Stock</span>
-                          </>
+                          <div className="flex items-center gap-xs select-none">
+                            <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                            <span className="text-xs font-bold text-primary">Low Stock</span>
+                          </div>
                         ) : (
-                          <>
-                            <span className="w-2 h-2 rounded-full bg-stone-400"></span>
-                            <span className="text-xs font-bold text-[#5c3f41]">Out of Stock</span>
-                          </>
+                          <div className="flex items-center gap-xs select-none">
+                            <span className="w-2.5 h-2.5 flex items-center justify-center text-secondary font-black">✕</span>
+                            <span className="text-xs font-bold text-on-surface-variant">Out of Stock</span>
+                          </div>
                         )}
                       </div>
                     </td>
                     <td className="px-xl py-lg text-right">
                       <div className="flex items-center justify-end gap-sm select-none">
                         <button
-                          onClick={() => router.push(`/admin/inventory/create?edit=${item.id}`)}
-                          className="p-1.5 hover:bg-[#eeeeee] hover:text-[#ba0036] text-[#5c3f41] rounded-lg transition-colors border-none bg-transparent cursor-pointer shrink-0"
+                          onClick={() => openEditModal(item)}
+                          className="p-1.5 hover:bg-surface-container hover:text-primary text-on-surface-variant rounded-lg transition-colors border-none bg-transparent cursor-pointer shrink-0"
                           title="Edit Product"
                         >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleArchive(item.id, item.title)}
-                          className="p-1.5 hover:bg-[#eeeeee] hover:text-[#ba0036] text-[#5c3f41] rounded-lg transition-colors border-none bg-transparent cursor-pointer shrink-0"
+                          className="p-1.5 hover:bg-surface-container hover:text-primary text-on-surface-variant rounded-lg transition-colors border-none bg-transparent cursor-pointer shrink-0"
                           title="Archive Product"
                         >
                           <Archive className="h-4 w-4" />
@@ -466,7 +465,7 @@ export function InventoryClient() {
             </table>
 
             {/* Pagination Controls */}
-            <div className="px-xl py-md bg-[#f4f3f3] border-t border-[#e2dfde] flex items-center justify-between select-none">
+            <div className="px-xl py-md bg-surface-container-low border-t border-secondary-container flex items-center justify-between select-none">
               <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">
                 Showing {Math.min(processedItems.length, (currentPage - 1) * itemsPerPage + 1)} to{" "}
                 {Math.min(processedItems.length, currentPage * itemsPerPage)} of {processedItems.length} items
@@ -475,7 +474,7 @@ export function InventoryClient() {
                 <button
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  className="p-1.5 bg-white border border-[#e2dfde] hover:border-charcoal disabled:opacity-40 disabled:hover:border-[#e2dfde] rounded-lg transition-all cursor-pointer flex items-center"
+                  className="p-1.5 bg-white border border-secondary-container hover:border-charcoal disabled:opacity-40 disabled:hover:border-secondary-container rounded-lg transition-all cursor-pointer flex items-center"
                 >
                   <ChevronLeft className="h-4 w-4 text-charcoal" />
                 </button>
@@ -486,8 +485,8 @@ export function InventoryClient() {
                       onClick={() => setCurrentPage(page)}
                       className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold cursor-pointer transition-all ${
                         currentPage === page
-                          ? "bg-[#ba0036] text-white shadow-sm"
-                          : "bg-white border border-[#e2dfde] hover:border-charcoal text-charcoal"
+                          ? "bg-primary text-white shadow-sm"
+                          : "bg-white border border-secondary-container hover:border-charcoal text-charcoal"
                       }`}
                     >
                       {page}
@@ -497,7 +496,7 @@ export function InventoryClient() {
                 <button
                   disabled={currentPage === totalPages}
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  className="p-1.5 bg-white border border-[#e2dfde] hover:border-charcoal disabled:opacity-40 disabled:hover:border-[#e2dfde] rounded-lg transition-all cursor-pointer flex items-center"
+                  className="p-1.5 bg-white border border-secondary-container hover:border-charcoal disabled:opacity-40 disabled:hover:border-secondary-container rounded-lg transition-all cursor-pointer flex items-center"
                 >
                   <ChevronRight className="h-4 w-4 text-charcoal" />
                 </button>
@@ -510,11 +509,11 @@ export function InventoryClient() {
             
             {/* Concierge Recommendation Panel */}
             {!alertDismissed ? (
-              <div className="lg:col-span-2 bg-gradient-to-br from-white to-[#fff5f6] border border-[#ffdad6] rounded-2xl p-xl relative overflow-hidden flex flex-col justify-between shadow-sm min-h-[160px]">
-                <div className="absolute top-0 left-0 w-1.5 h-full bg-[#ba0036]"></div>
+              <div className="lg:col-span-2 bg-gradient-to-br from-white to-primary-light-bg border border-error-container rounded-2xl p-xl relative overflow-hidden flex flex-col justify-between shadow-sm min-h-[160px]">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
                 <div>
-                  <div className="flex items-center gap-sm text-[#ba0036] mb-sm select-none">
-                    <Sparkles className="h-5 w-5 fill-[#ba0036]/15 text-[#ba0036] shrink-0" />
+                  <div className="flex items-center gap-sm text-primary mb-sm select-none">
+                    <Sparkles className="h-5 w-5 fill-primary/15 text-primary shrink-0" />
                     <span className="text-[10px] font-extrabold uppercase tracking-widest">
                       Concierge Recommendation
                     </span>
@@ -527,14 +526,14 @@ export function InventoryClient() {
                 <div className="mt-4 flex justify-end">
                   <button
                     onClick={handleRestockAlert}
-                    className="bg-[#e21e4a] hover:bg-[#ba0036] text-white px-lg py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-sm"
+                    className="bg-primary-container hover:bg-primary text-white px-lg py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-sm"
                   >
                     Action Restock
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="lg:col-span-2 bg-[#f4f3f3] border border-[#e2dfde] rounded-2xl p-xl flex items-center justify-center min-h-[160px] shadow-sm select-none">
+              <div className="lg:col-span-2 bg-surface-container-low border border-secondary-container rounded-2xl p-xl flex items-center justify-center min-h-[160px] shadow-sm select-none">
                 <div className="text-center font-bold text-secondary text-xs">
                   ✓ Replenishment restocking task dispatched to Milan administrative center.
                 </div>
@@ -542,15 +541,15 @@ export function InventoryClient() {
             )}
 
             {/* Total Inventory Stock Value */}
-            <div className="bg-white border border-[#e2dfde] rounded-2xl p-xl flex flex-col justify-center items-center text-center shadow-sm select-none">
-              <span className="material-symbols-outlined text-[#ba0036] text-[48px] mb-md select-none">
+            <div className="bg-white border border-secondary-container rounded-2xl p-xl flex flex-col justify-center items-center text-center shadow-sm select-none">
+              <span className="material-symbols-outlined text-primary text-[48px] mb-md select-none">
                 inventory
               </span>
-              <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-[#5c3f41]">
+              <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">
                 Inventory Value
               </h4>
               <p className="text-3xl font-extrabold text-charcoal mt-sm">${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2 })}</p>
-              <p className="text-[10px] font-bold text-[#008545] mt-2 flex items-center gap-xs select-none">
+              <p className="text-[10px] font-bold text-success-green mt-2 flex items-center gap-xs select-none">
                 <span className="material-symbols-outlined text-sm font-bold">trending_up</span>
                 +12.4% from last month
               </p>
@@ -562,15 +561,15 @@ export function InventoryClient() {
       {/* Dynamic Modal: EDIT PRODUCT MODAL */}
       {isEditOpen && editingItem && (
         <div className="fixed inset-0 z-[100] flex justify-end">
-          <div className="absolute inset-0 bg-[#1a1c1c]/45 backdrop-blur-sm transition-opacity" onClick={() => setIsEditOpen(false)} />
+          <div className="absolute inset-0 bg-on-surface/45 backdrop-blur-sm transition-opacity" onClick={() => setIsEditOpen(false)} />
           <form
             onSubmit={handleEditItem}
-            className="absolute right-0 top-0 h-full w-full sm:w-[480px] bg-white shadow-2xl flex flex-col border-l border-[#e2dfde] p-xl overflow-y-auto select-none"
+            className="absolute right-0 top-0 h-full w-full sm:w-[480px] bg-white shadow-2xl flex flex-col border-l border-secondary-container p-xl overflow-y-auto select-none"
           >
-            <div className="flex justify-between items-center pb-md border-b border-[#e2dfde] mb-xl select-none">
+            <div className="flex justify-between items-center pb-md border-b border-secondary-container mb-xl select-none">
               <div>
                 <h3 className="text-lg font-bold text-charcoal">Edit Product Information</h3>
-                <span className="text-[9px] text-[#717171] font-bold uppercase tracking-widest block">{editingItem.sku}</span>
+                <span className="text-[9px] text-muted font-bold uppercase tracking-widest block">{editingItem.sku}</span>
               </div>
               <button
                 type="button"
@@ -591,7 +590,7 @@ export function InventoryClient() {
                   value={editingItem.title}
                   onChange={(e) => setEditingItem({ ...editingItem, title: e.target.value })}
                   placeholder="Garment title"
-                  className="w-full px-md py-3 rounded-xl border border-[#e2dfde] text-xs font-semibold focus:outline-none focus:border-[#ba0036] input-focus-ring bg-[#f9f9f9]"
+                  className="w-full px-md py-3 rounded-xl border border-secondary-container text-xs font-semibold focus:outline-none focus:border-primary input-focus-ring bg-background"
                 />
               </div>
 
@@ -604,7 +603,7 @@ export function InventoryClient() {
                   value={editingItem.price}
                   onChange={(e) => setEditingItem({ ...editingItem, price: parseFloat(e.target.value) || 0 })}
                   placeholder="Price"
-                  className="w-full px-md py-3 rounded-xl border border-[#e2dfde] text-xs font-semibold focus:outline-none focus:border-[#ba0036] input-focus-ring bg-[#f9f9f9]"
+                  className="w-full px-md py-3 rounded-xl border border-secondary-container text-xs font-semibold focus:outline-none focus:border-primary input-focus-ring bg-background"
                 />
               </div>
 
@@ -614,7 +613,7 @@ export function InventoryClient() {
                 <select
                   value={editingItem.status}
                   onChange={(e) => setEditingItem({ ...editingItem, status: e.target.value as any })}
-                  className="w-full px-md py-3 rounded-xl border border-[#e2dfde] text-xs font-semibold focus:outline-none focus:border-[#ba0036] bg-[#f9f9f9] cursor-pointer"
+                  className="w-full px-md py-3 rounded-xl border border-secondary-container text-xs font-semibold focus:outline-none focus:border-primary bg-background cursor-pointer"
                 >
                   <option value="In Stock">In Stock</option>
                   <option value="Low Stock">Low Stock</option>
@@ -625,7 +624,7 @@ export function InventoryClient() {
 
             <button
               type="submit"
-              className="w-full py-4 mt-auto bg-[#ba0036] text-white rounded-xl text-xs font-bold hover:brightness-110 active:scale-[0.98] transition-all border-none cursor-pointer tracking-wider"
+              className="w-full py-4 mt-auto bg-primary text-white rounded-xl text-xs font-bold hover:brightness-110 active:scale-[0.98] transition-all border-none cursor-pointer tracking-wider"
             >
               Save Product Details
             </button>

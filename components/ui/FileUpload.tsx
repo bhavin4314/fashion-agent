@@ -113,16 +113,16 @@ export function FileUpload({
       
       {value ? (
         // File selected state
-        <div className="flex items-center justify-between p-4 bg-white border border-[#ebebeb] rounded-xl shadow-sm">
+        <div className="flex items-center justify-between p-4 bg-white border border-border-light rounded-xl shadow-sm">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="p-2 bg-[#f4f3f3] rounded-lg text-[#5f5e5e]">
+            <div className="p-2 bg-surface-container-low rounded-lg text-secondary">
               <File className="h-5 w-5" />
             </div>
             <div className="flex flex-col overflow-hidden">
-              <span className="text-sm font-semibold text-[#1a1c1c] truncate">
+              <span className="text-sm font-semibold text-on-surface truncate">
                 {value.name}
               </span>
-              <span className="text-xs text-[#5f5e5e]">
+              <span className="text-xs text-secondary">
                 {(value.size / (1024 * 1024)).toFixed(2)} MB
               </span>
             </div>
@@ -132,7 +132,7 @@ export function FileUpload({
             variant="ghost"
             size="sm"
             onClick={clearFile}
-            className="p-1.5 h-auto rounded-lg text-[#5f5e5e] hover:bg-[#f4f3f3]"
+            className="p-1.5 h-auto rounded-lg text-secondary hover:bg-surface-container-low"
             aria-label="Remove file"
           >
             <X className="h-4 w-4" />
@@ -147,20 +147,20 @@ export function FileUpload({
           onDrop={handleDrop}
           onClick={onButtonClick}
           className={cn(
-            "flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl cursor-pointer bg-white transition-all duration-200 hover:bg-[#f4f3f3]",
-            isDragActive ? "border-[#ff385c] bg-[#ff385c]/5" : ariaInvalid || error ? "border-[#ba1a1a]" : "border-[#ebebeb]",
-            "focus-within:border-[#222222]"
+            "flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl cursor-pointer bg-white transition-all duration-200 hover:bg-surface-container-low",
+            isDragActive ? "border-brand bg-brand/5" : ariaInvalid || error ? "border-error" : "border-border-light",
+            "focus-within:border-charcoal"
           )}
         >
-          <UploadCloud className={cn("h-8 w-8 mb-2 text-[#5f5e5e]", isDragActive && "text-[#ff385c]")} />
-          <p className="text-sm font-semibold text-[#1a1c1c]">
+          <UploadCloud className={cn("h-8 w-8 mb-2 text-secondary", isDragActive && "text-brand")} />
+          <p className="text-sm font-semibold text-on-surface">
             Click to upload or drag and drop
           </p>
-          <p className="text-xs text-[#5f5e5e] mt-1">
+          <p className="text-xs text-secondary mt-1">
             {accept ? `${accept.toUpperCase()} files` : "All files"} up to {maxSizeMB}MB
           </p>
           {error && (
-            <p className="text-xs text-[#ba1a1a] mt-2 font-medium" role="alert">
+            <p className="text-xs text-error mt-2 font-medium" role="alert">
               {error}
             </p>
           )}

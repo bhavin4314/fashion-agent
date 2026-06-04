@@ -14,6 +14,9 @@ interface FormInputProps {
   className?: string;
   leftIcon?: React.ReactNode;
   inputClassName?: string;
+  min?: string | number;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
+  onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
 }
 
 export function FormInput({
@@ -25,6 +28,9 @@ export function FormInput({
   className,
   leftIcon,
   inputClassName,
+  min,
+  onKeyDown,
+  onPaste,
 }: FormInputProps) {
   const {
     register,
@@ -44,7 +50,7 @@ export function FormInput({
       )}
       <div className="relative flex items-center">
         {leftIcon && (
-          <div className="absolute left-3.5 text-[#5c3f41] pointer-events-none flex items-center justify-center">
+          <div className="absolute left-3.5 text-on-surface-variant pointer-events-none flex items-center justify-center">
             {leftIcon}
           </div>
         )}
@@ -57,6 +63,9 @@ export function FormInput({
             error ? `${name}-error` : description ? `${name}-description` : undefined
           }
           className={cn(leftIcon && "pl-11", inputClassName)}
+          min={min}
+          onKeyDown={onKeyDown}
+          onPaste={onPaste}
           {...register(name)}
         />
       </div>

@@ -2,21 +2,41 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import * as React from "react";
 import { SidebarNav } from "./_components/SidebarNav";
+import { AdminLogoutButton } from "./_components/AdminLogoutButton";
+import { createClient } from "@/utils/supabase/server";
 
 export const metadata: Metadata = {
   title: "Vistra Concierge | Admin Dashboard",
   description: "Secure administrative inventory control and styling queue concierge.",
 };
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let adminName = "Vistra Admin";
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .single();
+  
+    if (profile?.full_name) {
+      adminName = profile.full_name;
+    } else if (user.email) {
+      adminName = user.email.split("@")[0] || "Vistra Admin";
+    }
+  }
+
   return (
-    <div className="bg-[#f9f9f9] text-on-surface font-sans min-h-screen flex w-full relative">
+    <div className="bg-background text-on-surface font-sans min-h-screen flex w-full relative">
       {/* Permanent Left Sidebar Navigation Dashboard */}
-      <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-[#e2dfde] flex flex-col h-screen overflow-y-auto select-none z-50">
+      <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-secondary-container flex flex-col h-screen overflow-y-auto select-none z-50">
         {/* Brand Logo Header */}
         <div className="px-lg py-xl">
           <div className="flex flex-col items-start gap-xs">
@@ -28,7 +48,7 @@ export default function AdminLayout({
               height={48}
               priority
             />
-            <p className="font-bold text-xs text-[#5c3f41] uppercase tracking-wider">
+            <p className="font-bold text-xs text-on-surface-variant uppercase tracking-wider">
               Luxury Concierge
             </p>
           </div>
@@ -37,27 +57,14 @@ export default function AdminLayout({
         <SidebarNav />
 
         {/* Admin Actions Footer Panel */}
-        <div className="p-lg mt-auto space-y-md border-t border-[#e2dfde] bg-white">
+        <div className="p-lg mt-auto space-y-md border-t border-secondary-container bg-white">
           <div className="space-y-sm">
-            <a
-              className="flex items-center gap-sm px-lg py-sm text-[#5c3f41] hover:text-[#ba0036] transition-colors text-xs font-bold uppercase tracking-wider"
-              href="#"
-            >
-              <span className="material-symbols-outlined text-[18px]">settings</span>
-              Settings
-            </a>
-            <a
-              className="flex items-center gap-sm px-lg py-sm text-[#5c3f41] hover:text-[#ba0036] transition-colors text-xs font-bold uppercase tracking-wider"
-              href="/"
-            >
-              <span className="material-symbols-outlined text-[18px]">logout</span>
-              Customer Portal
-            </a>
+            <AdminLogoutButton />
           </div>
 
           {/* Admin Avatar Identity */}
-          <div className="flex items-center gap-sm px-lg pt-sm border-t border-[#e2dfde] mt-sm">
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-[#e2dfde] bg-surface-container shrink-0">
+          <div className="flex items-center gap-sm px-lg pt-sm border-t border-secondary-container mt-sm">
+            <div className="w-8 h-8 rounded-full overflow-hidden border border-secondary-container bg-surface-container shrink-0">
               <Image
                 alt="Vistra Admin Avatar"
                 className="w-full h-full object-cover"
@@ -68,8 +75,8 @@ export default function AdminLayout({
               />
             </div>
             <div className="overflow-hidden">
-              <p className="text-xs font-bold truncate text-charcoal">Vistra Admin</p>
-              <span className="text-[9px] text-[#717171] font-bold uppercase tracking-widest block">Concierge Elite</span>
+              <p className="text-xs font-bold truncate text-charcoal">{adminName}</p>
+              <span className="text-[9px] text-muted font-bold uppercase tracking-widest block">Concierge Elite</span>
             </div>
           </div>
         </div>

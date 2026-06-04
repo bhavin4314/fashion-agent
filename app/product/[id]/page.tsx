@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { Navbar } from "@/app/_components/Navbar";
 import { PRODUCTS } from "@/lib/products";
 import { ProductDetailClient } from "./_components/ProductDetailClient";
@@ -42,12 +43,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
           <p className="text-muted mb-8 text-center max-w-md font-semibold text-sm">
             We apologize, but the quiet luxury piece you requested is currently unavailable or has been archived.
           </p>
-          <a
+          <Link
             href="/collection"
             className="px-8 py-4 bg-neutral-900 text-white font-bold rounded-xl shadow-md text-xs hover:bg-neutral-800 transition-colors uppercase tracking-widest"
           >
             Explore Collection
-          </a>
+          </Link>
         </main>
       </div>
     );

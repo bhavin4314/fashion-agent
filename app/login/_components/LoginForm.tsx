@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Form } from "@/components/forms/Form";
 import { FormInput } from "@/components/forms/FormInput";
@@ -107,7 +108,7 @@ export function LoginForm() {
           type="email"
           placeholder="name@example.com"
           className="gap-xs"
-          inputClassName="w-full h-[56px] px-md rounded-xl border-[#EBEBEB] border bg-surface-container-low text-on-surface font-body-md placeholder:text-secondary-fixed-dim input-focus-ring transition-all duration-200"
+          inputClassName="w-full h-[56px] px-md rounded-xl border-border-light border bg-surface-container-low text-on-surface font-body-md placeholder:text-secondary-fixed-dim input-focus-ring transition-all duration-200"
         />
 
         {/* Password controlled form input with hide/show toggle */}
@@ -116,7 +117,7 @@ export function LoginForm() {
           label="Password"
           placeholder="••••••••"
           className="gap-xs"
-          inputClassName="w-full h-[56px] px-md rounded-xl border-[#EBEBEB] border bg-surface-container-low text-on-surface font-body-md placeholder:text-secondary-fixed-dim input-focus-ring transition-all duration-200"
+          inputClassName="w-full h-[56px] px-md rounded-xl border-border-light border bg-surface-container-low text-on-surface font-body-md placeholder:text-secondary-fixed-dim input-focus-ring transition-all duration-200"
         />
 
         {/* CTA submit button matching radical coral and sizes from design system */}
@@ -124,7 +125,7 @@ export function LoginForm() {
           <Button
             type="submit"
             isLoading={isSubmitting}
-            className="w-full h-[56px] bg-[#FF385C] hover:bg-[#E21E4A] active:scale-[0.98] text-white font-label-md text-label-md rounded-xl transition-all duration-200 shadow-md shadow-[#FF385C]/20 flex items-center justify-center gap-base border-none cursor-pointer"
+            className="w-full h-[56px] bg-brand hover:bg-brand-hover active:scale-[0.98] text-white font-label-md text-label-md rounded-xl transition-all duration-200 shadow-md shadow-brand/20 flex items-center justify-center gap-base border-none cursor-pointer"
           >
             Continue
             <ArrowRight className="h-4 w-4 ml-1 select-none pointer-events-none" />
@@ -136,12 +137,12 @@ export function LoginForm() {
       <div className="mt-xl pt-xl border-t border-surface-container-highest text-center select-none">
         <p className="font-body-md text-body-md text-secondary">
           Don't have an account?{" "}
-          <a
+          <Link
             className="text-on-surface font-semibold hover:underline decoration-2 underline-offset-4 transition-all duration-150"
             href="/signup"
           >
             Sign up
-          </a>
+          </Link>
         </p>
       </div>
     </div>

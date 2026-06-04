@@ -61,6 +61,16 @@
   --color-border-light: #ebebeb;
   --color-footer-bg: #f7f7f7;
 
+  /* Custom Centralized Color Tokens */
+  --color-brand: #ff385c;
+  --color-brand-hover: #e02d4f;
+  --color-primary-dark: #a0002e;
+  --color-success-green: #008545;
+  --color-primary-light-bg: #fff5f6;
+  --color-primary-light-badge: #fff2f3;
+  --color-rating-yellow: #FFB800;
+  --color-amber-light: #fffbeb;
+
   /* Font adjustments */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
@@ -108,4 +118,15 @@ body {
 
 .search-pill {
   box-shadow: 0 3px 12px 0 rgba(0,0,0,0.1), 0 1px 2px 0 rgba(0,0,0,0.08);
+}
+
+/* Hide up/down spinner buttons in number inputs */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }

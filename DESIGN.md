@@ -48,6 +48,14 @@ colors:
   background: '#f9f9f9'
   on-background: '#1a1c1c'
   surface-variant: '#e2e2e2'
+  brand: '#ff385c'
+  brand-hover: '#e02d4f'
+  primary-dark: '#a0002e'
+  success-green: '#008545'
+  primary-light-bg: '#fff5f6'
+  primary-light-badge: '#fff2f3'
+  rating-yellow: '#FFB800'
+  amber-light: '#fffbeb'
 typography:
   display-lg:
     fontFamily: Inter

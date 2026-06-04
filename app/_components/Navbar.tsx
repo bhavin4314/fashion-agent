@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { signOutAction } from "@/app/login/actions";
@@ -103,38 +104,38 @@ export function Navbar({ activeTab }: NavbarProps) {
         {!isLoading && (
           <>
             {role === "admin" ? (
-              <a
+              <Link
                 className={`text-sm font-semibold transition-colors duration-150 ${
                   activeTab === "admin"
-                    ? "text-[#ff385c] border-b-2 border-[#ff385c] pb-1"
+                    ? "text-brand border-b-2 border-brand pb-1"
                     : "text-charcoal hover:text-black"
                 }`}
                 href="/admin/inventory"
               >
                 Admin Overview
-              </a>
+              </Link>
             ) : (
               <>
-                <a
+                <Link
                   className={`text-sm font-semibold transition-colors duration-150 ${
                     activeTab === "explore"
-                      ? "text-[#ff385c] border-b-2 border-[#ff385c] pb-1"
+                      ? "text-brand border-b-2 border-brand pb-1"
                       : "text-charcoal hover:text-black"
                   }`}
                   href="/collection"
                 >
                   Explore Collection
-                </a>
-                <a
+                </Link>
+                <Link
                   className={`text-sm font-semibold transition-colors duration-150 ${
                     activeTab === "stylist"
-                      ? "text-[#ff385c] border-b-2 border-[#ff385c] pb-1"
+                      ? "text-brand border-b-2 border-brand pb-1"
                       : "text-charcoal hover:text-black"
                   }`}
                   href="/stylist"
                 >
                   AI Stylist
-                </a>
+                </Link>
               </>
             )}
           </>
@@ -157,7 +158,7 @@ export function Navbar({ activeTab }: NavbarProps) {
                   <Image
                     alt="User profile"
                     className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmuqdX4FM3xMfoKGOV9pqobOx9lysFIZNKePzrA9CsBBeBJUWSKs2zuLy5PzOPadgT0Lnq4BupJyeXHG5FpnG6bDrwsREE4o6E-ZVHsLzAclxx0wpMChWn8EZT5N-4zfVAN2NvYSS4yeHOoz_UdixCL5fBkUQTIYtf8iZXqy9ghWrpZgNB7pgOqypMK6DZXjXc39R0DLl5d5hdH_CtKknIpOFNJHxjip0zhWPmg4KSmrgNDLm6LbOC5hXT-YvtkpXVb7a521otyiND"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmuqdX4FM3xMfoKGOV9pqobOx9lysFIZNKePzrA9CsBBeBJUWSKs2zuLy5PzOPadgT0Lnq4BupJyeXHG5FpnG6bDrwsREE4o6E-ZVHsLzAclxx0wonMChWn8EZT5N-4zfVAN2NvYSS4yeHOoz_UdixCL5fBkUQTIYtf8iZXqy9ghWrpZgNB7pgOqypMK6DZXjXc39R0DLl5d5hdH_CtKknIpOFNJHxjip0zhWPmg4KSmrgNDLm6LbOC5hXT-YvtkpXVb7a521otyiND"
                     width={40}
                     height={40}
                     unoptimized
@@ -165,12 +166,12 @@ export function Navbar({ activeTab }: NavbarProps) {
                 </div>
               </>
             ) : (
-              <a
+              <Link
                 href="/login"
-                className="text-sm font-semibold text-[#ff385c] hover:text-[#e03150] transition-colors duration-150 flex items-center"
+                className="text-sm font-semibold text-brand hover:text-brand-hover transition-colors duration-150 flex items-center"
               >
                 Log in
-              </a>
+              </Link>
             )}
           </>
         )}

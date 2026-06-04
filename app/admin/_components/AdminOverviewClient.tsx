@@ -138,23 +138,23 @@ export function AdminOverviewClient() {
   return (
     <div className="flex flex-col flex-grow select-none w-full min-h-screen">
       {/* TopAppBar Navigation */}
-      <header className="flex justify-between items-center w-full px-margin-desktop py-md bg-white border-b border-[#e2dfde] z-40 select-none">
+      <header className="flex justify-between items-center w-full px-margin-desktop py-md bg-white border-b border-secondary-container z-40 select-none">
         <div className="flex items-center flex-1">
           <div
-            className={`relative w-96 flex items-center bg-[#f4f3f3] rounded-xl px-md transition-all duration-200 border ${
+            className={`relative w-96 flex items-center bg-surface-container-low rounded-xl px-md transition-all duration-200 border ${
               isSearchFocused
-                ? "border-[#ba0036] ring-2 ring-[#ba0036]/10 bg-white"
+                ? "border-primary ring-2 ring-primary/10 bg-white"
                 : "border-transparent"
             }`}
           >
-            <Search className="h-4 w-4 text-[#5c3f41] shrink-0" />
+            <Search className="h-4 w-4 text-on-surface-variant shrink-0" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
-              className="flex-1 min-w-0 pl-sm pr-md bg-transparent border-none text-xs font-semibold text-charcoal focus:outline-none focus:ring-0 placeholder:text-[#5c3f41]/50 h-10"
+              className="flex-1 min-w-0 pl-sm pr-md bg-transparent border-none text-xs font-semibold text-charcoal focus:outline-none focus:ring-0 placeholder:text-on-surface-variant/50 h-10"
               placeholder="Search orders, products, or clients..."
             />
           </div>
@@ -164,22 +164,22 @@ export function AdminOverviewClient() {
           <div className="flex items-center gap-sm shrink-0">
             <button
               onClick={() => alert("Notification panel represents clean curate logs.")}
-              className="p-2 hover:bg-[#f4f3f3] rounded-full transition-all text-[#5c3f41] border-none bg-transparent cursor-pointer shrink-0"
+              className="p-2 hover:bg-surface-container-low rounded-full transition-all text-on-surface-variant border-none bg-transparent cursor-pointer shrink-0"
             >
               <Bell className="h-5 w-5" />
             </button>
             <button
               onClick={() => alert("Curator Support Center. Contact milan-concierge@vistra.ai")}
-              className="p-2 hover:bg-[#f4f3f3] rounded-full transition-all text-[#5c3f41] border-none bg-transparent cursor-pointer shrink-0"
+              className="p-2 hover:bg-surface-container-low rounded-full transition-all text-on-surface-variant border-none bg-transparent cursor-pointer shrink-0"
             >
               <HelpCircle className="h-5 w-5" />
             </button>
           </div>
-          <div className="h-8 w-px bg-[#e2dfde] mx-sm"></div>
+          <div className="h-8 w-px bg-secondary-container mx-sm"></div>
 
           <button
             onClick={handleCreateProduct}
-            className="bg-[#ba0036] hover:bg-[#a0002e] text-white px-lg py-2.5 rounded-xl text-xs font-bold hover:shadow-lg transition-all active:scale-[0.98] border-none cursor-pointer tracking-wider flex items-center gap-1"
+            className="bg-primary hover:bg-primary-dark text-white px-lg py-2.5 rounded-xl text-xs font-bold hover:shadow-lg transition-all active:scale-[0.98] border-none cursor-pointer tracking-wider flex items-center gap-1"
           >
             <Plus className="w-4 h-4" />
             New Product
@@ -188,12 +188,12 @@ export function AdminOverviewClient() {
       </header>
 
       {/* Main Canvas Viewport */}
-      <div className="flex-grow overflow-y-auto p-xl bg-[#f7f7f7] w-full select-none">
+      <div className="flex-grow overflow-y-auto p-xl bg-footer-bg w-full select-none">
         <div className="max-w-7xl mx-auto space-y-xl">
           {/* Dashboard Header */}
           <div className="flex flex-col gap-xs mb-lg select-none">
-            <h2 className="text-3xl font-extrabold text-[#1a1c1c] tracking-tight">Dashboard</h2>
-            <p className="text-sm font-medium text-[#5c3f41] opacity-80">
+            <h2 className="text-3xl font-extrabold text-on-surface tracking-tight">Dashboard</h2>
+            <p className="text-sm font-medium text-on-surface-variant opacity-80">
               Welcome back. Here is what is happening with Vistra today.
             </p>
           </div>
@@ -201,17 +201,17 @@ export function AdminOverviewClient() {
           {/* Bento Style Metrics Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg">
             {/* Total Revenue */}
-            <div className="bg-white border border-[#ebebeb] rounded-2xl p-xl flex flex-col justify-between min-h-[140px] transition-all hover:shadow-lg duration-300">
+            <div className="bg-white border border-border-light rounded-2xl p-xl flex flex-col justify-between min-h-[140px] transition-all hover:shadow-lg duration-300">
               <div className="flex justify-between items-start select-none">
-                <span className="p-3 bg-[#fff5f6] text-[#ba0036] rounded-xl">
+                <span className="p-3 bg-primary-light-bg text-primary rounded-xl">
                   <DollarSign className="w-6 h-6" />
                 </span>
-                <span className="bg-[#ffdada] text-[#ba0036] px-2.5 py-1 rounded-full text-[10px] font-extrabold">
+                <span className="bg-primary-fixed text-primary px-2.5 py-1 rounded-full text-[10px] font-extrabold">
                   +12.5%
                 </span>
               </div>
               <div className="mt-4 select-none">
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#5c3f41]">
+                <p className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">
                   Total Revenue
                 </p>
                 <h3 className="text-2xl font-black text-charcoal mt-1">$142,850.00</h3>
@@ -219,17 +219,17 @@ export function AdminOverviewClient() {
             </div>
 
             {/* Active Products */}
-            <div className="bg-white border border-[#ebebeb] rounded-2xl p-xl flex flex-col justify-between min-h-[140px] transition-all hover:shadow-lg duration-300">
+            <div className="bg-white border border-border-light rounded-2xl p-xl flex flex-col justify-between min-h-[140px] transition-all hover:shadow-lg duration-300">
               <div className="flex justify-between items-start select-none">
-                <span className="p-3 bg-[#fff5f6] text-[#ba0036] rounded-xl">
+                <span className="p-3 bg-primary-light-bg text-primary rounded-xl">
                   <Shirt className="w-6 h-6" />
                 </span>
-                <span className="bg-[#eeeeee] text-[#5f5e5e] px-2.5 py-1 rounded-full text-[10px] font-extrabold">
+                <span className="bg-surface-container text-secondary px-2.5 py-1 rounded-full text-[10px] font-extrabold">
                   Active
                 </span>
               </div>
               <div className="mt-4 select-none">
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#5c3f41]">
+                <p className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">
                   Active Products
                 </p>
                 <h3 className="text-2xl font-black text-charcoal mt-1">3,240</h3>
@@ -237,17 +237,17 @@ export function AdminOverviewClient() {
             </div>
 
             {/* AI Styling Requests */}
-            <div className="bg-white border border-[#ebebeb] rounded-2xl p-xl flex flex-col justify-between min-h-[140px] transition-all hover:shadow-lg duration-300">
+            <div className="bg-white border border-border-light rounded-2xl p-xl flex flex-col justify-between min-h-[140px] transition-all hover:shadow-lg duration-300">
               <div className="flex justify-between items-start select-none">
-                <span className="p-3 bg-[#fff5f6] text-[#ba0036] rounded-xl animate-pulse">
+                <span className="p-3 bg-primary-light-bg text-primary rounded-xl animate-pulse">
                   <Sparkle className="w-6 h-6" />
                 </span>
-                <span className="bg-[#ffdada] text-[#ba0036] px-2.5 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-0.5">
+                <span className="bg-primary-fixed text-primary px-2.5 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-0.5">
                   Hot
                 </span>
               </div>
               <div className="mt-4 select-none">
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#5c3f41]">
+                <p className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">
                   AI Styling Requests
                 </p>
                 <h3 className="text-2xl font-black text-charcoal mt-1">842</h3>
@@ -255,17 +255,17 @@ export function AdminOverviewClient() {
             </div>
 
             {/* New Customers */}
-            <div className="bg-white border border-[#ebebeb] rounded-2xl p-xl flex flex-col justify-between min-h-[140px] transition-all hover:shadow-lg duration-300">
+            <div className="bg-white border border-border-light rounded-2xl p-xl flex flex-col justify-between min-h-[140px] transition-all hover:shadow-lg duration-300">
               <div className="flex justify-between items-start select-none">
-                <span className="p-3 bg-[#fff5f6] text-[#ba0036] rounded-xl">
+                <span className="p-3 bg-primary-light-bg text-primary rounded-xl">
                   <Users className="w-6 h-6" />
                 </span>
-                <span className="bg-[#ffdada] text-[#ba0036] px-2.5 py-1 rounded-full text-[10px] font-extrabold">
+                <span className="bg-primary-fixed text-primary px-2.5 py-1 rounded-full text-[10px] font-extrabold">
                   +48
                 </span>
               </div>
               <div className="mt-4 select-none">
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#5c3f41]">
+                <p className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">
                   New Customers
                 </p>
                 <h3 className="text-2xl font-black text-charcoal mt-1">156</h3>
@@ -276,21 +276,21 @@ export function AdminOverviewClient() {
           {/* Grid Layout for Interactive SVG Chart & Recent Activity Feed */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg select-none">
             {/* SVG Chart Section */}
-            <div className="lg:col-span-2 bg-white border border-[#ebebeb] rounded-2xl p-xl flex flex-col relative select-none">
+            <div className="lg:col-span-2 bg-white border border-border-light rounded-2xl p-xl flex flex-col relative select-none">
               <div className="flex justify-between items-center mb-lg">
                 <div>
                   <h4 className="text-lg font-black text-charcoal tracking-tight">Styling Engagement</h4>
-                  <p className="text-xs font-semibold text-[#5f5e5e] uppercase tracking-wider mt-0.5">
+                  <p className="text-xs font-semibold text-secondary uppercase tracking-wider mt-0.5">
                     Daily AI Stylist interactions over the last 7 days.
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <button className="bg-[#f4f3f3] text-charcoal px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                  <button className="bg-surface-container-low text-charcoal px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">
                     7 Days
                   </button>
                   <button
                     onClick={() => alert("Historical logs currently archived in Milan curation servers.")}
-                    className="text-[#5c3f41] hover:bg-[#f4f3f3] px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors"
+                    className="text-on-surface-variant hover:bg-surface-container-low px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors"
                   >
                     30 Days
                   </button>
@@ -302,17 +302,17 @@ export function AdminOverviewClient() {
                 <svg className="w-full h-full overflow-visible" viewBox="0 0 800 200">
                   <defs>
                     <linearGradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
-                      <stop offset="0%" stopColor="#ba0036" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#ba0036" stopOpacity="0" />
+                      <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.25" />
+                      <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0" />
                     </linearGradient>
                   </defs>
 
                   {/* Horizontal Grid lines matching Stitch */}
-                  <line stroke="#EBEBEB" strokeWidth="1" x1="0" x2="800" y1="0" y2="0" />
-                  <line stroke="#EBEBEB" strokeWidth="1" x1="0" x2="800" y1="50" y2="50" />
-                  <line stroke="#EBEBEB" strokeWidth="1" x1="0" x2="800" y1="100" y2="100" />
-                  <line stroke="#EBEBEB" strokeWidth="1" x1="0" x2="800" y1="150" y2="150" />
-                  <line stroke="#EBEBEB" strokeWidth="1" x1="0" x2="800" y1="200" y2="200" />
+                  <line stroke="var(--color-border-light)" strokeWidth="1" x1="0" x2="800" y1="0" y2="0" />
+                  <line stroke="var(--color-border-light)" strokeWidth="1" x1="0" x2="800" y1="50" y2="50" />
+                  <line stroke="var(--color-border-light)" strokeWidth="1" x1="0" x2="800" y1="100" y2="100" />
+                  <line stroke="var(--color-border-light)" strokeWidth="1" x1="0" x2="800" y1="150" y2="150" />
+                  <line stroke="var(--color-border-light)" strokeWidth="1" x1="0" x2="800" y1="200" y2="200" />
 
                   {/* Gradient Area Fill under Bezier line */}
                   <path
@@ -325,7 +325,7 @@ export function AdminOverviewClient() {
                   <path
                     d="M 50 150 C 100 130, 120 120, 166 120 C 220 120, 240 135, 282 140 C 330 145, 360 80, 398 60 C 440 40, 480 85, 514 95 C 560 110, 590 55, 630 45 C 670 35, 710 20, 746 15"
                     fill="none"
-                    stroke="#ba0036"
+                    stroke="var(--color-primary)"
                     strokeWidth="3.5"
                     strokeLinecap="round"
                     className="chart-line"
@@ -340,7 +340,7 @@ export function AdminOverviewClient() {
                           cx={pt.x}
                           cy={pt.y}
                           r={isHovered ? 8 : 4.5}
-                          fill="#ba0036"
+                          fill="var(--color-primary)"
                           stroke="#ffffff"
                           strokeWidth={isHovered ? 2.5 : 1.5}
                           className="cursor-pointer transition-all duration-150 shadow-sm"
@@ -364,7 +364,7 @@ export function AdminOverviewClient() {
                     }}
                   >
                     {CHART_DATA[hoveredDotIndex].day}:{" "}
-                    <span className="text-[#ff5c7e] font-extrabold">
+                    <span className="text-brand font-extrabold">
                       {CHART_DATA[hoveredDotIndex].value} requests
                     </span>
                   </div>
@@ -372,7 +372,7 @@ export function AdminOverviewClient() {
               </div>
 
               {/* Day Labels */}
-              <div className="flex justify-between mt-sm font-extrabold text-[10px] text-[#5c3f41] opacity-70 uppercase tracking-widest px-xs select-none">
+              <div className="flex justify-between mt-sm font-extrabold text-[10px] text-on-surface-variant opacity-70 uppercase tracking-widest px-xs select-none">
                 {CHART_DATA.map((pt) => (
                   <span key={pt.day}>{pt.day}</span>
                 ))}
@@ -380,12 +380,12 @@ export function AdminOverviewClient() {
             </div>
 
             {/* Recent Activity Curation Feed */}
-            <div className="bg-white border border-[#ebebeb] rounded-2xl p-xl flex flex-col select-none">
+            <div className="bg-white border border-border-light rounded-2xl p-xl flex flex-col select-none">
               <div className="mb-lg flex justify-between items-center">
                 <h4 className="text-lg font-black text-charcoal tracking-tight">Recent Activity</h4>
                 <button
                   onClick={() => alert("Historical dynamic activities fully loaded.")}
-                  className="text-[#ba0036] font-bold text-xs hover:underline uppercase tracking-wider"
+                  className="text-primary font-bold text-xs hover:underline uppercase tracking-wider"
                 >
                   View All
                 </button>
@@ -393,10 +393,10 @@ export function AdminOverviewClient() {
 
               <div className="flex-1 space-y-md overflow-y-auto max-h-[300px] pr-xs select-none">
                 {RECENT_ACTIVITIES.map((act) => {
-                  let badgeColor = "bg-[#fff2f3] text-[#ba0036]";
-                  if (act.type === "inventory") badgeColor = "bg-[#f4f3f3] text-secondary";
+                  let badgeColor = "bg-primary-light-badge text-primary";
+                  if (act.type === "inventory") badgeColor = "bg-surface-container-low text-secondary";
                   if (act.type === "customer") badgeColor = "bg-green-50 text-green-700";
-                  if (act.type === "order") badgeColor = "bg-[#fffbeb] text-amber-700";
+                  if (act.type === "order") badgeColor = "bg-amber-light text-amber-700";
 
                   return (
                     <div key={act.id} className="flex gap-md group items-start select-none">
@@ -411,7 +411,7 @@ export function AdminOverviewClient() {
                       <div className="flex flex-col min-w-0">
                         <p className="text-xs font-bold text-charcoal leading-tight">
                           {act.title}:{" "}
-                          <span className="font-medium text-[#5f5e5e]">{act.detail}</span>
+                          <span className="font-medium text-secondary">{act.detail}</span>
                         </p>
                         <span className="text-[10px] text-secondary tracking-wide mt-1">
                           {act.time}
@@ -429,20 +429,20 @@ export function AdminOverviewClient() {
             <div className="flex justify-between items-center mb-xl">
               <div>
                 <h4 className="text-lg font-black text-charcoal tracking-tight">Recent Inventory Additions</h4>
-                <p className="text-xs font-semibold text-[#5f5e5e] uppercase tracking-wider mt-0.5">
+                <p className="text-xs font-semibold text-secondary uppercase tracking-wider mt-0.5">
                   Exclusive luxury items recently verified into the Vistra concierge catalog.
                 </p>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => alert("Slide view is fully optimized.")}
-                  className="hover:text-black hover:border-black transition-all border border-[#e2dfde] p-2 rounded-full cursor-pointer flex items-center justify-center"
+                  className="hover:text-black hover:border-black transition-all border border-secondary-container p-2 rounded-full cursor-pointer flex items-center justify-center"
                 >
                   <ChevronLeft className="w-4 h-4 text-charcoal" />
                 </button>
                 <button
                   onClick={() => alert("Slide view is fully optimized.")}
-                  className="hover:text-black hover:border-black transition-all border border-[#e2dfde] p-2 rounded-full cursor-pointer flex items-center justify-center"
+                  className="hover:text-black hover:border-black transition-all border border-secondary-container p-2 rounded-full cursor-pointer flex items-center justify-center"
                 >
                   <ChevronRight className="w-4 h-4 text-charcoal" />
                 </button>
@@ -453,7 +453,7 @@ export function AdminOverviewClient() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-lg">
               {filteredFeatured.map((item) => (
                 <div key={item.id} className="flex flex-col gap-sm select-none group">
-                  <div className="aspect-[4/5] bg-stone-100 rounded-2xl overflow-hidden relative border border-[#ebebeb] shadow-sm select-none shrink-0">
+                  <div className="aspect-[4/5] bg-stone-100 rounded-2xl overflow-hidden relative border border-border-light shadow-sm select-none shrink-0">
                     <Image
                       alt={item.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
@@ -463,7 +463,7 @@ export function AdminOverviewClient() {
                       unoptimized
                     />
                     {item.isNew && (
-                      <div className="absolute top-md right-md bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl font-extrabold text-[9px] uppercase tracking-widest text-[#ba0036] shadow-sm select-none">
+                      <div className="absolute top-md right-md bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl font-extrabold text-[9px] uppercase tracking-widest text-primary shadow-sm select-none">
                         New
                       </div>
                     )}
@@ -473,7 +473,7 @@ export function AdminOverviewClient() {
                       {item.designer}
                     </p>
                     <p className="text-xs font-bold text-charcoal mt-1 truncate">{item.name}</p>
-                    <p className="text-xs font-black text-[#ba0036] mt-1.5 leading-none">
+                    <p className="text-xs font-black text-primary mt-1.5 leading-none">
                       ${item.price.toLocaleString("en-US", { minimumFractionDigits: 0 })}
                     </p>
                   </div>
@@ -481,7 +481,7 @@ export function AdminOverviewClient() {
               ))}
 
               {filteredFeatured.length === 0 && (
-                <div className="col-span-full py-xxl bg-white border border-[#ebebeb] rounded-2xl text-center text-xs font-bold text-secondary select-none">
+                <div className="col-span-full py-xxl bg-white border border-border-light rounded-2xl text-center text-xs font-bold text-secondary select-none">
                   No arrivals found matching current search query filters.
                 </div>
               )}

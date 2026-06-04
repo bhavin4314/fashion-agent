@@ -3,21 +3,22 @@
 import * as React from "react";
 import Image from "next/image";
 import { useFormContext } from "react-hook-form";
-import { Loader2 } from "lucide-react";
 import type { ProductWizardFormValues } from "../schema";
 
 interface Step1MediaProps {
-  aiProgress: number;
   handleMockAddFile: () => void;
   handleRemoveImage: (index: number) => void;
   setValue: (name: keyof ProductWizardFormValues, value: any, options?: any) => void;
+  isUploading: boolean;
+  uploadProgress: Record<number, number>;
 }
 
 export function Step1Media({
-  aiProgress,
   handleMockAddFile,
   handleRemoveImage,
-  setValue
+  setValue,
+  isUploading,
+  uploadProgress
 }: Step1MediaProps) {
   const { watch, formState: { errors } } = useFormContext<ProductWizardFormValues>();
   const images = watch("images") || [];
@@ -33,6 +34,7 @@ export function Step1Media({
 
   const triggerFileSelect = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isUploading) return;
     fileInputRef.current?.click();
   };
 
@@ -46,12 +48,15 @@ export function Step1Media({
         accept="image/*"
         className="hidden"
         onChange={handleFileSelect}
+        disabled={isUploading}
       />
       
       {/* Drag-drop Upload Slot */}
       <div 
         onClick={triggerFileSelect}
-        className="drag-drop-area h-64 flex flex-col items-center justify-center gap-md bg-surface-container-lowest rounded-xl group transition-all hover:bg-primary/5 cursor-pointer"
+        className={`drag-drop-area h-64 flex flex-col items-center justify-center gap-md bg-surface-container-lowest rounded-xl group transition-all ${
+          isUploading ? "opacity-50 cursor-not-allowed bg-neutral-50" : "hover:bg-primary/5 cursor-pointer"
+        }`}
         style={{
           backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%23BA0036FF' stroke-width='2' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e")`
         }}
@@ -60,13 +65,20 @@ export function Step1Media({
           <span className="material-symbols-outlined text-primary text-[48px]">cloud_upload</span>
         </div>
         <div className="text-center">
-          <p className="font-headline-md text-headline-md text-on-surface">Drag and drop collection images</p>
+          <p className="font-headline-md text-headline-md text-on-surface">
+            {isUploading ? "Uploading boutique assets..." : "Drag and drop collection images"}
+          </p>
           <p className="text-secondary body-md mt-xs">Support for high-resolution PNG, JPG (Max 20MB each)</p>
         </div>
         <button
           type="button"
           onClick={triggerFileSelect}
-          className="bg-primary text-on-primary px-xl py-md rounded-xl font-label-md text-label-md hover:opacity-90 transition-all shadow-md active:scale-95 border-none cursor-pointer"
+          disabled={isUploading}
+          className={`px-xl py-md rounded-xl font-label-md text-label-md transition-all shadow-md active:scale-95 border-none ${
+            isUploading 
+              ? "bg-neutral-300 text-neutral-500 cursor-not-allowed" 
+              : "bg-primary text-on-primary hover:opacity-90 cursor-pointer"
+          }`}
         >
           Upload Images
         </button>
@@ -76,7 +88,7 @@ export function Step1Media({
       <div className="space-y-lg">
         <div className="flex items-center justify-between">
           <h2 className="font-headline-md text-headline-md text-on-surface">Selected Media ({images.length})</h2>
-          {images.length > 0 && (
+          {images.length > 0 && !isUploading && (
             <button
               type="button"
               onClick={() => setValue("images", [], { shouldValidate: true })}
@@ -101,7 +113,7 @@ export function Step1Media({
             }
 
             return (
-              <div key={idx} className="relative group aspect-[0.73] bg-surface-container-high rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-[#e2dfde]/30">
+              <div key={idx} className="relative group aspect-[0.73] bg-surface-container-high rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-secondary-container/30">
                 <Image 
                   src={img} 
                   alt={`Asset ${idx + 1}`} 
@@ -115,16 +127,44 @@ export function Step1Media({
                     Cover
                   </div>
                 )}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRemoveImage(idx);
-                  }}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-on-surface/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm hover:bg-error border-none cursor-pointer"
-                >
-                  <span className="material-symbols-outlined text-sm">close</span>
-                </button>
+                {!isUploading && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveImage(idx);
+                    }}
+                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-on-surface/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm hover:bg-error border-none cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-sm">close</span>
+                  </button>
+                )}
+
+                {/* Sequential Upload Progress Overlay */}
+                {isUploading && (
+                  <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-md text-white select-none animate-in fade-in duration-200">
+                    {uploadProgress[idx] === undefined ? (
+                      <div className="flex flex-col items-center gap-xs">
+                        <span className="material-symbols-outlined text-neutral-400 animate-pulse text-[24px]">pending</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-300">Queued</span>
+                      </div>
+                    ) : uploadProgress[idx] < 100 ? (
+                      <div className="w-full flex flex-col items-center gap-sm px-xs text-center">
+                        <span className="material-symbols-outlined text-primary text-[28px] animate-spin">sync</span>
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-white">Uploading {uploadProgress[idx]}%</span>
+                        <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
+                          <div className="h-full bg-primary rounded-full transition-all duration-100" style={{ width: `${uploadProgress[idx]}%` }} />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-xs">
+                        <span className="material-symbols-outlined text-emerald-400 text-[32px] animate-in zoom-in duration-300">check_circle</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Uploaded</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div className="absolute bottom-0 inset-x-0 p-md bg-gradient-to-t from-black/60 to-transparent">
                   <p className="text-white font-label-sm">{filename}</p>
                 </div>
@@ -133,13 +173,20 @@ export function Step1Media({
           })}
           
           {/* Add More Slot */}
-          <div 
-            onClick={triggerFileSelect}
-            className="aspect-[0.73] border-2 border-dashed border-secondary-container rounded-xl flex flex-col items-center justify-center gap-sm text-secondary hover:border-primary hover:text-primary transition-all cursor-pointer bg-surface-container-low"
-          >
-            <span className="material-symbols-outlined text-headline-lg">add</span>
-            <span className="font-label-md text-label-md">Add More</span>
-          </div>
+          {!isUploading ? (
+            <div 
+              onClick={triggerFileSelect}
+              className="aspect-[0.73] border-2 border-dashed border-secondary-container rounded-xl flex flex-col items-center justify-center gap-sm text-secondary hover:border-primary hover:text-primary transition-all cursor-pointer bg-surface-container-low"
+            >
+              <span className="material-symbols-outlined text-headline-lg">add</span>
+              <span className="font-label-md text-label-md">Add More</span>
+            </div>
+          ) : (
+            <div className="aspect-[0.73] border-2 border-dashed border-neutral-300 bg-neutral-50 rounded-xl flex flex-col items-center justify-center gap-sm text-neutral-400 opacity-60 cursor-not-allowed">
+              <span className="material-symbols-outlined text-headline-lg">cloud_sync</span>
+              <span className="font-label-md text-label-md">Uploading...</span>
+            </div>
+          )}
         </div>
         
         {errors.images?.message && (
@@ -148,59 +195,6 @@ export function Step1Media({
           </p>
         )}
       </div>
-
-      {/* AI Processing State Section */}
-      <section className="bg-primary/5 rounded-2xl p-xl border border-primary/10">
-        <div className="flex items-start gap-lg">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0 animate-pulse text-white">
-            <span className="material-symbols-outlined text-on-primary" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-          </div>
-          <div className="flex-1 space-y-md">
-            <div className="flex items-center justify-between">
-              <h3 className="font-headline-md text-headline-md text-on-surface">AI Concierge Engine</h3>
-              <span className="text-primary font-label-md text-label-md">{aiProgress}% Complete</span>
-            </div>
-            
-            {/* Progress Bar */}
-            <div className="w-full h-2 bg-primary/10 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-primary rounded-full transition-all duration-300"
-                style={{ width: `${aiProgress}%` }}
-              />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-md pt-md">
-              <div className="flex items-center gap-md text-on-surface-variant font-label-md text-xs">
-                <span className="material-symbols-outlined text-primary text-body-md" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                Analyzing product image...
-              </div>
-              
-              <div className="flex items-center gap-md text-on-surface-variant font-label-md text-xs">
-                <span className="material-symbols-outlined text-primary text-body-md" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                Detecting clothing attributes...
-              </div>
-              
-              <div className={`flex items-center gap-md font-label-md text-xs transition-colors duration-300`}>
-                {aiProgress >= 100 ? (
-                  <span className="material-symbols-outlined text-primary text-body-md" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                ) : (
-                  <span className="material-symbols-outlined text-primary text-body-md animate-spin">sync</span>
-                )}
-                Extracting style information...
-              </div>
-              
-              <div className={`flex items-center gap-md font-label-md text-xs transition-colors duration-300 ${aiProgress >= 100 ? "text-on-surface-variant" : "text-secondary"}`}>
-                {aiProgress >= 100 ? (
-                  <span className="material-symbols-outlined text-primary text-body-md" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                ) : (
-                  <span className="material-symbols-outlined text-secondary-container text-body-md">pending</span>
-                )}
-                Generating product draft...
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

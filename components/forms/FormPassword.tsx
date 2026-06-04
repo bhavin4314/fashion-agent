@@ -43,7 +43,7 @@ export function FormPassword({
       </div>
       <div className="relative flex items-center">
         {leftIcon && (
-          <div className="absolute left-3.5 text-[#5c3f41] pointer-events-none flex items-center justify-center">
+          <div className="absolute left-3.5 text-on-surface-variant pointer-events-none flex items-center justify-center">
             {leftIcon}
           </div>
         )}

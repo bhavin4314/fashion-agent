@@ -36,7 +36,7 @@ export function Modal({
             className={cn(
               // Elevation Level 3 shadow from DESIGN.md: shadow-[0px_12px_28px_rgba(0,0,0,0.15)]
               // Shape corner radius from DESIGN.md: rounded-xl (12px)
-              "relative w-full bg-white p-6 shadow-[0px_12px_28px_rgba(0,0,0,0.15)] rounded-xl outline-none border border-[#ebebeb]",
+              "relative w-full bg-white p-6 shadow-[0px_12px_28px_rgba(0,0,0,0.15)] rounded-xl outline-none border border-border-light",
               "transition-all duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
               
               // Size options
@@ -51,21 +51,21 @@ export function Modal({
           >
             {/* Header */}
             <div className="flex flex-col gap-1.5 pr-6">
-              <DialogPrimitive.Title className="text-xl font-bold text-[#1a1c1c] tracking-tight">
+              <DialogPrimitive.Title className="text-xl font-bold text-on-surface tracking-tight">
                 {title}
               </DialogPrimitive.Title>
               {description && (
-                <DialogPrimitive.Description className="text-sm text-[#5f5e5e]">
+                <DialogPrimitive.Description className="text-sm text-secondary">
                   {description}
                 </DialogPrimitive.Description>
               )}
             </div>
 
             {/* Main content body */}
-            <div className="mt-4 text-[#1a1c1c]">{children}</div>
+            <div className="mt-4 text-on-surface">{children}</div>
 
             {/* Accessible close button */}
-            <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg p-1 text-[#5f5e5e] hover:bg-[#eeeeee] hover:text-[#1a1c1c] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff385c]">
+            <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg p-1 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand">
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </DialogPrimitive.Close>

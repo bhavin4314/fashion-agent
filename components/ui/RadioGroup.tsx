@@ -27,16 +27,14 @@ export const RadioGroupItem = React.forwardRef<HTMLButtonElement, RadioGroupItem
         ref={ref}
         className={cn(
           "aspect-square h-5 w-5 rounded-full bg-white transition-all duration-200 outline-none disabled:cursor-not-allowed disabled:opacity-50",
-          // Spec from DESIGN.md:
-          // 1px border. Selected uses Radical Coral (#ff385c) background/border or inner indicator.
-          "border border-[#ebebeb] text-[#ff385c] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#ff385c]",
-          "data-[state=checked]:border-[#ff385c]",
+          "border border-border-light text-brand focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand",
+          "data-[state=checked]:border-brand",
           className
         )}
         {...props}
       >
         <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-          <Circle className="h-2.5 w-2.5 fill-current text-[#ff385c]" />
+          <Circle className="h-2.5 w-2.5 fill-current text-brand" />
         </RadioGroupPrimitive.Indicator>
       </RadioGroupPrimitive.Item>
     );

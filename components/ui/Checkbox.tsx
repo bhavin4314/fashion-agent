@@ -13,11 +13,11 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
         className={cn(
           "peer h-5 w-5 shrink-0 bg-white transition-colors duration-200 outline-none disabled:cursor-not-allowed disabled:opacity-50",
           // Spec from DESIGN.md:
-          // 1px border. Checked state uses Radical Coral (#ff385c) background and border.
+          // 1px border. Checked state uses Radical Coral background and border.
           // 4px-8px rounded corners (rounded-lg or rounded-md).
-          "border border-[#ebebeb] rounded-lg",
-          "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#ff385c]",
-          "data-[state=checked]:bg-[#ff385c] data-[state=checked]:border-[#ff385c] data-[state=checked]:text-white",
+          "border border-border-light rounded-lg",
+          "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand",
+          "data-[state=checked]:bg-brand data-[state=checked]:border-brand data-[state=checked]:text-white",
           className
         )}
         {...props}

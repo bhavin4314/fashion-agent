@@ -103,7 +103,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             >
               <Heart
                 className={`h-5 w-5 transition-colors ${
-                  wishlist ? "text-[#ff385c] fill-[#ff385c]" : "text-on-surface group-hover/heart:text-[#ff385c]"
+                  wishlist ? "text-brand fill-brand" : "text-on-surface group-hover/heart:text-brand"
                 }`}
               />
             </button>
@@ -148,9 +148,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               {product.title}
             </h1>
             <div className="flex items-center gap-md">
-              <span className="text-2xl font-bold text-[#ff385c]">${product.price}</span>
-              <div className="flex items-center gap-xs text-[#FFB800]">
-                <Star className="h-5 w-5 fill-[#FFB800] text-[#FFB800]" />
+              <span className="text-2xl font-bold text-brand">${product.price}</span>
+              <div className="flex items-center gap-xs text-rating-yellow">
+                <Star className="h-5 w-5 fill-rating-yellow text-rating-yellow" />
                 <span className="text-label-md font-label-md text-on-surface font-semibold">
                   {product.rating} ({product.reviewsCount})
                 </span>
@@ -170,7 +170,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               </span>
               <button
                 onClick={() => alert("Standard Vistra size measurements fit true to luxury sizing tables.")}
-                className="text-xs font-bold text-muted underline hover:text-[#ff385c] transition-colors bg-transparent border-none cursor-pointer"
+                className="text-xs font-bold text-muted underline hover:text-brand transition-colors bg-transparent border-none cursor-pointer"
               >
                 Size Guide
               </button>
@@ -198,7 +198,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               onClick={handleAddToBag}
               disabled={isBagging}
               className={`w-full h-14 text-white rounded-xl font-label-md text-label-md flex items-center justify-center gap-sm active:scale-95 transition-all duration-200 shadow-md border-none cursor-pointer font-semibold ${
-                isBagging ? "bg-neutral-700" : "bg-[#ba0036] hover:bg-[#a0002e]"
+                isBagging ? "bg-neutral-700" : "bg-primary hover:bg-primary-dark"
               }`}
             >
               <ShoppingBag className="h-5 w-5 text-white" />
@@ -206,9 +206,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </button>
 
             {/* AI Stylist Assistant Widget */}
-            <div className="p-lg rounded-xl flex flex-col gap-sm border-l-4 border-[#ff385c] bg-gradient-to-br from-white to-[#fff5f6] border border-[#ffdad6] shadow-sm select-none">
-              <div className="flex items-center gap-sm text-[#ff385c]">
-                <Sparkles className="h-5 w-5 fill-[#ff385c]/25 text-[#ff385c]" />
+            <div className="p-lg rounded-xl flex flex-col gap-sm border-l-4 border-brand bg-gradient-to-br from-white to-primary-light-bg border border-error-container shadow-sm select-none">
+              <div className="flex items-center gap-sm text-brand">
+                <Sparkles className="h-5 w-5 fill-brand/25 text-brand" />
                 <span className="text-label-md font-label-md font-bold text-sm">AI Stylist Assistant</span>
               </div>
               <p className="text-xs font-medium text-secondary italic leading-relaxed">
@@ -231,13 +231,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 onClick={() => toggleAccordion("sustainability")}
                 className="py-4 flex justify-between items-center cursor-pointer group"
               >
-                <span className="text-label-md font-label-md font-bold text-sm text-neutral-800 group-hover:text-[#ff385c] transition-colors">
+                <span className="text-label-md font-label-md font-bold text-sm text-neutral-800 group-hover:text-brand transition-colors">
                   Sustainability & Care
                 </span>
                 {activeAccordion === "sustainability" ? (
-                  <ChevronUp className="h-5 w-5 text-secondary group-hover:text-[#ff385c] transition-colors" />
+                  <ChevronUp className="h-5 w-5 text-secondary group-hover:text-brand transition-colors" />
                 ) : (
-                  <ChevronDown className="h-5 w-5 text-secondary group-hover:text-[#ff385c] transition-colors" />
+                  <ChevronDown className="h-5 w-5 text-secondary group-hover:text-brand transition-colors" />
                 )}
               </div>
               <div
@@ -260,13 +260,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 onClick={() => toggleAccordion("shipping")}
                 className="py-4 flex justify-between items-center cursor-pointer group"
               >
-                <span className="text-label-md font-label-md font-bold text-sm text-neutral-800 group-hover:text-[#ff385c] transition-colors">
+                <span className="text-label-md font-label-md font-bold text-sm text-neutral-800 group-hover:text-brand transition-colors">
                   Shipping & Returns
                 </span>
                 {activeAccordion === "shipping" ? (
-                  <ChevronUp className="h-5 w-5 text-secondary group-hover:text-[#ff385c] transition-colors" />
+                  <ChevronUp className="h-5 w-5 text-secondary group-hover:text-brand transition-colors" />
                 ) : (
-                  <ChevronDown className="h-5 w-5 text-secondary group-hover:text-[#ff385c] transition-colors" />
+                  <ChevronDown className="h-5 w-5 text-secondary group-hover:text-brand transition-colors" />
                 )}
               </div>
               <div
@@ -308,7 +308,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     onClick={() => handleCrossSellAdd(lookItem.title, lookItem.price)}
                     className="absolute bottom-md right-md w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 border-none cursor-pointer"
                   >
-                    <Plus className="h-5 w-5 text-[#ff385c]" />
+                    <Plus className="h-5 w-5 text-brand" />
                   </button>
                 </div>
                 <h3 className="text-sm font-semibold text-on-surface tracking-tight">
@@ -328,7 +328,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         <div className="fixed inset-0 z-[100] flex justify-end">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-[#1a1c1c]/40 backdrop-blur-sm transition-opacity duration-300"
+            className="absolute inset-0 bg-on-surface/40 backdrop-blur-sm transition-opacity duration-300"
             onClick={() => setIsAiOpen(false)}
           />
 
@@ -336,9 +336,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           <div className="absolute right-0 top-0 h-full w-full sm:w-[450px] bg-white shadow-2xl flex flex-col border-l border-border-light animate-[slideIn_0.35s_cubic-bezier(0.16,1,0.3,1)]">
             
             {/* Header */}
-            <div className="p-xl border-b border-border-light flex justify-between items-center bg-gradient-to-r from-white to-[#fff5f6]">
-              <div className="flex items-center gap-sm text-[#ff385c]">
-                <Sparkles className="h-5 w-5 fill-[#ff385c]/25 text-[#ff385c]" />
+            <div className="p-xl border-b border-border-light flex justify-between items-center bg-gradient-to-r from-white to-primary-light-bg">
+              <div className="flex items-center gap-sm text-brand">
+                <Sparkles className="h-5 w-5 fill-brand/25 text-brand" />
                 <div>
                   <h3 className="text-sm font-extrabold text-charcoal">Vistra AI Stylist</h3>
                   <span className="text-[10px] text-secondary font-bold uppercase tracking-wider">Premium Concierge</span>
@@ -363,7 +363,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     className={`max-w-[85%] rounded-2xl p-lg text-xs leading-relaxed font-semibold shadow-sm ${
                       msg.sender === "user"
                         ? "bg-neutral-900 text-white rounded-tr-none"
-                        : "bg-white border border-border-light text-[#5f5e5e] rounded-tl-none border-l-4 border-l-[#ff385c]"
+                        : "bg-white border border-border-light text-secondary rounded-tl-none border-l-4 border-l-brand"
                     }`}
                   >
                     {msg.text}
@@ -379,7 +379,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 placeholder="Ask about size, coordinates, or occasions..."
-                className="flex-1 h-11 px-md rounded-xl border border-outline-variant bg-[#f9f9f9] text-xs font-semibold focus:outline-none focus:border-neutral-900 input-focus-ring"
+                className="flex-1 h-11 px-md rounded-xl border border-outline-variant bg-background text-xs font-semibold focus:outline-none focus:border-neutral-900 input-focus-ring"
               />
               <button
                 type="submit"

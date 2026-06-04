@@ -7,19 +7,13 @@ export const metadata: Metadata = {
   description: "Create new luxury items utilizing AI-assisted automated attribute indexing.",
 };
 
-export default function CreateProductPage() {
-  return (
-    <React.Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><LoaderPlaceholder /></div>}>
-      <CreateProductWizardClient />
-    </React.Suspense>
-  );
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-function LoaderPlaceholder() {
-  return (
-    <div className="flex flex-col items-center gap-md select-none">
-      <div className="w-10 h-10 border-4 border-[#ffdada] border-t-[#ba0036] rounded-full animate-spin" />
-      <p className="text-xs font-bold text-secondary uppercase tracking-widest">Initializing Wizard...</p>
-    </div>
-  );
+export default async function CreateProductPage(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const editId = typeof searchParams.edit === "string" ? searchParams.edit : undefined;
+
+  return <CreateProductWizardClient editId={editId} />;
 }

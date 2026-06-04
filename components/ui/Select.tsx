@@ -26,25 +26,25 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
           id={id}
           ref={ref}
           className={cn(
-            "flex h-10 w-full items-center justify-between bg-white px-3 py-2 text-sm text-[#1a1c1c] transition-colors duration-200 outline-none disabled:cursor-not-allowed disabled:opacity-50",
+            "flex h-10 w-full items-center justify-between bg-white px-3 py-2 text-sm text-on-surface transition-colors duration-200 outline-none disabled:cursor-not-allowed disabled:opacity-50",
             // Spec from DESIGN.md:
-            // 1px Cloud Gray (#EBEBEB) border, transitioning to Mine Shaft Charcoal (#222222) on focus.
+            // 1px Cloud Gray border, transitioning to Mine Shaft Charcoal on focus.
             // 12px rounded corners (rounded-xl).
-            "border border-[#ebebeb] focus:border-[#222222] data-[state=open]:border-[#222222] rounded-xl",
+            "border border-border-light focus:border-charcoal data-[state=open]:border-charcoal rounded-xl",
             className
           )}
           {...props}
         >
           <SelectPrimitive.Value placeholder={placeholder} />
           <SelectPrimitive.Icon asChild>
-            <ChevronDown className="h-4 w-4 text-[#5f5e5e] opacity-50" />
+            <ChevronDown className="h-4 w-4 text-secondary opacity-50" />
           </SelectPrimitive.Icon>
         </SelectPrimitive.Trigger>
         
         <SelectPrimitive.Portal>
           <SelectPrimitive.Content
             className={cn(
-              "relative z-50 min-w-[8rem] overflow-hidden bg-white text-[#1a1c1c] shadow-[0px_12px_28px_rgba(0,0,0,0.15)] rounded-xl border border-[#ebebeb]",
+              "relative z-50 min-w-[8rem] overflow-hidden bg-white text-on-surface shadow-[0px_12px_28px_rgba(0,0,0,0.15)] rounded-xl border border-border-light",
               "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
             )}
             position="popper"
@@ -56,13 +56,13 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
                   key={option.value}
                   value={option.value}
                   className={cn(
-                    "relative flex w-full cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2 text-sm outline-none transition-colors duration-150 text-[#1a1c1c]",
-                    "focus:bg-[#eeeeee] focus:text-[#1a1c1c] data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                    "relative flex w-full cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2 text-sm outline-none transition-colors duration-150 text-on-surface",
+                    "focus:bg-surface-container focus:text-on-surface data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                   )}
                 >
                   <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                    <SelectPrimitive.ItemIndicator>
-                      <Check className="h-4 w-4 text-[#ff385c]" />
+                     <SelectPrimitive.ItemIndicator>
+                      <Check className="h-4 w-4 text-brand" />
                     </SelectPrimitive.ItemIndicator>
                   </span>
                   <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>

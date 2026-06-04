@@ -22,10 +22,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           "rounded-xl select-none",
           
           // Variants from DESIGN.md
-          variant === "primary" && "bg-[#ff385c] text-white hover:bg-[#e02d4f] hover:shadow-[0_6px_16px_rgba(0,0,0,0.12)] focus-visible:ring-[#ff385c]",
-          variant === "secondary" && "bg-white text-[#222222] border border-[#222222] hover:bg-[#f9f9f9] hover:shadow-[0_6px_16px_rgba(0,0,0,0.12)] focus-visible:ring-[#222222]",
-          variant === "destructive" && "bg-[#ba1a1a] text-white hover:bg-[#93000a] hover:shadow-[0_6px_16px_rgba(0,0,0,0.12)] focus-visible:ring-[#ba1a1a]",
-          variant === "ghost" && "text-[#222222] hover:bg-[#eeeeee] focus-visible:ring-[#222222]",
+          variant === "primary" && "bg-brand text-white hover:bg-brand-hover hover:shadow-[0_6px_16px_rgba(0,0,0,0.12)] focus-visible:ring-brand",
+          variant === "secondary" && "bg-white text-charcoal border border-charcoal hover:bg-background hover:shadow-[0_6px_16px_rgba(0,0,0,0.12)] focus-visible:ring-charcoal",
+          variant === "destructive" && "bg-error text-white hover:bg-on-error-container hover:shadow-[0_6px_16px_rgba(0,0,0,0.12)] focus-visible:ring-error",
+          variant === "ghost" && "text-charcoal hover:bg-surface-container focus-visible:ring-charcoal",
           
           // Sizes
           size === "sm" && "px-3 py-1.5 text-xs",

@@ -152,7 +152,7 @@ export function CollectionClient() {
                   type="checkbox"
                   checked={priceRanges.includes("0-100")}
                   onChange={() => handlePriceChange("0-100")}
-                  className="rounded border-outline-variant text-[#ff385c] focus:ring-[#ff385c] h-4 w-4 cursor-pointer"
+                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
                 <span className="text-body-md">$0 - $100</span>
               </label>
@@ -161,7 +161,7 @@ export function CollectionClient() {
                   type="checkbox"
                   checked={priceRanges.includes("100-250")}
                   onChange={() => handlePriceChange("100-250")}
-                  className="rounded border-outline-variant text-[#ff385c] focus:ring-[#ff385c] h-4 w-4 cursor-pointer"
+                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
                 <span className="text-body-md">$100 - $250</span>
               </label>
@@ -170,7 +170,7 @@ export function CollectionClient() {
                   type="checkbox"
                   checked={priceRanges.includes("250+")}
                   onChange={() => handlePriceChange("250+")}
-                  className="rounded border-outline-variant text-[#ff385c] focus:ring-[#ff385c] h-4 w-4 cursor-pointer"
+                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
                 <span className="text-body-md">$250+</span>
               </label>
@@ -221,7 +221,7 @@ export function CollectionClient() {
                   type="checkbox"
                   checked={selectedMaterials.includes("linen")}
                   onChange={() => handleMaterialChange("linen")}
-                  className="rounded border-outline-variant text-[#ff385c] focus:ring-[#ff385c] h-4 w-4 cursor-pointer"
+                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
                 <span className="text-body-md">Linen</span>
               </label>
@@ -230,7 +230,7 @@ export function CollectionClient() {
                   type="checkbox"
                   checked={selectedMaterials.includes("cashmere")}
                   onChange={() => handleMaterialChange("cashmere")}
-                  className="rounded border-outline-variant text-[#ff385c] focus:ring-[#ff385c] h-4 w-4 cursor-pointer"
+                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
                 <span className="text-body-md">Cashmere</span>
               </label>
@@ -239,7 +239,7 @@ export function CollectionClient() {
                   type="checkbox"
                   checked={selectedMaterials.includes("cotton")}
                   onChange={() => handleMaterialChange("cotton")}
-                  className="rounded border-outline-variant text-[#ff385c] focus:ring-[#ff385c] h-4 w-4 cursor-pointer"
+                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
                 <span className="text-body-md">Cotton</span>
               </label>
@@ -255,7 +255,7 @@ export function CollectionClient() {
                   type="checkbox"
                   checked={selectedOccasions.includes("Formal")}
                   onChange={() => handleOccasionChange("Formal")}
-                  className="rounded border-outline-variant text-[#ff385c] focus:ring-[#ff385c] h-4 w-4 cursor-pointer"
+                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
                 <span className="text-body-md">Formal</span>
               </label>
@@ -264,7 +264,7 @@ export function CollectionClient() {
                   type="checkbox"
                   checked={selectedOccasions.includes("Casual")}
                   onChange={() => handleOccasionChange("Casual")}
-                  className="rounded border-outline-variant text-[#ff385c] focus:ring-[#ff385c] h-4 w-4 cursor-pointer"
+                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
                 <span className="text-body-md">Casual</span>
               </label>
@@ -273,7 +273,7 @@ export function CollectionClient() {
                   type="checkbox"
                   checked={selectedOccasions.includes("Workwear")}
                   onChange={() => handleOccasionChange("Workwear")}
-                  className="rounded border-outline-variant text-[#ff385c] focus:ring-[#ff385c] h-4 w-4 cursor-pointer"
+                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
                 <span className="text-body-md">Workwear</span>
               </label>
@@ -335,8 +335,8 @@ export function CollectionClient() {
                   <Heart
                     className={`h-5 w-5 transition-colors ${
                       wishlist.includes(product.id)
-                        ? "text-[#ff385c] fill-[#ff385c]"
-                        : "text-on-surface group-hover/heart:text-[#ff385c]"
+                        ? "text-brand fill-brand"
+                        : "text-on-surface group-hover/heart:text-brand"
                     }`}
                   />
                 </button>
@@ -363,7 +363,7 @@ export function CollectionClient() {
             </span>
           </div>
           <div className="w-12 h-1 bg-surface-container-high rounded-full overflow-hidden">
-            <div className="h-full bg-[#ff385c]/30 w-1/3 animate-[loading_1.5s_ease-in-out_infinite]"></div>
+            <div className="h-full bg-brand/30 w-1/3 animate-[loading_1.5s_ease-in-out_infinite]"></div>
           </div>
         </div>
       </div>
@@ -373,7 +373,7 @@ export function CollectionClient() {
         <div className="fixed inset-0 z-[100] flex justify-end">
           {/* Blur backdrop overlay */}
           <div
-            className={`absolute inset-0 bg-[#1a1c1c]/40 backdrop-blur-sm transition-opacity duration-300 ${
+            className={`absolute inset-0 bg-on-surface/40 backdrop-blur-sm transition-opacity duration-300 ${
               isAnimatingIn ? "opacity-100" : "opacity-0"
             }`}
             onClick={closeDetailView}
@@ -414,7 +414,7 @@ export function CollectionClient() {
                 <h1 className="text-3xl lg:text-[40px] font-bold text-on-surface mb-sm leading-tight tracking-tight select-none">
                   {selectedProduct.title}
                 </h1>
-                <p className="text-2xl font-bold text-[#ff385c] mb-xl select-none">
+                <p className="text-2xl font-bold text-brand mb-xl select-none">
                   ${selectedProduct.price}
                 </p>
 
@@ -457,9 +457,9 @@ export function CollectionClient() {
 
                   <button
                     onClick={handleAskStylist}
-                    className="w-full py-lg bg-[#ffdada] text-[#ba0036] rounded-xl font-label-md text-label-md hover:shadow-md transition-all flex items-center justify-center gap-sm border-2 border-[#ffb2b6]/40 cursor-pointer font-bold active:scale-[0.98]"
+                    className="w-full py-lg bg-primary-fixed text-primary rounded-xl font-label-md text-label-md hover:shadow-md transition-all flex items-center justify-center gap-sm border-2 border-primary-fixed-dim/40 cursor-pointer font-bold active:scale-[0.98]"
                   >
-                    <Sparkles className="h-5 w-5 fill-[#ba0036]/20 text-[#ba0036]" />
+                    <Sparkles className="h-5 w-5 fill-primary/20 text-primary" />
                     Ask Stylist about this item
                   </button>
                 </div>
@@ -472,19 +472,19 @@ export function CollectionClient() {
                     onClick={() => alert("100% sustainably sourced. Wash with similar colors.")}
                     className="flex justify-between items-center cursor-pointer group py-2"
                   >
-                    <span className="text-label-md font-label-md font-bold text-sm text-neutral-800 group-hover:text-[#ff385c] transition-colors">
+                    <span className="text-label-md font-label-md font-bold text-sm text-neutral-800 group-hover:text-brand transition-colors">
                       Material & Care
                     </span>
-                    <ChevronDown className="h-5 w-5 text-secondary group-hover:text-[#ff385c] transition-colors" />
+                    <ChevronDown className="h-5 w-5 text-secondary group-hover:text-brand transition-colors" />
                   </div>
                   <div
                     onClick={() => alert("Free global courier shipping and 30-day hassle-free returns.")}
                     className="flex justify-between items-center cursor-pointer group py-2"
                   >
-                    <span className="text-label-md font-label-md font-bold text-sm text-neutral-800 group-hover:text-[#ff385c] transition-colors">
+                    <span className="text-label-md font-label-md font-bold text-sm text-neutral-800 group-hover:text-brand transition-colors">
                       Shipping & Returns
                     </span>
-                    <ChevronDown className="h-5 w-5 text-secondary group-hover:text-[#ff385c] transition-colors" />
+                    <ChevronDown className="h-5 w-5 text-secondary group-hover:text-brand transition-colors" />
                   </div>
                 </div>
               </div>

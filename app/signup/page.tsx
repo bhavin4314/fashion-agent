@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { SignUpForm } from "./_components/SignUpForm";
 
 export const metadata: Metadata = {
@@ -42,12 +43,12 @@ export default function SignUpPage() {
             {/* Redirect Footer Link */}
             <p className="mt-xl font-body-md text-body-md text-center text-secondary select-none">
               Already have an account?{" "}
-              <a
+              <Link
                 className="text-on-surface font-bold hover:underline transition-colors duration-150"
                 href="/login"
               >
                 Log in
-              </a>
+              </Link>
             </p>
           </div>
 

@@ -19,11 +19,11 @@ export function Stepper({ currentStep, onStepClick }: StepperProps) {
     <div className="w-full max-w-3xl mb-xl mt-md flex flex-col items-center select-none">
       <div className="flex items-center w-full relative">
         {/* Continuous background progress line connecting steps */}
-        <div className="absolute top-5 left-0 w-full h-[2px] bg-[#e2dfde] z-0" />
+        <div className="absolute top-5 left-0 w-full h-[2px] bg-secondary-container z-0" />
         
         {/* Dynamic active progress fill */}
         <div 
-          className="absolute top-5 left-0 h-[2px] bg-[#ba0036] transition-all duration-500 ease-in-out z-0" 
+          className="absolute top-5 left-0 h-[2px] bg-primary transition-all duration-500 ease-in-out z-0" 
           style={{ 
             width: currentStep === 1 ? "16.6%" : currentStep === 2 ? "50%" : "100%" 
           }}
@@ -42,10 +42,10 @@ export function Stepper({ currentStep, onStepClick }: StepperProps) {
                 disabled={isPending}
                 className={`w-10 h-10 rounded-full flex items-center justify-center mb-sm font-bold text-xs border-2 transition-all duration-300 ${
                   isActive
-                    ? "bg-white border-[#ba0036] text-[#ba0036] shadow-sm scale-110 font-extrabold ring-4 ring-[#ba0036]/10"
+                    ? "bg-white border-primary text-primary shadow-sm scale-110 font-extrabold ring-4 ring-primary/10"
                     : isCompleted
-                    ? "bg-[#ba0036] border-[#ba0036] text-white shadow-xs"
-                    : "bg-white border-[#e2dfde] text-[#5f5e5e] cursor-not-allowed hover:bg-stone-50"
+                    ? "bg-primary border-primary text-white shadow-xs"
+                    : "bg-white border-secondary-container text-secondary cursor-not-allowed hover:bg-stone-50"
                 }`}
               >
                 {isCompleted ? (
@@ -57,10 +57,10 @@ export function Stepper({ currentStep, onStepClick }: StepperProps) {
               <span 
                 className={`text-[10px] font-extrabold uppercase tracking-widest transition-all duration-300 ${
                   isActive 
-                    ? "text-[#ba0036] font-extrabold" 
+                    ? "text-primary font-extrabold" 
                     : isCompleted
-                    ? "text-[#1a1c1c] font-bold"
-                    : "text-[#5f5e5e]"
+                    ? "text-on-surface font-bold"
+                    : "text-secondary"
                 }`}
               >
                 {step.label}

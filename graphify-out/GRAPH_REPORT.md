@@ -1,16 +1,16 @@
-# Graph Report - fashion-agent  (2026-06-03)
+# Graph Report - fashion-agent  (2026-06-04)
 
 ## Corpus Check
-- 66 files · ~170,936 words
+- 67 files · ~220,148 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 341 nodes · 500 edges · 36 communities (29 shown, 7 thin omitted)
+- 347 nodes · 513 edges · 33 communities (27 shown, 6 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.95)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0c5ae760`
+- Built from commit: `ac981bbb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -33,7 +33,6 @@
 - [[_COMMUNITY_Community 15|Community 15]]
 - [[_COMMUNITY_Community 16|Community 16]]
 - [[_COMMUNITY_Community 17|Community 17]]
-- [[_COMMUNITY_Community 18|Community 18]]
 - [[_COMMUNITY_Community 19|Community 19]]
 - [[_COMMUNITY_Community 20|Community 20]]
 - [[_COMMUNITY_Community 21|Community 21]]
@@ -47,9 +46,7 @@
 - [[_COMMUNITY_Community 30|Community 30]]
 - [[_COMMUNITY_Community 31|Community 31]]
 - [[_COMMUNITY_Community 32|Community 32]]
-- [[_COMMUNITY_Community 33|Community 33]]
 - [[_COMMUNITY_Community 34|Community 34]]
-- [[_COMMUNITY_Community 35|Community 35]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 30 edges
@@ -60,8 +57,8 @@
 6. `4.4 Form Component Family — The Complete Primitives` - 8 edges
 7. `Design System: Vistra Fashion Concierge` - 8 edges
 8. `Button` - 7 edges
-9. `LoginForm()` - 6 edges
-10. `Form()` - 6 edges
+9. `ProductWizardFormValues` - 6 edges
+10. `LoginForm()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `LoginForm()` --implements--> `Form System Architecture Stack`  [INFERRED]
@@ -82,11 +79,11 @@
 - **Vistra Design Tokens** — design_radical_coral, design_tonal_layers, design_rounded_corners [EXTRACTED 1.00]
 - **AI Agent Architecture Rules** — agents_typescript_strict, agents_form_stack, agents_rsc_default [EXTRACTED 1.00]
 
-## Communities (36 total, 7 thin omitted)
+## Communities (33 total, 6 thin omitted)
 
 ### Community 0 - "Form Components and UI Primitives"
-Cohesion: 0.09
-Nodes (42): Form System Architecture Stack, defaultValues, LoginFormValues, loginSchema, Form(), FormProps, FormCheckbox(), FormCheckboxProps (+34 more)
+Cohesion: 0.08
+Nodes (45): Antigravity Codebase Rules, Form System Architecture Stack, RSC-First Component Rules, Strict TypeScript Standards, Claude Agent References, defaultValues, LoginFormValues, loginSchema (+37 more)
 
 ### Community 1 - "Package Configuration & Project Dependencies"
 Cohesion: 0.33
@@ -109,8 +106,8 @@ Cohesion: 0.29
 Nodes (6): 11. Naming Conventions, 15. Forbidden Patterns, 2.1 Placement Rules, 2. Project & Folder Structure, Antigravity — AI Agent Codebase Rules, Table of Contents
 
 ### Community 6 - "Development Tools and Environments"
-Cohesion: 0.11
-Nodes (17): devDependencies, eslint, eslint-config-next, tailwindcss, @tailwindcss/postcss, @types/node, @types/react, @types/react-dom (+9 more)
+Cohesion: 0.06
+Nodes (34): dependencies, clsx, @hookform/resolvers, lucide-react, next, postcss, @radix-ui/react-checkbox, @radix-ui/react-dialog (+26 more)
 
 ### Community 7 - "Multi-line Text Inputs"
 Cohesion: 0.13
@@ -121,8 +118,8 @@ Cohesion: 0.33
 Nodes (4): geistMono, geistSans, inter, metadata
 
 ### Community 9 - "Standard Home Page Segment"
-Cohesion: 0.09
-Nodes (19): metadata, metadata, CollectionClient(), Product, PRODUCTS, Navbar(), NavbarProps, ProductDetailClient() (+11 more)
+Cohesion: 0.08
+Nodes (22): metadata, metadata, CollectionClient(), Product, PRODUCTS, Navbar(), NavbarProps, ProductDetailClient() (+14 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.22
@@ -133,8 +130,8 @@ Cohesion: 0.33
 Nodes (6): 6.1 Design Tokens First, 6.2 Class Ordering, 6.3 Conditional Classes, 6.4 No `@apply` Abuse, 6.5 Responsive Design, 6. Styling & Tailwind CSS
 
 ### Community 16 - "Community 16"
-Cohesion: 0.16
-Nodes (11): CreateProductWizardClient(), Step1Media(), Step1MediaProps, Step2Garment(), Step3Metadata(), Step3MetadataProps, Stepper(), StepperProps (+3 more)
+Cohesion: 0.12
+Nodes (16): CreateProductWizardClient(), CreateProductWizardClientProps, WizardContentProps, Step1Media(), Step1MediaProps, Step2Garment(), Step2GarmentProps, Step3Metadata() (+8 more)
 
 ### Community 17 - "Community 17"
 Cohesion: 0.33
@@ -145,8 +142,8 @@ Cohesion: 0.50
 Nodes (3): Deploy on Vercel, Getting Started, Learn More
 
 ### Community 23 - "Community 23"
-Cohesion: 0.15
-Nodes (12): defaultValues, SignUpForm(), SignUpFormValues, signUpSchema, loginAction(), LoginFormValues, loginSchema, signUpAction() (+4 more)
+Cohesion: 0.13
+Nodes (12): metadata, AdminLogoutButton(), SidebarNav(), defaultValues, SignUpForm(), SignUpFormValues, signUpSchema, signUpAction() (+4 more)
 
 ### Community 24 - "Community 24"
 Cohesion: 0.22
@@ -184,37 +181,29 @@ Nodes (4): 14.1 Baseline Requirements, 14.2 ARIA Rules, 14.3 Form Accessibility,
 Cohesion: 0.67
 Nodes (3): 9.1 State Hierarchy, 9.2 Context Rules, 9. State Management
 
-### Community 33 - "Community 33"
-Cohesion: 0.12
-Nodes (17): dependencies, clsx, @hookform/resolvers, lucide-react, next, postcss, @radix-ui/react-checkbox, @radix-ui/react-dialog (+9 more)
-
 ### Community 34 - "Community 34"
 Cohesion: 0.60
 Nodes (3): config, middleware(), updateSession()
 
-### Community 35 - "Community 35"
-Cohesion: 0.50
-Nodes (4): Antigravity Codebase Rules, RSC-First Component Rules, Strict TypeScript Standards, Claude Agent References
-
 ## Knowledge Gaps
-- **173 isolated node(s):** `NavbarProps`, `ActivityItem`, `FeaturedItem`, `RECENT_ACTIVITIES`, `FEATURED_ITEMS` (+168 more)
+- **177 isolated node(s):** `NavbarProps`, `ActivityItem`, `FeaturedItem`, `RECENT_ACTIVITIES`, `FEATURED_ITEMS` (+172 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Antigravity — AI Agent Codebase Rules` connect `AI Agent Architectural Guidelines and Form Conventions` to `Community 32`, `Interactive Form Selectors and Layouts`, `Multi-line Text Inputs`, `Community 15`, `Community 17`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`?**
-  _High betweenness centrality (0.046) - this node is a cross-community bridge._
-- **Why does `cn()` connect `Form Components and UI Primitives` to `Community 23`?**
-  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+- **Why does `cn()` connect `Form Components and UI Primitives` to `Community 16`, `Community 23`?**
+  _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Why does `Form()` connect `Form Components and UI Primitives` to `Community 16`, `Community 23`?**
-  _High betweenness centrality (0.017) - this node is a cross-community bridge._
+  _High betweenness centrality (0.019) - this node is a cross-community bridge._
 - **What connects `NavbarProps`, `ActivityItem`, `FeaturedItem` to the rest of the system?**
-  _174 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _178 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Form Components and UI Primitives` be split into smaller, more focused modules?**
-  _Cohesion score 0.08602150537634409 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07884615384615384 - nodes in this community are weakly interconnected._
 - **Should `TypeScript Compiler Settings` be split into smaller, more focused modules?**
   _Cohesion score 0.1 - nodes in this community are weakly interconnected._
 - **Should `Development Tools and Environments` be split into smaller, more focused modules?**
-  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05714285714285714 - nodes in this community are weakly interconnected._

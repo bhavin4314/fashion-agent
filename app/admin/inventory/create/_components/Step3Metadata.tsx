@@ -37,13 +37,33 @@ export function Step3Metadata({
   const title = watch("title") || "";
   const price = watch("price");
   const stock = watch("stock");
-  const gender = watch("gender");
-  const season = watch("season");
+  const category = watch("category") || "Apparel";
+  const gender = watch("gender") || "Unisex";
+  const season = watch("season") || "Summer";
   const sizes = watch("sizes") || [];
-  const aesthetic = watch("aesthetic") || "";
-  const occasion = watch("occasion") || "";
+  const aesthetics = watch("aesthetics") || [];
+  const occasions = watch("occasions") || [];
   const materials = watch("materials") || [];
-  const fit = watch("fit");
+
+  // Helper for toggling values in a multi-select field
+  const toggleMultiSelect = (field: "aesthetics" | "occasions", value: string) => {
+    const current = watch(field) || [];
+    if (current.includes(value)) {
+      setValue(field, current.filter((v) => v !== value), { shouldValidate: true });
+    } else {
+      setValue(field, [...current, value], { shouldValidate: true });
+    }
+  };
+
+  // Sizing definitions based on Category
+  const apparelSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+  const footwearSizes = ["7", "8", "9", "10", "11"];
+  const availableSizes = category === "Apparel" ? apparelSizes : footwearSizes;
+
+  // Preset default tags for chips
+  const defaultAesthetics = ["Quiet Luxury", "Minimalist", "Old Money", "Casual", "Vintage", "Avant-Garde"];
+  const defaultOccasions = ["Evening Lounge", "Gala Night", "Resort Casual", "Everyday", "Office", "Travel"];
+  const presetMaterials = ["Cashmere", "Suede", "Silk", "Leather", "Cotton", "Wool", "Linen"];
 
   return (
     <div className="grid grid-cols-12 gap-lg animate-in fade-in duration-300">
@@ -51,93 +71,66 @@ export function Step3Metadata({
       {/* Bento Classifications Columns */}
       <div className="col-span-12 md:col-span-8 space-y-lg">
         
-        {/* Section: Core Attributes */}
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white">
-          <h3 className="font-label-md text-[#5c5c5c] mb-md flex items-center gap-sm">
-            <span className="material-symbols-outlined text-[20px]">category</span>
-            Classification &amp; Seasonality
+        {/* Section: Seasonality */}
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white shadow-xs">
+          <h3 className="font-label-md text-tertiary mb-md flex items-center gap-sm font-bold text-sm">
+            <span className="material-symbols-outlined text-[20px] text-primary">wb_sunny</span>
+            Seasonality Selection
           </h3>
           
-          <div className="space-y-xl">
-            {/* Gender */}
-            <div>
-              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-xs">Target Gender</label>
-              <div className="flex flex-wrap gap-sm">
-                {(["Men", "Women", "Unisex"] as const).map((g) => {
-                  const isActive = gender === g;
-                  return (
-                    <button
-                      key={g}
-                      type="button"
-                      onClick={() => setValue("gender", g, { shouldValidate: true })}
-                      className={
-                        isActive
-                          ? "px-lg py-base rounded-lg bg-primary text-on-primary shadow-md font-bold font-label-md transition-all cursor-pointer border-none"
-                          : "px-lg py-base rounded-lg border border-outline-variant hover:bg-surface-container transition-all font-label-md text-charcoal cursor-pointer"
-                      }
-                    >
-                      {g}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Season */}
-            <div>
-              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-xs">Season</label>
-              <div className="flex flex-wrap gap-sm">
-                {(["Summer", "Autumn", "Winter", "Spring"] as const).map((s) => {
-                  const isActive = season === s;
-                  return (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => setValue("season", s, { shouldValidate: true })}
-                      className={
-                        isActive
-                          ? "px-lg py-base rounded-lg bg-primary text-on-primary shadow-md font-bold font-label-md transition-all cursor-pointer border-none"
-                          : "px-lg py-base rounded-lg border border-outline-variant hover:bg-surface-container transition-all font-label-md text-charcoal cursor-pointer"
-                      }
-                    >
-                      {s}
-                    </button>
-                  );
-                })}
-              </div>
+          <div>
+            <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Season (Single Choice)</label>
+            <div className="flex flex-wrap gap-sm">
+              {(["Summer", "Autumn", "Winter", "Spring"] as const).map((s) => {
+                const isActive = season === s;
+                return (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setValue("season", s, { shouldValidate: true })}
+                    className={`px-lg py-2.5 rounded-xl transition-all font-semibold text-xs border cursor-pointer ${
+                      isActive
+                        ? "bg-primary text-white border-transparent shadow-sm scale-[1.02]"
+                        : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        {/* Sizing grid bento container */}
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white">
+        {/* Dynamic Size Selection bento container */}
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white shadow-xs">
           <div className="flex justify-between items-center mb-md">
-            <h3 className="font-label-md text-[#5c5c5c] flex items-center gap-sm">
-              <span className="material-symbols-outlined text-[20px]">straighten</span>
+            <h3 className="font-label-md text-tertiary flex items-center gap-sm font-bold text-sm">
+              <span className="material-symbols-outlined text-[20px] text-primary">straighten</span>
               Size Selection
             </h3>
-            <div className="flex items-center gap-xs px-sm py-[2px] bg-[#ffdada] text-[#ba0036] rounded-full text-[10px] font-bold uppercase">
-              <span className="material-symbols-outlined text-[14px]">auto_awesome</span>
-              AI Generated
-            </div>
+            <span className="text-[10px] font-bold text-primary uppercase bg-primary-fixed px-sm py-[2px] rounded-full flex items-center gap-xs">
+              <span className="material-symbols-outlined text-[13px]">tune</span>
+              Filtered for {category}
+            </span>
           </div>
           
           <div className="space-y-xl">
             <div>
-              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-xs">Footwear Sizing (EU)</label>
+              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Available sizes (Multi-select)</label>
               <div className="flex flex-wrap gap-sm">
-                {["38", "39", "40", "41", "42", "43", "44", "45"].map((sz) => {
+                {availableSizes.map((sz) => {
                   const isActive = sizes.includes(sz);
                   return (
                     <button
                       key={sz}
                       type="button"
                       onClick={() => toggleSize(sz)}
-                      className={
+                      className={`px-lg py-2.5 min-w-[50px] rounded-xl transition-all font-semibold text-xs border cursor-pointer ${
                         isActive
-                          ? "px-lg py-base rounded-lg bg-primary text-on-primary shadow-md font-bold font-label-md transition-all cursor-pointer border-none"
-                          : "px-lg py-base rounded-lg border border-outline-variant hover:bg-surface-container transition-all font-label-md text-charcoal cursor-pointer"
-                      }
+                          ? "bg-primary text-white border-transparent shadow-sm scale-[1.02]"
+                          : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
+                      }`}
                     >
                       {sz}
                     </button>
@@ -151,77 +144,82 @@ export function Step3Metadata({
           )}
         </div>
 
-        {/* Section: Style & Occasion */}
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white">
-          <h3 className="font-label-md text-[#5c5c5c] mb-md flex items-center gap-sm">
-            <span className="material-symbols-outlined text-[20px]">auto_awesome</span>
-            AI Style Inference
-          </h3>
-          
-          <div className="space-y-xl">
-            {/* Style */}
-            <div>
-              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-xs">Aesthetic</label>
-              <div className="flex flex-wrap gap-sm">
-                {["Minimal", "Quiet Luxury", "Casual"].map((ae) => {
-                  const isActive = aesthetic === ae;
-                  return (
-                    <button
-                      key={ae}
-                      type="button"
-                      onClick={() => setValue("aesthetic", ae, { shouldValidate: true })}
-                      className={
-                        isActive
-                          ? "px-lg py-base rounded-lg bg-primary text-on-primary shadow-md font-bold font-label-md transition-all cursor-pointer border-none"
-                          : "px-lg py-base rounded-lg border border-outline-variant hover:bg-surface-container transition-all font-label-md text-charcoal cursor-pointer"
-                      }
-                    >
-                      {ae}
-                    </button>
-                  );
-                })}
-              </div>
+        {/* Section: Aesthetics & Occasions */}
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white shadow-xs space-y-xl">
+          <div>
+            <h3 className="font-label-md text-tertiary mb-md flex items-center gap-sm font-bold text-sm">
+              <span className="material-symbols-outlined text-[20px] text-primary">palette</span>
+              Stylist Aesthetics
+            </h3>
+            <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Aesthetics Selection (Multi-select)</label>
+            <div className="flex flex-wrap gap-sm">
+              {defaultAesthetics.map((ae) => {
+                const isActive = aesthetics.includes(ae);
+                return (
+                  <button
+                    key={ae}
+                    type="button"
+                    onClick={() => toggleMultiSelect("aesthetics", ae)}
+                    className={`px-lg py-2.5 rounded-xl transition-all font-semibold text-xs border cursor-pointer ${
+                      isActive
+                        ? "bg-primary text-white border-transparent shadow-sm scale-[1.02]"
+                        : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
+                    }`}
+                  >
+                    {ae}
+                  </button>
+                );
+              })}
             </div>
+            {errors.aesthetics?.message && (
+              <p className="text-[10px] text-red-600 font-bold mt-2">{String(errors.aesthetics.message)}</p>
+            )}
+          </div>
 
-            {/* Occasion */}
-            <div>
-              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-xs">Occasion</label>
-              <div className="flex flex-wrap gap-sm">
-                {["Travel", "Office", "Everyday"].map((oc) => {
-                  const isActive = occasion === oc;
-                  return (
-                    <button
-                      key={oc}
-                      type="button"
-                      onClick={() => setValue("occasion", oc, { shouldValidate: true })}
-                      className={
-                        isActive
-                          ? "px-lg py-base rounded-lg bg-primary text-on-primary shadow-md font-bold font-label-md transition-all cursor-pointer border-none"
-                          : "px-lg py-base rounded-lg border border-outline-variant hover:bg-surface-container transition-all font-label-md text-charcoal cursor-pointer"
-                      }
-                    >
-                      {oc}
-                    </button>
-                  );
-                })}
-              </div>
+          <div className="border-t border-neutral-100 pt-xl">
+            <h3 className="font-label-md text-tertiary mb-md flex items-center gap-sm font-bold text-sm">
+              <span className="material-symbols-outlined text-[20px] text-primary">celebration</span>
+              Wear Occasions
+            </h3>
+            <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Occasions Selection (Multi-select)</label>
+            <div className="flex flex-wrap gap-sm">
+              {defaultOccasions.map((oc) => {
+                const isActive = occasions.includes(oc);
+                return (
+                  <button
+                    key={oc}
+                    type="button"
+                    onClick={() => toggleMultiSelect("occasions", oc)}
+                    className={`px-lg py-2.5 rounded-xl transition-all font-semibold text-xs border cursor-pointer ${
+                      isActive
+                        ? "bg-primary text-white border-transparent shadow-sm scale-[1.02]"
+                        : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
+                    }`}
+                  >
+                    {oc}
+                  </button>
+                );
+              })}
             </div>
+            {errors.occasions?.message && (
+              <p className="text-[10px] text-red-600 font-bold mt-2">{String(errors.occasions.message)}</p>
+            )}
           </div>
         </div>
 
-        {/* Section: Composition */}
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white">
+        {/* Section: Material Composition */}
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white shadow-xs">
           <div className="flex justify-between items-center mb-md">
-            <h3 className="font-label-md text-[#5c5c5c] flex items-center gap-sm">
-              <span className="material-symbols-outlined text-[20px]">texture</span>
-              Material &amp; Fit
+            <h3 className="font-label-md text-tertiary flex items-center gap-sm font-bold text-sm">
+              <span className="material-symbols-outlined text-[20px] text-primary">texture</span>
+              Materials Composition
             </h3>
             <button
               type="button"
               onClick={() => setShowAddMaterialInput(!showAddMaterialInput)}
-              className="text-primary font-label-md flex items-center gap-xs bg-transparent border-none cursor-pointer text-sm font-bold uppercase tracking-wider"
+              className="text-primary font-label-md flex items-center gap-xs bg-transparent border-none cursor-pointer text-xs font-bold uppercase tracking-wider hover:opacity-90"
             >
-              <span className="material-symbols-outlined text-[18px]">add</span> Add Material
+              <span className="material-symbols-outlined text-[18px]">add</span> Add Custom
             </button>
           </div>
           
@@ -233,7 +231,7 @@ export function Step3Metadata({
                   value={customMaterial}
                   onChange={(e) => setCustomMaterial(e.target.value)}
                   placeholder="Material name..."
-                  className="flex-grow px-sm py-1.5 border border-[#e2dfde] rounded-lg text-xs font-semibold focus:outline-none focus:border-[#ba0036] bg-white h-9"
+                  className="flex-grow px-sm py-1.5 border border-secondary-container rounded-lg text-xs font-semibold focus:outline-none focus:border-primary bg-white h-9"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
@@ -244,60 +242,54 @@ export function Step3Metadata({
                 <button
                   type="button"
                   onClick={handleAddNewMaterial}
-                  className="bg-[#ba0036] hover:bg-[#a0002e] text-white px-md py-1.5 rounded-lg text-xs font-bold border-none cursor-pointer h-9 transition-all active:scale-95"
+                  className="bg-primary hover:opacity-90 text-white px-md py-1.5 rounded-lg text-xs font-bold border-none cursor-pointer h-9 transition-all active:scale-95"
                 >
                   Add
                 </button>
               </div>
             )}
 
-            <div className="flex flex-wrap gap-sm">
-              {materials.map((m) => {
-                const isPrimaryTag = ["Suede", "Leather", "Cashmere"].includes(m);
-                return (
+            <div>
+              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Select materials (Multi-select)</label>
+              <div className="flex flex-wrap gap-sm">
+                {presetMaterials.map((m) => {
+                  const isActive = materials.includes(m);
+                  return (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => toggleMaterial(m)}
+                      className={`px-lg py-2 rounded-xl transition-all font-semibold text-xs border cursor-pointer ${
+                        isActive
+                          ? "bg-primary text-white border-transparent shadow-sm"
+                          : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  );
+                })}
+                {/* Dynamically added custom materials */}
+                {materials.filter(m => !presetMaterials.includes(m)).map((m) => (
                   <div 
                     key={m}
-                    className={
-                      isPrimaryTag
-                        ? "px-lg py-base rounded-lg bg-tertiary-container text-on-tertiary-container flex items-center gap-md font-label-md text-xs font-bold uppercase"
-                        : "px-lg py-base rounded-lg border border-outline-variant text-secondary flex items-center gap-md font-label-md text-xs font-bold uppercase"
-                    }
+                    className="px-lg py-2 rounded-xl border border-dashed border-primary text-primary bg-primary-fixed/25 flex items-center gap-sm font-semibold text-xs"
                   >
                     {m}
                     <span 
                       onClick={() => toggleMaterial(m)} 
-                      className="material-symbols-outlined text-[16px] cursor-pointer"
+                      className="material-symbols-outlined text-[16px] cursor-pointer hover:text-red-700"
                     >
                       close
                     </span>
                   </div>
-                );
-              })}
-            </div>
-            
-            <div>
-              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-xs">Fit</label>
-              <div className="flex gap-sm">
-                {(["Regular", "Slim"] as const).map((f) => {
-                  const isActive = fit === f;
-                  return (
-                    <button
-                      key={f}
-                      type="button"
-                      onClick={() => setValue("fit", f, { shouldValidate: true })}
-                      className={
-                        isActive
-                          ? "px-lg py-base rounded-lg bg-primary text-on-primary shadow-md font-bold font-label-md transition-all cursor-pointer border-none"
-                          : "px-lg py-base rounded-lg border border-outline-variant hover:bg-surface-container transition-all font-label-md text-charcoal cursor-pointer"
-                      }
-                    >
-                      {f}
-                    </button>
-                  );
-                })}
+                ))}
               </div>
             </div>
           </div>
+          {errors.materials?.message && (
+            <p className="text-[10px] text-red-600 font-bold mt-2">{String(errors.materials.message)}</p>
+          )}
         </div>
       </div>
 
@@ -315,46 +307,54 @@ export function Step3Metadata({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
             <div className="absolute bottom-md left-md right-md text-white">
-              <p className="font-label-sm opacity-80 mb-xs uppercase text-[10px] tracking-widest font-extrabold">Preview</p>
-              <h4 className="font-headline-md leading-tight truncate">{title || "Loro Summer Walk"}</h4>
+              <p className="font-label-sm opacity-80 mb-xs uppercase text-[10px] tracking-widest font-extrabold">Preview Catalog Profile</p>
+              <h4 className="font-headline-md leading-tight truncate font-bold">{title || "Loro Summer Walk"}</h4>
             </div>
           </div>
 
           <div className="p-lg space-y-md">
-            <div className="flex justify-between items-center py-sm border-b border-surface-container">
-              <span className="text-[#5c5c5c] font-label-md text-xs font-bold uppercase tracking-wider">Price</span>
+            
+            <div className="flex justify-between items-center py-sm border-b border-surface-container text-xs">
+              <span className="text-tertiary font-bold uppercase tracking-wider">Category</span>
+              <span className="font-bold text-primary">
+                {category}
+              </span>
+            </div>
+
+            <div className="flex justify-between items-center py-sm border-b border-surface-container text-xs">
+              <span className="text-tertiary font-bold uppercase tracking-wider">Price</span>
               <span className="font-bold text-on-surface">
                 ${price ? Number(price).toLocaleString("en-US", { minimumFractionDigits: 2 }) : "0.00"}
               </span>
             </div>
 
-            <div className="flex justify-between items-center py-sm border-b border-surface-container">
-              <span className="text-[#5c5c5c] font-label-md text-xs font-bold uppercase tracking-wider">Stock</span>
+            <div className="flex justify-between items-center py-sm border-b border-surface-container text-xs">
+              <span className="text-tertiary font-bold uppercase tracking-wider">Stock</span>
               <span className="font-bold text-on-surface">
                 {stock ? Number(stock) : 0} Units
               </span>
             </div>
 
             <div>
-              <span className="block text-[#5c5c5c] font-label-sm mb-sm uppercase text-[10px] tracking-widest font-extrabold">Selected Tags</span>
+              <span className="block text-tertiary font-label-sm mb-sm uppercase text-[10px] tracking-widest font-extrabold">Selected Tags</span>
               <div className="flex flex-wrap gap-xs">
                 {gender && (
-                  <span className="bg-surface-container px-sm py-[2px] rounded text-[11px] font-bold text-secondary uppercase">
+                  <span className="bg-neutral-100 px-sm py-[2px] rounded text-[10px] font-bold text-neutral-600 uppercase">
                     {gender}
                   </span>
                 )}
                 {season && (
-                  <span className="bg-surface-container px-sm py-[2px] rounded text-[11px] font-bold text-secondary uppercase">
+                  <span className="bg-neutral-100 px-sm py-[2px] rounded text-[10px] font-bold text-neutral-600 uppercase">
                     {season}
                   </span>
                 )}
-                {aesthetic && (
-                  <span className="bg-surface-container px-sm py-[2px] rounded text-[11px] font-bold text-secondary uppercase">
-                    {aesthetic}
+                {aesthetics.slice(0, 2).map((a) => (
+                  <span key={a} className="bg-neutral-100 px-sm py-[2px] rounded text-[10px] font-bold text-neutral-600 uppercase">
+                    {a}
                   </span>
-                )}
-                {materials.slice(0, 3).map((m) => (
-                  <span key={m} className="bg-surface-container px-sm py-[2px] rounded text-[11px] font-bold text-secondary uppercase">
+                ))}
+                {materials.slice(0, 2).map((m) => (
+                  <span key={m} className="bg-neutral-100 px-sm py-[2px] rounded text-[10px] font-bold text-neutral-600 uppercase">
                     {m}
                   </span>
                 ))}
@@ -364,7 +364,7 @@ export function Step3Metadata({
             <button
               type="button"
               onClick={handleFinalSubmitTrigger}
-              className="w-full bg-primary text-on-primary py-md px-lg rounded-xl font-bold font-label-md mt-lg transition-all active:scale-95 shadow-lg shadow-primary/20 flex items-center justify-center gap-md border-none cursor-pointer text-xs uppercase tracking-widest"
+              className="w-full bg-primary text-white hover:brightness-105 py-md px-lg rounded-xl font-bold mt-lg transition-all active:scale-95 shadow-md flex items-center justify-center gap-md border-none cursor-pointer text-xs uppercase tracking-widest"
             >
               <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
               {editId ? "Update Product" : "Create Product"}

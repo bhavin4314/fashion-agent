@@ -30,7 +30,7 @@ export function SearchPill() {
       </div>
       <button
         type="submit"
-        className="bg-[#ff385c] hover:bg-[#E31C5F] text-white p-4 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-md border-none cursor-pointer"
+        className="bg-brand hover:bg-brand-hover text-white p-4 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-md border-none cursor-pointer"
         aria-label="Search styles"
       >
         <Search className="h-5 w-5 text-white font-bold" />

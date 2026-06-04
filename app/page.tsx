@@ -41,8 +41,8 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-xl">
             {/* Feature 1 */}
             <div className="p-lg rounded-xl flex flex-col gap-md">
-              <div className="w-10 h-10 flex items-center justify-center bg-[#ff385c]/10 rounded-lg shrink-0">
-                <Camera className="h-6 w-6 text-[#ff385c]" />
+              <div className="w-10 h-10 flex items-center justify-center bg-brand/10 rounded-lg shrink-0">
+                <Camera className="h-6 w-6 text-brand" />
               </div>
               <div>
                 <h3 className="text-lg font-bold text-charcoal mb-2">
@@ -56,8 +56,8 @@ export default function Home() {
 
             {/* Feature 2 */}
             <div className="p-lg rounded-xl flex flex-col gap-md">
-              <div className="w-10 h-10 flex items-center justify-center bg-[#ff385c]/10 rounded-lg shrink-0">
-                <Sparkles className="h-6 w-6 text-[#ff385c]" />
+              <div className="w-10 h-10 flex items-center justify-center bg-brand/10 rounded-lg shrink-0">
+                <Sparkles className="h-6 w-6 text-brand" />
               </div>
               <div>
                 <h3 className="text-lg font-bold text-charcoal mb-2">
@@ -71,8 +71,8 @@ export default function Home() {
 
             {/* Feature 3 */}
             <div className="p-lg rounded-xl flex flex-col gap-md">
-              <div className="w-10 h-10 flex items-center justify-center bg-[#ff385c]/10 rounded-lg shrink-0">
-                <Ruler className="h-6 w-6 text-[#ff385c]" />
+              <div className="w-10 h-10 flex items-center justify-center bg-brand/10 rounded-lg shrink-0">
+                <Ruler className="h-6 w-6 text-brand" />
               </div>
               <div>
                 <h3 className="text-lg font-bold text-charcoal mb-2">

@@ -243,7 +243,7 @@
       "label": "WizardContentProps",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/_components/CreateProductWizardClient.tsx",
-      "source_location": "L62",
+      "source_location": "L63",
       "id": "components_createproductwizardclient_wizardcontentprops",
       "community": 16,
       "norm_label": "wizardcontentprops"
@@ -252,7 +252,7 @@
       "label": "WizardContent()",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/_components/CreateProductWizardClient.tsx",
-      "source_location": "L66",
+      "source_location": "L67",
       "id": "components_createproductwizardclient_wizardcontent",
       "community": 16,
       "norm_label": "wizardcontent()"
@@ -270,7 +270,7 @@
       "label": "Step1MediaProps",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/_components/Step1Media.tsx",
-      "source_location": "L8",
+      "source_location": "L9",
       "id": "components_step1media_step1mediaprops",
       "community": 16,
       "norm_label": "step1mediaprops"
@@ -290,23 +290,14 @@
       "source_file": "app/admin/inventory/create/_components/Step2Garment.tsx",
       "source_location": "L1",
       "id": "components_step2garment",
-      "community": 16,
+      "community": 0,
       "norm_label": "step2garment.tsx"
-    },
-    {
-      "label": "Step2GarmentProps",
-      "file_type": "code",
-      "source_file": "app/admin/inventory/create/_components/Step2Garment.tsx",
-      "source_location": "L9",
-      "id": "components_step2garment_step2garmentprops",
-      "community": 16,
-      "norm_label": "step2garmentprops"
     },
     {
       "label": "Step2Garment()",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/_components/Step2Garment.tsx",
-      "source_location": "L14",
+      "source_location": "L7",
       "id": "components_step2garment_step2garment",
       "community": 16,
       "norm_label": "step2garment()"
@@ -423,7 +414,7 @@
       "label": "ProductWizardFormValues",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/schema.ts",
-      "source_location": "L24",
+      "source_location": "L25",
       "id": "create_schema_productwizardformvalues",
       "community": 16,
       "norm_label": "productwizardformvalues"
@@ -614,7 +605,7 @@
       "source_file": "app/login/actions.ts",
       "source_location": "L1",
       "id": "login_actions",
-      "community": 9,
+      "community": 23,
       "norm_label": "actions.ts"
     },
     {
@@ -623,7 +614,7 @@
       "source_file": "app/login/actions.ts",
       "source_location": "L6",
       "id": "login_actions_loginaction",
-      "community": 9,
+      "community": 23,
       "norm_label": "loginaction()"
     },
     {
@@ -668,7 +659,7 @@
       "source_file": "app/login/schema.ts",
       "source_location": "L1",
       "id": "login_schema",
-      "community": 9,
+      "community": 23,
       "norm_label": "schema.ts"
     },
     {
@@ -677,7 +668,7 @@
       "source_file": "app/login/schema.ts",
       "source_location": "L3",
       "id": "login_schema_loginschema",
-      "community": 9,
+      "community": 23,
       "norm_label": "loginschema"
     },
     {
@@ -686,7 +677,7 @@
       "source_file": "app/login/schema.ts",
       "source_location": "L8",
       "id": "login_schema_loginformvalues",
-      "community": 9,
+      "community": 23,
       "norm_label": "loginformvalues"
     },
     {
@@ -785,7 +776,7 @@
       "source_file": "app/signup/_components/SignUpForm.tsx",
       "source_location": "L1",
       "id": "components_signupform",
-      "community": 23,
+      "community": 0,
       "norm_label": "signupform.tsx"
     },
     {
@@ -794,7 +785,7 @@
       "source_file": "app/signup/_components/SignUpForm.tsx",
       "source_location": "L13",
       "id": "components_signupform_defaultvalues",
-      "community": 23,
+      "community": 0,
       "norm_label": "defaultvalues"
     },
     {
@@ -803,7 +794,7 @@
       "source_file": "app/signup/_components/SignUpForm.tsx",
       "source_location": "L20",
       "id": "components_signupform_signupform",
-      "community": 23,
+      "community": 0,
       "norm_label": "signupform()"
     },
     {
@@ -830,7 +821,7 @@
       "source_file": "app/signup/page.tsx",
       "source_location": "L1",
       "id": "signup_page",
-      "community": 23,
+      "community": 33,
       "norm_label": "page.tsx"
     },
     {
@@ -839,7 +830,7 @@
       "source_file": "app/signup/page.tsx",
       "source_location": "L6",
       "id": "signup_page_metadata",
-      "community": 23,
+      "community": 33,
       "norm_label": "metadata"
     },
     {
@@ -848,7 +839,7 @@
       "source_file": "app/signup/page.tsx",
       "source_location": "L11",
       "id": "signup_page_signuppage",
-      "community": 23,
+      "community": 33,
       "norm_label": "signuppage()"
     },
     {
@@ -1044,9 +1035,9 @@
       "label": "FormInput()",
       "file_type": "code",
       "source_file": "components/forms/FormInput.tsx",
-      "source_location": "L22",
+      "source_location": "L19",
       "id": "forms_forminput_forminput",
-      "community": 16,
+      "community": 0,
       "norm_label": "forminput()"
     },
     {
@@ -2998,7 +2989,7 @@
       "file_type": "code",
       "source_file": "app/signup/_components/SignUpForm.tsx",
       "source_location": "L11",
-      "community": 23,
+      "community": 0,
       "norm_label": "signupschema",
       "id": "components_signupform_signupschema"
     },
@@ -3007,7 +2998,7 @@
       "file_type": "code",
       "source_file": "app/signup/_components/SignUpForm.tsx",
       "source_location": "L23",
-      "community": 23,
+      "community": 0,
       "norm_label": "signupformvalues",
       "id": "components_signupform_signupformvalues"
     },
@@ -3130,7 +3121,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 35,
       "norm_label": "antigravity codebase rules",
       "id": "agents_agents_rules"
     },
@@ -3143,7 +3134,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 35,
       "norm_label": "strict typescript standards",
       "id": "agents_typescript_strict"
     },
@@ -3169,7 +3160,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 35,
       "norm_label": "rsc-first component rules",
       "id": "agents_rsc_default"
     },
@@ -3195,7 +3186,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 35,
       "norm_label": "claude agent references",
       "id": "claude_claude"
     }
@@ -3874,38 +3865,6 @@
       "target": "components_step2garment_step2garment"
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "app/admin/inventory/create/_components/Step2Garment.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "source": "components_step2garment",
-      "target": "components_step2garment_step2garmentprops",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "app/admin/inventory/create/_components/Step2Garment.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "components_step2garment",
-      "target": "create_schema",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "app/admin/inventory/create/_components/Step2Garment.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "components_step2garment",
-      "target": "create_schema_productwizardformvalues",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -4118,9 +4077,9 @@
       "source_file": "app/admin/layout.tsx",
       "source_location": "L6",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "admin_layout",
-      "target": "supabase_server"
+      "target": "supabase_server",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -4129,9 +4088,9 @@
       "source_file": "app/admin/layout.tsx",
       "source_location": "L6",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "admin_layout",
-      "target": "supabase_server_createclient"
+      "target": "supabase_server_createclient",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",

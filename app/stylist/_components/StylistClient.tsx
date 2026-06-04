@@ -351,8 +351,8 @@ export function StylistClient() {
     <div className="flex flex-1 w-full h-full relative overflow-hidden select-none">
       
       {/* Left Sidebar: Chat History (320px) */}
-      <aside className="hidden lg:flex lg:w-[320px] bg-[#f4f3f3] border-r border-[#eeeeee] flex-col overflow-y-auto hide-scrollbar z-10 shrink-0">
-        <div className="p-lg border-b border-[#eeeeee]">
+      <aside className="hidden lg:flex lg:w-[320px] bg-surface-container-low border-r border-surface-container flex-col overflow-y-auto hide-scrollbar z-10 shrink-0">
+        <div className="p-lg border-b border-surface-container">
           <h2 className="text-headline-md font-headline-md text-charcoal select-none">Chat Sessions</h2>
         </div>
         <div className="flex flex-col">
@@ -362,12 +362,12 @@ export function StylistClient() {
               onClick={() => handleSessionChange(sess.id)}
               className={`flex flex-col gap-xs p-lg transition-all duration-200 text-left border-r-4 border-l-4 border-l-transparent cursor-pointer ${
                 activeSessionId === sess.id
-                  ? "bg-white border-r-[#ba0036] font-bold text-neutral-900"
+                  ? "bg-white border-r-primary font-bold text-neutral-900"
                   : "hover:bg-neutral-200/50 border-r-transparent text-secondary"
               }`}
             >
               <span className="text-sm font-semibold select-none">{sess.title}</span>
-              <span className="text-[10px] font-bold text-[#717171] tracking-wide uppercase select-none">{sess.time}</span>
+              <span className="text-[10px] font-bold text-muted tracking-wide uppercase select-none">{sess.time}</span>
             </button>
           ))}
         </div>
@@ -376,7 +376,7 @@ export function StylistClient() {
         <div className="mt-auto p-lg select-none">
           <button
             onClick={handleNewSession}
-            className="w-full flex items-center justify-center gap-sm py-3 border-2 border-dashed border-outline-variant hover:border-[#ff385c] rounded-xl text-xs font-bold text-charcoal hover:text-[#ff385c] bg-white transition-all cursor-pointer hover:shadow-sm active:scale-98"
+            className="w-full flex items-center justify-center gap-sm py-3 border-2 border-dashed border-outline-variant hover:border-brand rounded-xl text-xs font-bold text-charcoal hover:text-brand bg-white transition-all cursor-pointer hover:shadow-sm active:scale-98"
           >
             <Plus className="h-4 w-4" />
             New Styling Session
@@ -385,7 +385,7 @@ export function StylistClient() {
       </aside>
 
       {/* Right Column: Dynamic Interactive Stylist Chat Board */}
-      <section className="flex-1 flex flex-col bg-[#f9f9f9] relative h-full min-w-0">
+      <section className="flex-1 flex flex-col bg-background relative h-full min-w-0">
         
         {/* Chat Message Flow Stream */}
         <div
@@ -398,14 +398,14 @@ export function StylistClient() {
                 /* AI Message: Group avatar on the left, and a single vertical column on the right */
                 <div className="flex gap-md items-start w-full max-w-[85%] lg:max-w-[70%] mr-auto">
                   {/* AI Avatar */}
-                  <div className="w-8 h-8 rounded-full bg-[#ba0036] text-white flex items-center justify-center flex-shrink-0 mt-1 shadow-sm shadow-[#ba0036]/15 shrink-0 select-none">
+                  <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 mt-1 shadow-sm shadow-primary/15 shrink-0 select-none">
                     <Sparkles className="h-4 w-4 fill-white/10 text-white" />
                   </div>
 
                   {/* Right column containing text bubble, carousel, and size picker */}
                   <div className="flex flex-col gap-md w-full flex-1 min-w-0">
                     {/* Text bubble */}
-                    <div className="bg-white border border-[#eeeeee] p-md rounded-2xl rounded-tl-none shadow-sm text-xs leading-relaxed font-semibold tracking-tight text-[#5f5e5e] max-w-[85%] lg:max-w-[70%] select-none">
+                    <div className="bg-white border border-surface-container p-md rounded-2xl rounded-tl-none shadow-sm text-xs leading-relaxed font-semibold tracking-tight text-secondary max-w-[85%] lg:max-w-[70%] select-none">
                       <p>{msg.text}</p>
                     </div>
 
@@ -416,7 +416,7 @@ export function StylistClient() {
                           <div
                             key={prod.id}
                             onClick={() => handleProductCardClick(prod.id)}
-                            className="flex-shrink-0 w-[220px] bg-white rounded-xl overflow-hidden border border-[#eeeeee] shadow-sm hover:shadow-md cursor-pointer transition-all duration-300 group flex flex-col"
+                            className="flex-shrink-0 w-[220px] bg-white rounded-xl overflow-hidden border border-surface-container shadow-sm hover:shadow-md cursor-pointer transition-all duration-300 group flex flex-col"
                           >
                             <div className="aspect-[4/5] w-full overflow-hidden bg-surface-container relative">
                               <Image
@@ -437,10 +437,10 @@ export function StylistClient() {
                               <span className="text-[10px] text-secondary font-bold uppercase tracking-wider">
                                 {prod.material}
                               </span>
-                              <h3 className="text-xs font-bold text-on-surface truncate group-hover:text-[#ff385c] transition-colors">
+                              <h3 className="text-xs font-bold text-on-surface truncate group-hover:text-brand transition-colors">
                                 {prod.title}
                               </h3>
-                              <p className="text-xs font-extrabold text-[#ff385c]">${prod.price}</p>
+                              <p className="text-xs font-extrabold text-brand">${prod.price}</p>
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -458,9 +458,9 @@ export function StylistClient() {
 
                     {/* Nested Size Picker Dialog Box */}
                     {msg.sizeSelectorProduct && (
-                      <div className="w-full max-w-sm min-w-[280px] sm:min-w-[340px] border border-[#ffdad6] bg-gradient-to-br from-white to-[#fff5f6] p-lg rounded-xl shadow-md ai-gradient-border relative select-none flex-shrink-0">
+                      <div className="w-full max-w-sm min-w-[280px] sm:min-w-[340px] border border-error-container bg-gradient-to-br from-white to-primary-light-bg p-lg rounded-xl shadow-md ai-gradient-border relative select-none flex-shrink-0">
                         <div className="flex items-center gap-sm mb-md">
-                          <CheckCircle2 className="h-5 w-5 text-[#ba0036] shrink-0" />
+                          <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
                           <span className="text-xs font-extrabold text-neutral-900 tracking-tight">
                             {msg.sizeSelectorProduct.title}
                           </span>
@@ -484,8 +484,8 @@ export function StylistClient() {
                                   onClick={() => handleSizeClick(msg.sizeSelectorProduct!.id, sz)}
                                   className={`flex-1 py-2.5 border rounded-lg text-xs font-bold cursor-pointer transition-all ${
                                     (sizePickerState[msg.sizeSelectorProduct!.id.toString()] || "M") === sz
-                                      ? "bg-[#ffdada] text-[#ba0036] border-[#ffb2b6]"
-                                      : "bg-white text-on-surface border-[#eeeeee] hover:bg-neutral-50"
+                                      ? "bg-primary-fixed text-primary border-primary-fixed-dim"
+                                      : "bg-white text-on-surface border-surface-container hover:bg-neutral-50"
                                   }`}
                                 >
                                   {sz}
@@ -497,7 +497,7 @@ export function StylistClient() {
                               onClick={() =>
                                 handleReserveSize(msg.sizeSelectorProduct!.id, msg.sizeSelectorProduct!.title)
                               }
-                              className="w-full py-3 bg-[#ba0036] text-white rounded-xl text-xs font-bold hover:brightness-110 active:scale-[0.98] transition-all shadow-sm shadow-[#ba0036]/20 border-none cursor-pointer text-center"
+                              className="w-full py-3 bg-primary text-white rounded-xl text-xs font-bold hover:brightness-110 active:scale-[0.98] transition-all shadow-sm shadow-primary/20 border-none cursor-pointer text-center"
                             >
                               Reserve styling options
                             </button>
@@ -510,7 +510,7 @@ export function StylistClient() {
               ) : (
                 /* User Message: Avatar on the right, content on the left */
                 <div className="flex gap-md items-start max-w-[85%] lg:max-w-[70%] ml-auto flex-row-reverse">
-                  <div className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant text-[#5f5e5e] flex items-center justify-center flex-shrink-0 mt-1 shadow-sm shrink-0 select-none">
+                  <div className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant text-secondary flex items-center justify-center flex-shrink-0 mt-1 shadow-sm shrink-0 select-none">
                     <User className="h-4 w-4 text-charcoal" />
                   </div>
                   <div className="p-md rounded-2xl shadow-sm text-xs leading-relaxed font-semibold tracking-tight border bg-neutral-900 border-neutral-900 text-white rounded-tr-none select-none">
@@ -524,13 +524,13 @@ export function StylistClient() {
           {/* Vistra is styling typing indicator bubble */}
           {isThinking && (
             <div className="flex gap-md items-start max-w-[85%] lg:max-w-[70%] mr-auto">
-              <div className="w-8 h-8 rounded-full bg-[#ba0036] flex items-center justify-center flex-shrink-0 mt-1 shadow-sm select-none">
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1 shadow-sm select-none">
                 <Sparkles className="h-4 w-4 fill-white/10 text-white" />
               </div>
-              <div className="bg-white border border-[#eeeeee] p-md px-6 rounded-2xl rounded-tl-none shadow-sm flex gap-1 items-center border-l-4 border-l-[#ba0036]">
-                <div className="w-2 h-2 bg-[#ba0036]/40 rounded-full typing-dot"></div>
-                <div className="w-2 h-2 bg-[#ba0036]/40 rounded-full typing-dot"></div>
-                <div className="w-2 h-2 bg-[#ba0036]/40 rounded-full typing-dot"></div>
+              <div className="bg-white border border-surface-container p-md px-6 rounded-2xl rounded-tl-none shadow-sm flex gap-1 items-center border-l-4 border-l-primary">
+                <div className="w-2 h-2 bg-primary/40 rounded-full typing-dot"></div>
+                <div className="w-2 h-2 bg-primary/40 rounded-full typing-dot"></div>
+                <div className="w-2 h-2 bg-primary/40 rounded-full typing-dot"></div>
                 <span className="ml-2 text-[10px] text-secondary font-bold uppercase tracking-wider select-none">
                   Vistra is styling...
                 </span>
@@ -539,8 +539,8 @@ export function StylistClient() {
           )}
         </div>
 
-        {/* Bottom Floating UI Form Input Bar */}
-        <div className="absolute bottom-0 w-full p-lg bg-gradient-to-t from-[#f9f9f9] via-[#f9f9f9]/95 to-transparent pt-10 select-none">
+        {/* Bottom Floating Chat input footer block */}
+        <div className="absolute bottom-0 w-full p-lg bg-gradient-to-t from-background via-background/95 to-transparent pt-10 select-none">
           <div className="max-w-4xl mx-auto flex flex-col gap-md">
             
             {/* Horizontal suggested queries pills */}
@@ -554,7 +554,7 @@ export function StylistClient() {
                 <button
                   key={i}
                   onClick={() => handleSendChat(pill)}
-                  className="flex-shrink-0 px-4 py-2 bg-white border border-[#eeeeee] hover:border-[#ff385c] rounded-full text-xs font-semibold text-charcoal hover:text-[#ff385c] transition-all shadow-sm active:scale-95 cursor-pointer"
+                  className="flex-shrink-0 px-4 py-2 bg-white border border-surface-container hover:border-brand rounded-full text-xs font-semibold text-charcoal hover:text-brand transition-all shadow-sm active:scale-95 cursor-pointer"
                 >
                   {pill}
                 </button>
@@ -568,14 +568,14 @@ export function StylistClient() {
                 handleSendChat(chatInput);
                 setChatInput("");
               }}
-              className="flex items-center gap-md bg-white border border-[#eeeeee] p-sm pl-md rounded-full shadow-xl"
+              className="flex items-center gap-md bg-white border border-surface-container p-sm pl-md rounded-full shadow-xl"
             >
               <button
                 type="button"
-                onClick={() => alert("Multi-modal image search is fully configured. Drag or attach look images.")}
-                className="text-secondary hover:text-[#ba0036] transition-colors flex items-center justify-center p-2 border-none bg-transparent cursor-pointer shrink-0"
+                onClick={() => alert("Upload media currently verified in administrative side.")}
+                className="text-secondary hover:text-primary transition-colors flex items-center justify-center p-2 border-none bg-transparent cursor-pointer shrink-0"
               >
-                <Paperclip className="h-5 w-5" />
+                <Plus className="h-5 w-5" />
               </button>
               <input
                 id="chat-input"
@@ -587,14 +587,14 @@ export function StylistClient() {
               />
               <button
                 type="submit"
-                className="w-10 h-10 bg-[#ba0036] rounded-full flex items-center justify-center text-white hover:brightness-110 active:scale-90 transition-all shadow-md shadow-[#ba0036]/25 border-none cursor-pointer shrink-0"
+                className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white hover:brightness-110 active:scale-90 transition-all shadow-md shadow-primary/25 border-none cursor-pointer shrink-0"
               >
                 <Send className="h-4 w-4 text-white" />
               </button>
             </form>
 
             <div className="text-center select-none pb-xs">
-              <span className="text-[9px] text-[#717171] font-bold uppercase tracking-widest">
+              <span className="text-[9px] text-muted font-bold uppercase tracking-widest">
                 Powered by Vistra Concierge AI
               </span>
             </div>
@@ -615,11 +615,11 @@ export function StylistClient() {
         .ai-gradient-border::before {
           content: "";
           position: absolute;
-          inset: -1px;
-          border-radius: 13px;
-          padding: 1px;
-          background: linear-gradient(to bottom right, #ba0036, #ffb2b6, #ba0036);
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+           inset: -1px;
+           border-radius: 13px;
+           padding: 1px;
+           background: linear-gradient(to bottom right, var(--color-primary), var(--color-primary-fixed-dim), var(--color-primary));
+           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;

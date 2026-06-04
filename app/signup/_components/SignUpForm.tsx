@@ -118,7 +118,7 @@ export function SignUpForm() {
       <Button
         type="submit"
         isLoading={isSubmitting}
-        className="w-full h-14 bg-[#ff385c] hover:bg-[#e03150] text-on-primary font-label-md text-label-md rounded-xl border-none shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 mt-md cursor-pointer flex items-center justify-center"
+        className="w-full h-14 bg-brand hover:bg-brand-hover text-on-primary font-label-md text-label-md rounded-xl border-none shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 mt-md cursor-pointer flex items-center justify-center"
       >
         Sign Up
       </Button>
