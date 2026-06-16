@@ -261,7 +261,7 @@
       "label": "CreateProductWizardClientProps",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/_components/CreateProductWizardClient.tsx",
-      "source_location": "L28",
+      "source_location": "L26",
       "id": "components_createproductwizardclient_createproductwizardclientprops",
       "community": 16,
       "norm_label": "createproductwizardclientprops"
@@ -270,7 +270,7 @@
       "label": "CreateProductWizardClient()",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/_components/CreateProductWizardClient.tsx",
-      "source_location": "L33",
+      "source_location": "L31",
       "id": "components_createproductwizardclient_createproductwizardclient",
       "community": 4,
       "norm_label": "createproductwizardclient()"
@@ -279,7 +279,7 @@
       "label": "WizardContentProps",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/_components/CreateProductWizardClient.tsx",
-      "source_location": "L88",
+      "source_location": "L84",
       "id": "components_createproductwizardclient_wizardcontentprops",
       "community": 16,
       "norm_label": "wizardcontentprops"
@@ -288,7 +288,7 @@
       "label": "WizardContent()",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/_components/CreateProductWizardClient.tsx",
-      "source_location": "L93",
+      "source_location": "L89",
       "id": "components_createproductwizardclient_wizardcontent",
       "community": 16,
       "norm_label": "wizardcontent()"
@@ -369,7 +369,7 @@
       "label": "Step3Metadata()",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/_components/Step3Metadata.tsx",
-      "source_location": "L25",
+      "source_location": "L24",
       "id": "components_step3metadata_step3metadata",
       "community": 16,
       "norm_label": "step3metadata()"
@@ -432,7 +432,7 @@
       "label": "analyzeProductMediaAction()",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/actions.ts",
-      "source_location": "L31",
+      "source_location": "L30",
       "id": "create_actions_analyzeproductmediaaction",
       "community": 16,
       "norm_label": "analyzeproductmediaaction()"
@@ -441,7 +441,7 @@
       "label": "createProductAction()",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/actions.ts",
-      "source_location": "L82",
+      "source_location": "L74",
       "id": "create_actions_createproductaction",
       "community": 16,
       "norm_label": "createproductaction()"
@@ -450,7 +450,7 @@
       "label": "updateProductAction()",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/actions.ts",
-      "source_location": "L167",
+      "source_location": "L159",
       "id": "create_actions_updateproductaction",
       "community": 16,
       "norm_label": "updateproductaction()"
@@ -477,7 +477,7 @@
       "label": "GENDER_OPTIONS",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/constants.ts",
-      "source_location": "L7",
+      "source_location": "L6",
       "id": "create_constants_gender_options",
       "community": 16,
       "norm_label": "gender_options"
@@ -486,7 +486,7 @@
       "label": "SEASON_OPTIONS",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/constants.ts",
-      "source_location": "L9",
+      "source_location": "L8",
       "id": "create_constants_season_options",
       "community": 16,
       "norm_label": "season_options"
@@ -495,7 +495,7 @@
       "label": "APPAREL_SIZES_PRESET",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/constants.ts",
-      "source_location": "L11",
+      "source_location": "L10",
       "id": "create_constants_apparel_sizes_preset",
       "community": 16,
       "norm_label": "apparel_sizes_preset"
@@ -504,7 +504,7 @@
       "label": "FOOTWEAR_SIZES_PRESET",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/constants.ts",
-      "source_location": "L12",
+      "source_location": "L11",
       "id": "create_constants_footwear_sizes_preset",
       "community": 16,
       "norm_label": "footwear_sizes_preset"
@@ -513,7 +513,7 @@
       "label": "MATERIALS_PRESET",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/constants.ts",
-      "source_location": "L14",
+      "source_location": "L13",
       "id": "create_constants_materials_preset",
       "community": 16,
       "norm_label": "materials_preset"
@@ -522,7 +522,7 @@
       "label": "AESTHETICS_PRESET",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/constants.ts",
-      "source_location": "L24",
+      "source_location": "L23",
       "id": "create_constants_aesthetics_preset",
       "community": 16,
       "norm_label": "aesthetics_preset"
@@ -531,7 +531,7 @@
       "label": "OCCASIONS_PRESET",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/constants.ts",
-      "source_location": "L33",
+      "source_location": "L32",
       "id": "create_constants_occasions_preset",
       "community": 16,
       "norm_label": "occasions_preset"
@@ -540,7 +540,7 @@
       "label": "FIT_PRESETS",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/constants.ts",
-      "source_location": "L42",
+      "source_location": "L41",
       "id": "create_constants_fit_presets",
       "community": 16,
       "norm_label": "fit_presets"
@@ -630,7 +630,7 @@
       "label": "ProductWizardFormValues",
       "file_type": "code",
       "source_file": "app/admin/inventory/create/schema.ts",
-      "source_location": "L50",
+      "source_location": "L36",
       "id": "create_schema_productwizardformvalues",
       "community": 16,
       "norm_label": "productwizardformvalues"
@@ -954,7 +954,7 @@
       "label": "ProductDetailClientProps",
       "file_type": "code",
       "source_file": "app/product/[id]/_components/ProductDetailClient.tsx",
-      "source_location": "L10",
+      "source_location": "L8",
       "id": "components_productdetailclient_productdetailclientprops",
       "community": 9,
       "norm_label": "productdetailclientprops"
@@ -963,7 +963,7 @@
       "label": "ProductDetailClient()",
       "file_type": "code",
       "source_file": "app/product/[id]/_components/ProductDetailClient.tsx",
-      "source_location": "L15",
+      "source_location": "L13",
       "id": "components_productdetailclient_productdetailclient",
       "community": 9,
       "norm_label": "productdetailclient()"
@@ -1010,7 +1010,7 @@
       "source_file": "app/signup/_components/SignUpForm.tsx",
       "source_location": "L1",
       "id": "components_signupform",
-      "community": 23,
+      "community": 0,
       "norm_label": "signupform.tsx"
     },
     {
@@ -1019,7 +1019,7 @@
       "source_file": "app/signup/_components/SignUpForm.tsx",
       "source_location": "L13",
       "id": "components_signupform_defaultvalues",
-      "community": 23,
+      "community": 0,
       "norm_label": "defaultvalues"
     },
     {
@@ -1028,7 +1028,7 @@
       "source_file": "app/signup/_components/SignUpForm.tsx",
       "source_location": "L20",
       "id": "components_signupform_signupform",
-      "community": 23,
+      "community": 0,
       "norm_label": "signupform()"
     },
     {
@@ -1037,7 +1037,7 @@
       "source_file": "app/signup/actions.ts",
       "source_location": "L1",
       "id": "signup_actions",
-      "community": 23,
+      "community": 4,
       "norm_label": "actions.ts"
     },
     {
@@ -1046,7 +1046,7 @@
       "source_file": "app/signup/actions.ts",
       "source_location": "L6",
       "id": "signup_actions_signupaction",
-      "community": 23,
+      "community": 4,
       "norm_label": "signupaction()"
     },
     {
@@ -1082,7 +1082,7 @@
       "source_file": "app/signup/schema.ts",
       "source_location": "L1",
       "id": "signup_schema",
-      "community": 23,
+      "community": 4,
       "norm_label": "schema.ts"
     },
     {
@@ -1091,7 +1091,7 @@
       "source_file": "app/signup/schema.ts",
       "source_location": "L3",
       "id": "signup_schema_signupschema",
-      "community": 23,
+      "community": 4,
       "norm_label": "signupschema"
     },
     {
@@ -1100,7 +1100,7 @@
       "source_file": "app/signup/schema.ts",
       "source_location": "L15",
       "id": "signup_schema_signupformvalues",
-      "community": 23,
+      "community": 4,
       "norm_label": "signupformvalues"
     },
     {
@@ -1500,33 +1500,6 @@
       "norm_label": "checkbox"
     },
     {
-      "label": "ConfirmationModal.tsx",
-      "file_type": "code",
-      "source_file": "components/ui/ConfirmationModal.tsx",
-      "source_location": "L1",
-      "id": "ui_confirmationmodal",
-      "community": 0,
-      "norm_label": "confirmationmodal.tsx"
-    },
-    {
-      "label": "ConfirmationModalProps",
-      "file_type": "code",
-      "source_file": "components/ui/ConfirmationModal.tsx",
-      "source_location": "L7",
-      "id": "ui_confirmationmodal_confirmationmodalprops",
-      "community": 0,
-      "norm_label": "confirmationmodalprops"
-    },
-    {
-      "label": "ConfirmationModal()",
-      "file_type": "code",
-      "source_file": "components/ui/ConfirmationModal.tsx",
-      "source_location": "L20",
-      "id": "ui_confirmationmodal_confirmationmodal",
-      "community": 16,
-      "norm_label": "confirmationmodal()"
-    },
-    {
       "label": "DeleteConfirmationModal.tsx",
       "file_type": "code",
       "source_file": "components/ui/DeleteConfirmationModal.tsx",
@@ -1550,7 +1523,7 @@
       "source_file": "components/ui/DeleteConfirmationModal.tsx",
       "source_location": "L18",
       "id": "ui_deleteconfirmationmodal_deleteconfirmationmodal",
-      "community": 4,
+      "community": 0,
       "norm_label": "deleteconfirmationmodal()"
     },
     {
@@ -1809,7 +1782,7 @@
       "label": "mapDbToInventoryItem()",
       "file_type": "code",
       "source_file": "lib/db-products.ts",
-      "source_location": "L90",
+      "source_location": "L85",
       "id": "lib_db_products_mapdbtoinventoryitem",
       "community": 4,
       "norm_label": "mapdbtoinventoryitem()"
@@ -1836,7 +1809,7 @@
       "label": "PRODUCTS",
       "file_type": "code",
       "source_file": "lib/products.ts",
-      "source_location": "L24",
+      "source_location": "L23",
       "id": "lib_products_products",
       "community": 9,
       "norm_label": "products"
@@ -3412,7 +3385,7 @@
       "file_type": "code",
       "source_file": "app/signup/_components/SignUpForm.tsx",
       "source_location": "L11",
-      "community": 23,
+      "community": 0,
       "norm_label": "signupschema",
       "id": "components_signupform_signupschema"
     },
@@ -3421,7 +3394,7 @@
       "file_type": "code",
       "source_file": "app/signup/_components/SignUpForm.tsx",
       "source_location": "L23",
-      "community": 23,
+      "community": 0,
       "norm_label": "signupformvalues",
       "id": "components_signupform_signupformvalues"
     },
@@ -4451,28 +4424,6 @@
       "target": "supabase_client_createclient"
     },
     {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "app/admin/inventory/create/_components/CreateProductWizardClient.tsx",
-      "source_location": "L20",
-      "weight": 1.0,
-      "source": "components_createproductwizardclient",
-      "target": "ui_confirmationmodal_confirmationmodal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "app/admin/inventory/create/_components/CreateProductWizardClient.tsx",
-      "source_location": "L20",
-      "weight": 1.0,
-      "source": "components_createproductwizardclient",
-      "target": "ui_index",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -5215,9 +5166,9 @@
       "source_file": "app/admin/inventory/page.tsx",
       "source_location": "L11",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "inventory_page",
-      "target": "inventory_page_pageprops"
+      "target": "inventory_page_pageprops",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -6031,39 +5982,6 @@
       "confidence_score": 1.0,
       "source": "components_productdetailclient",
       "target": "lib_products_product"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "app/product/[id]/_components/ProductDetailClient.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "components_productdetailclient",
-      "target": "lib_products_products",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "app/product/[id]/_components/ProductDetailClient.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "components_productdetailclient",
-      "target": "lib_utils",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "app/product/[id]/_components/ProductDetailClient.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "components_productdetailclient",
-      "target": "lib_utils_cn",
-      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -7705,17 +7623,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "components/ui/ConfirmationModal.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "ui_confirmationmodal",
-      "target": "ui_button",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "components/ui/DeleteConfirmationModal.tsx",
       "source_location": "L5",
       "weight": 1.0,
@@ -7755,17 +7662,6 @@
       "confidence_score": 1.0,
       "source": "ui_index",
       "target": "ui_button_buttonprops"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "components/ui/ConfirmationModal.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "ui_confirmationmodal",
-      "target": "ui_button_button",
-      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -7874,70 +7770,6 @@
       "confidence_score": 1.0,
       "source": "ui_index",
       "target": "ui_checkbox_checkbox"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "components/ui/ConfirmationModal.tsx",
-      "source_location": "L20",
-      "weight": 1.0,
-      "source": "ui_confirmationmodal",
-      "target": "ui_confirmationmodal_confirmationmodal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "components/ui/ConfirmationModal.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "ui_confirmationmodal",
-      "target": "ui_confirmationmodal_confirmationmodalprops",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "components/ui/ConfirmationModal.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "ui_confirmationmodal",
-      "target": "ui_modal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "components/ui/ConfirmationModal.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "ui_confirmationmodal",
-      "target": "ui_modal_modal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "re_exports",
-      "context": "export",
-      "confidence": "EXTRACTED",
-      "source_file": "components/ui/index.ts",
-      "source_location": "L18",
-      "weight": 1.0,
-      "source": "ui_index",
-      "target": "ui_confirmationmodal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "re_exports",
-      "context": "re-export",
-      "confidence": "EXTRACTED",
-      "source_file": "components/ui/index.ts",
-      "source_location": "L18",
-      "weight": 1.0,
-      "source": "ui_index",
-      "target": "ui_confirmationmodal_confirmationmodal",
-      "confidence_score": 1.0
     },
     {
       "relation": "contains",

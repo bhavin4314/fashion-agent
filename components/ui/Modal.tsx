@@ -40,10 +40,10 @@ export function Modal({
               "transition-all duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
               
               // Size options
-              size === "sm" && "max-w-sm",
-              size === "md" && "max-w-md",
-              size === "lg" && "max-w-lg",
-              size === "xl" && "max-w-xl",
+              size === "sm" && "max-w-[384px]",
+              size === "md" && "max-w-[448px]",
+              size === "lg" && "max-w-[512px]",
+              size === "xl" && "max-w-[576px]",
               size === "full" && "max-w-[calc(100vw-2rem)] h-[calc(100vh-2rem)]",
               
               className

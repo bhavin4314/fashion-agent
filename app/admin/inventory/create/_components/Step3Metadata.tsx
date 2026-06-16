@@ -3,67 +3,42 @@
 import * as React from "react";
 import Image from "next/image";
 import { useFormContext } from "react-hook-form";
-import { useSearchParams } from "next/navigation";
+import { FormChips } from "@/components/forms/FormChips";
 import type { ProductWizardFormValues } from "../schema";
+import {
+  SEASON_OPTIONS,
+  APPAREL_SIZES_PRESET,
+  FOOTWEAR_SIZES_PRESET,
+  MATERIALS_PRESET,
+  AESTHETICS_PRESET,
+  OCCASIONS_PRESET,
+  FIT_PRESETS,
+} from "../constants";
 
 const DEFAULT_COVER_IMAGE = "https://lh3.googleusercontent.com/aida/AP1WRLvLL6pm-reCPtRqMuprVJq4uYIgYkhYYLqHWsE0UA6esWCrdw_zH-fh_LniYZdGk-ouobVfNHzV74tZoBdHtBSKqh4OCjfxz9QNJAhvkuxHhxyv3VIigNXUqpF6ojbWql1J8BEF3oz1BK7luzIchjg4Gfw4jDd7wZ1M3OVo5RtsfB4UC2FpEyv22L67TslEsiK9VeXGf8hDTYZU_hS2ru9gopffwK26WF6J955O-XdvsR83YvANEwRPTg";
 
 interface Step3MetadataProps {
-  toggleSize: (sz: string) => void;
-  toggleMaterial: (m: string) => void;
-  handleAddNewMaterial: (e: React.FormEvent) => void;
-  customMaterial: string;
-  setCustomMaterial: (val: string) => void;
-  showAddMaterialInput: boolean;
-  setShowAddMaterialInput: (val: boolean) => void;
+  editId?: string;
   handleFinalSubmitTrigger: () => void;
 }
 
-export function Step3Metadata({
-  toggleSize,
-  toggleMaterial,
-  handleAddNewMaterial,
-  customMaterial,
-  setCustomMaterial,
-  showAddMaterialInput,
-  setShowAddMaterialInput,
-  handleFinalSubmitTrigger
-}: Step3MetadataProps) {
-  const searchParams = useSearchParams();
-  const editId = searchParams.get("edit");
-  const { watch, setValue, formState: { errors } } = useFormContext<ProductWizardFormValues>();
+export function Step3Metadata({ editId, handleFinalSubmitTrigger }: Step3MetadataProps) {
+  const { watch } = useFormContext<ProductWizardFormValues>();
 
-  const images = watch("images") || [];
+  const imageUrls = watch("image_urls") || [];
   const title = watch("title") || "";
   const price = watch("price");
-  const stock = watch("stock");
-  const category = watch("category") || "Apparel";
+  const stockQuantity = watch("stock_quantity");
+  const category = watch("category") || "apparel";
   const gender = watch("gender") || "Unisex";
-  const season = watch("season") || "Summer";
+  const season = watch("season") || [];
   const sizes = watch("sizes") || [];
   const aesthetics = watch("aesthetics") || [];
   const occasions = watch("occasions") || [];
   const materials = watch("materials") || [];
+  const fit = watch("fit") || "";
 
-  // Helper for toggling values in a multi-select field
-  const toggleMultiSelect = (field: "aesthetics" | "occasions", value: string) => {
-    const current = watch(field) || [];
-    if (current.includes(value)) {
-      setValue(field, current.filter((v) => v !== value), { shouldValidate: true });
-    } else {
-      setValue(field, [...current, value], { shouldValidate: true });
-    }
-  };
-
-  // Sizing definitions based on Category
-  const apparelSizes = ["XS", "S", "M", "L", "XL", "XXL"];
-  const footwearSizes = ["7", "8", "9", "10", "11"];
-  const availableSizes = category === "Apparel" ? apparelSizes : footwearSizes;
-
-  // Preset default tags for chips
-  const defaultAesthetics = ["Quiet Luxury", "Minimalist", "Old Money", "Casual", "Vintage", "Avant-Garde"];
-  const defaultOccasions = ["Evening Lounge", "Gala Night", "Resort Casual", "Everyday", "Office", "Travel"];
-  const presetMaterials = ["Cashmere", "Suede", "Silk", "Leather", "Cotton", "Wool", "Linen"];
+  const availableSizes = category === "apparel" ? APPAREL_SIZES_PRESET : FOOTWEAR_SIZES_PRESET;
 
   return (
     <div className="grid grid-cols-12 gap-lg animate-in fade-in duration-300">
@@ -79,70 +54,65 @@ export function Step3Metadata({
           </h3>
           
           <div>
-            <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Season (Single Choice)</label>
-            <div className="flex flex-wrap gap-sm">
-              {(["Summer", "Autumn", "Winter", "Spring"] as const).map((s) => {
-                const isActive = season === s;
-                return (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setValue("season", s, { shouldValidate: true })}
-                    className={`px-lg py-2.5 rounded-xl transition-all font-semibold text-xs border cursor-pointer ${
-                      isActive
-                        ? "bg-primary text-white border-transparent shadow-sm scale-[1.02]"
-                        : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
-                    }`}
-                  >
-                    {s}
-                  </button>
-                );
-              })}
-            </div>
+            <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Season (Multi-select)</label>
+            <FormChips
+              name="season"
+              options={SEASON_OPTIONS}
+              multiple={true}
+            />
           </div>
         </div>
 
-        {/* Dynamic Size Selection bento container */}
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white shadow-xs">
-          <div className="flex justify-between items-center mb-md">
-            <h3 className="font-label-md text-tertiary flex items-center gap-sm font-bold text-sm">
-              <span className="material-symbols-outlined text-[20px] text-primary">straighten</span>
-              Size Selection
-            </h3>
-            <span className="text-[10px] font-bold text-primary uppercase bg-primary-fixed px-sm py-[2px] rounded-full flex items-center gap-xs">
-              <span className="material-symbols-outlined text-[13px]">tune</span>
-              Filtered for {category}
-            </span>
-          </div>
-          
-          <div className="space-y-xl">
-            <div>
-              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Available sizes (Multi-select)</label>
-              <div className="flex flex-wrap gap-sm">
-                {availableSizes.map((sz) => {
-                  const isActive = sizes.includes(sz);
-                  return (
-                    <button
-                      key={sz}
-                      type="button"
-                      onClick={() => toggleSize(sz)}
-                      className={`px-lg py-2.5 min-w-[50px] rounded-xl transition-all font-semibold text-xs border cursor-pointer ${
-                        isActive
-                          ? "bg-primary text-white border-transparent shadow-sm scale-[1.02]"
-                          : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
-                      }`}
-                    >
-                      {sz}
-                    </button>
-                  );
-                })}
+        {/* Dynamic Size Selection bento container (ACTION B) */}
+        {category !== "accessories" && (
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white shadow-xs">
+            <div className="flex justify-between items-center mb-md">
+              <h3 className="font-label-md text-tertiary flex items-center gap-sm font-bold text-sm">
+                <span className="material-symbols-outlined text-[20px] text-primary">straighten</span>
+                Size Selection
+              </h3>
+              <span className="text-[10px] font-bold text-primary uppercase bg-primary-fixed px-sm py-[2px] rounded-full flex items-center gap-xs">
+                <span className="material-symbols-outlined text-[13px]">tune</span>
+                Filtered for {category === "apparel" ? "Apparel" : "Footwear"}
+              </span>
+            </div>
+            
+            <div className="space-y-xl">
+              <div>
+                <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Available sizes (Multi-select)</label>
+                <FormChips
+                  name="sizes"
+                  options={availableSizes}
+                  multiple={true}
+                  allowCustom={true}
+                  customPlaceholder="Custom size..."
+                />
               </div>
             </div>
           </div>
-          {errors.sizes?.message && (
-            <p className="text-[10px] text-red-600 font-bold mt-2">{String(errors.sizes.message)}</p>
-          )}
-        </div>
+        )}
+
+        {/* Conditional Render Row: Garment Fit (ACTION B) */}
+        {category === "apparel" && (
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white shadow-xs">
+            <h3 className="font-label-md text-tertiary mb-md flex items-center gap-sm font-bold text-sm">
+              <span className="material-symbols-outlined text-[20px] text-primary">accessibility</span>
+              Garment Fit
+            </h3>
+            
+            <div className="space-y-md">
+              <label className="block font-label-sm text-on-surface-variant uppercase tracking-wider text-[11px] font-bold text-neutral-500">
+                Fit choice
+              </label>
+              <FormChips
+                name="fit"
+                options={FIT_PRESETS}
+                allowCustom={true}
+                customPlaceholder="Or type custom fit (e.g. Extra Oversized)"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Section: Aesthetics & Occasions */}
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white shadow-xs space-y-xl">
@@ -151,29 +121,14 @@ export function Step3Metadata({
               <span className="material-symbols-outlined text-[20px] text-primary">palette</span>
               Stylist Aesthetics
             </h3>
-            <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Aesthetics Selection (Multi-select)</label>
-            <div className="flex flex-wrap gap-sm">
-              {defaultAesthetics.map((ae) => {
-                const isActive = aesthetics.includes(ae);
-                return (
-                  <button
-                    key={ae}
-                    type="button"
-                    onClick={() => toggleMultiSelect("aesthetics", ae)}
-                    className={`px-lg py-2.5 rounded-xl transition-all font-semibold text-xs border cursor-pointer ${
-                      isActive
-                        ? "bg-primary text-white border-transparent shadow-sm scale-[1.02]"
-                        : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
-                    }`}
-                  >
-                    {ae}
-                  </button>
-                );
-              })}
-            </div>
-            {errors.aesthetics?.message && (
-              <p className="text-[10px] text-red-600 font-bold mt-2">{String(errors.aesthetics.message)}</p>
-            )}
+            <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Aesthetics Selection</label>
+            <FormChips
+              name="aesthetics"
+              options={AESTHETICS_PRESET}
+              multiple={true}
+              allowCustom={true}
+              customPlaceholder="Custom aesthetic..."
+            />
           </div>
 
           <div className="border-t border-neutral-100 pt-xl">
@@ -181,115 +136,36 @@ export function Step3Metadata({
               <span className="material-symbols-outlined text-[20px] text-primary">celebration</span>
               Wear Occasions
             </h3>
-            <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Occasions Selection (Multi-select)</label>
-            <div className="flex flex-wrap gap-sm">
-              {defaultOccasions.map((oc) => {
-                const isActive = occasions.includes(oc);
-                return (
-                  <button
-                    key={oc}
-                    type="button"
-                    onClick={() => toggleMultiSelect("occasions", oc)}
-                    className={`px-lg py-2.5 rounded-xl transition-all font-semibold text-xs border cursor-pointer ${
-                      isActive
-                        ? "bg-primary text-white border-transparent shadow-sm scale-[1.02]"
-                        : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
-                    }`}
-                  >
-                    {oc}
-                  </button>
-                );
-              })}
-            </div>
-            {errors.occasions?.message && (
-              <p className="text-[10px] text-red-600 font-bold mt-2">{String(errors.occasions.message)}</p>
-            )}
+            <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Occasions Selection</label>
+            <FormChips
+              name="occasions"
+              options={OCCASIONS_PRESET}
+              multiple={true}
+              allowCustom={true}
+              customPlaceholder="Custom occasion..."
+            />
           </div>
         </div>
 
         {/* Section: Material Composition */}
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg bg-white shadow-xs">
-          <div className="flex justify-between items-center mb-md">
-            <h3 className="font-label-md text-tertiary flex items-center gap-sm font-bold text-sm">
-              <span className="material-symbols-outlined text-[20px] text-primary">texture</span>
-              Materials Composition
-            </h3>
-            <button
-              type="button"
-              onClick={() => setShowAddMaterialInput(!showAddMaterialInput)}
-              className="text-primary font-label-md flex items-center gap-xs bg-transparent border-none cursor-pointer text-xs font-bold uppercase tracking-wider hover:opacity-90"
-            >
-              <span className="material-symbols-outlined text-[18px]">add</span> Add Custom
-            </button>
-          </div>
+          <h3 className="font-label-md text-tertiary mb-md flex items-center gap-sm font-bold text-sm">
+            <span className="material-symbols-outlined text-[20px] text-primary">texture</span>
+            Materials Composition
+          </h3>
           
           <div className="space-y-xl">
-            {showAddMaterialInput && (
-              <div className="flex gap-sm items-center animate-in slide-in-from-top-2 duration-200">
-                <input
-                  type="text"
-                  value={customMaterial}
-                  onChange={(e) => setCustomMaterial(e.target.value)}
-                  placeholder="Material name..."
-                  className="flex-grow px-sm py-1.5 border border-secondary-container rounded-lg text-xs font-semibold focus:outline-none focus:border-primary bg-white h-9"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAddNewMaterial(e);
-                    }
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={handleAddNewMaterial}
-                  className="bg-primary hover:opacity-90 text-white px-md py-1.5 rounded-lg text-xs font-bold border-none cursor-pointer h-9 transition-all active:scale-95"
-                >
-                  Add
-                </button>
-              </div>
-            )}
-
             <div>
-              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Select materials (Multi-select)</label>
-              <div className="flex flex-wrap gap-sm">
-                {presetMaterials.map((m) => {
-                  const isActive = materials.includes(m);
-                  return (
-                    <button
-                      key={m}
-                      type="button"
-                      onClick={() => toggleMaterial(m)}
-                      className={`px-lg py-2 rounded-xl transition-all font-semibold text-xs border cursor-pointer ${
-                        isActive
-                          ? "bg-primary text-white border-transparent shadow-sm"
-                          : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
-                      }`}
-                    >
-                      {m}
-                    </button>
-                  );
-                })}
-                {/* Dynamically added custom materials */}
-                {materials.filter(m => !presetMaterials.includes(m)).map((m) => (
-                  <div 
-                    key={m}
-                    className="px-lg py-2 rounded-xl border border-dashed border-primary text-primary bg-primary-fixed/25 flex items-center gap-sm font-semibold text-xs"
-                  >
-                    {m}
-                    <span 
-                      onClick={() => toggleMaterial(m)} 
-                      className="material-symbols-outlined text-[16px] cursor-pointer hover:text-red-700"
-                    >
-                      close
-                    </span>
-                  </div>
-                ))}
-              </div>
+              <label className="block font-label-sm text-on-surface-variant mb-sm uppercase tracking-wider text-[11px] font-bold text-neutral-500">Select materials</label>
+              <FormChips
+                name="materials"
+                options={MATERIALS_PRESET}
+                multiple={true}
+                allowCustom={true}
+                customPlaceholder="Custom material..."
+              />
             </div>
           </div>
-          {errors.materials?.message && (
-            <p className="text-[10px] text-red-600 font-bold mt-2">{String(errors.materials.message)}</p>
-          )}
         </div>
       </div>
 
@@ -298,7 +174,7 @@ export function Step3Metadata({
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden sticky top-xxl shadow-xs bg-white">
           <div className="relative h-48 overflow-hidden group">
             <Image 
-              src={images[0] || DEFAULT_COVER_IMAGE} 
+              src={imageUrls[0] || DEFAULT_COVER_IMAGE} 
               alt="Preview Cover" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none"
               fill
@@ -308,7 +184,7 @@ export function Step3Metadata({
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
             <div className="absolute bottom-md left-md right-md text-white">
               <p className="font-label-sm opacity-80 mb-xs uppercase text-[10px] tracking-widest font-extrabold">Preview Catalog Profile</p>
-              <h4 className="font-headline-md leading-tight truncate font-bold">{title || "Loro Summer Walk"}</h4>
+              <h4 className="font-headline-md leading-tight truncate font-bold">{title || "Untitled Product"}</h4>
             </div>
           </div>
 
@@ -316,7 +192,7 @@ export function Step3Metadata({
             
             <div className="flex justify-between items-center py-sm border-b border-surface-container text-xs">
               <span className="text-tertiary font-bold uppercase tracking-wider">Category</span>
-              <span className="font-bold text-primary">
+              <span className="font-bold text-primary uppercase">
                 {category}
               </span>
             </div>
@@ -324,16 +200,25 @@ export function Step3Metadata({
             <div className="flex justify-between items-center py-sm border-b border-surface-container text-xs">
               <span className="text-tertiary font-bold uppercase tracking-wider">Price</span>
               <span className="font-bold text-on-surface">
-                ${price ? Number(price).toLocaleString("en-US", { minimumFractionDigits: 2 }) : "0.00"}
+                ₹{price ? Number(price).toLocaleString("en-US", { minimumFractionDigits: 2 }) : "0.00"}
               </span>
             </div>
 
             <div className="flex justify-between items-center py-sm border-b border-surface-container text-xs">
               <span className="text-tertiary font-bold uppercase tracking-wider">Stock</span>
               <span className="font-bold text-on-surface">
-                {stock ? Number(stock) : 0} Units
+                {stockQuantity ? Number(stockQuantity) : 0} Units
               </span>
             </div>
+
+            {category === "apparel" && fit && (
+              <div className="flex justify-between items-center py-sm border-b border-surface-container text-xs">
+                <span className="text-tertiary font-bold uppercase tracking-wider">Fit</span>
+                <span className="font-bold text-on-surface">
+                  {fit}
+                </span>
+              </div>
+            )}
 
             <div>
               <span className="block text-tertiary font-label-sm mb-sm uppercase text-[10px] tracking-widest font-extrabold">Selected Tags</span>
@@ -343,9 +228,9 @@ export function Step3Metadata({
                     {gender}
                   </span>
                 )}
-                {season && (
+                {season && season.length > 0 && (
                   <span className="bg-neutral-100 px-sm py-[2px] rounded text-[10px] font-bold text-neutral-600 uppercase">
-                    {season}
+                    {Array.isArray(season) ? season.join(", ") : season}
                   </span>
                 )}
                 {aesthetics.slice(0, 2).map((a) => (

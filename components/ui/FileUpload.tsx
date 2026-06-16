@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { UploadCloud, File, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -111,6 +113,12 @@ export function FileUpload({
         onChange={handleFileChange}
       />
       
+      {error && (
+        <p className="text-xs text-error mb-2 font-medium" role="alert">
+          {error}
+        </p>
+      )}
+      
       {value ? (
         // File selected state
         <div className="flex items-center justify-between p-4 bg-white border border-border-light rounded-xl shadow-sm">
@@ -159,11 +167,7 @@ export function FileUpload({
           <p className="text-xs text-secondary mt-1">
             {accept ? `${accept.toUpperCase()} files` : "All files"} up to {maxSizeMB}MB
           </p>
-          {error && (
-            <p className="text-xs text-error mt-2 font-medium" role="alert">
-              {error}
-            </p>
-          )}
+
         </div>
       )}
     </div>

@@ -987,6 +987,14 @@ export function RegisterForm() {
 
 ---
 
+### 4.8 Static Options & Default Values
+
+- **Static Options**: Any static options arrays (e.g., options for `<FormSelect />`, `<FormRadioGroup />`, chips, etc.) **must** be defined as constants *outside* the component render function (or imported from a constants file). Defining them inline or inside the component triggers unnecessary re-renders and is strictly prohibited.
+- **Default Values**: Default values objects used with `<Form />` **must** also be defined as constants *outside* the component or memoized/computed only when dynamically derived.
+- **Standardized Forms**: Every form in the application must use the common `<Form />` component and standardized form primitives (`<FormInput />`, `<FormSelect />`, etc.). Do not build ad-hoc forms using native HTML `<form>` or `<input>` tags.
+
+---
+
 ## 5. Design System & Base Components
 
 ### 5.1 Mandatory Component Usage
@@ -1529,6 +1537,19 @@ state.user.name = "Jane"; // use setState or immer
 export function updateUser(data: unknown) { // must be async + must validate with Zod
   db.update(data);
 }
+
+// ❌ 20. Defining static options (select/radio options) or default values inline or inside the component render function
+"use client";
+export function MyForm() {
+  const options = [{ label: "A", value: "a" }]; // FORBIDDEN — define outside the component or as a constant
+  const defaultValues = { choice: "" }; // FORBIDDEN — define outside the component or as a constant
+  return <FormSelect name="choice" label="Choice" options={options} />;
+}
+
+// ❌ 21. Creating ad-hoc HTML <form> or <input> elements instead of using common Form and form primitive components
+<form onSubmit={handleSubmit}>
+  <input type="text" value={name} onChange={...} /> // FORBIDDEN — use <Form /> and <FormInput />
+</form>
 ```
 
 - Always consult `DESIGN.md` for exact styling tokens, colors, and layout configurations.

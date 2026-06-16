@@ -1,5 +1,5 @@
 export interface Product {
-  id: number;
+  id: number | string;
   title: string;
   price: number;
   material: string;
@@ -14,6 +14,7 @@ export interface Product {
   description: string;
   aiRecommendation: string;
   completeTheLook: Array<{
+    id?: number | string;
     title: string;
     price: number;
     image: string;

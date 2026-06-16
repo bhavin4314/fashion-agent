@@ -25,7 +25,7 @@ export function StylistClient() {
 
   // Default products for the initial Parisian session
   const defaultParisianProducts = PRODUCTS.filter((p) =>
-    [6, 7, 12, 5].includes(p.id)
+    [6, 7, 12, 5].map(String).includes(String(p.id))
   );
 
   // Chat sessions database
@@ -50,7 +50,7 @@ export function StylistClient() {
           sender: "ai",
           text: "Excellent choice. The Structured Blazer is available in several sizes. Here are my top styling recommendations to complete that look:",
           products: defaultParisianProducts,
-          sizeSelectorProduct: PRODUCTS.find((p) => p.id === 6) // Structured Blazer
+          sizeSelectorProduct: PRODUCTS.find((p) => String(p.id) === "6") // Structured Blazer
         }
       ]
     },
@@ -73,7 +73,7 @@ export function StylistClient() {
           id: "ss-3",
           sender: "ai",
           text: "Yes, our Relaxed Linen Shirt and Suede Loafers represent the perfect combination of summer slow-fashion and premium comfort:",
-          products: PRODUCTS.filter((p) => [1, 8, 2].includes(p.id))
+          products: PRODUCTS.filter((p) => [1, 8, 2].map(String).includes(String(p.id)))
         }
       ]
     },
@@ -96,7 +96,7 @@ export function StylistClient() {
           id: "mo-3",
           sender: "ai",
           text: "I recommend our Italian wool blazer paired with our structured leather tote for a sophisticated workspace profile:",
-          products: PRODUCTS.filter((p) => [6, 7, 12].includes(p.id))
+          products: PRODUCTS.filter((p) => [6, 7, 12].map(String).includes(String(p.id)))
         }
       ]
     },
@@ -119,7 +119,7 @@ export function StylistClient() {
           id: "wa-3",
           sender: "ai",
           text: "Here is our luxury cashmere sweater, belted coat, and structured overcoat mix to provide pristine warmth:",
-          products: PRODUCTS.filter((p) => [3, 4, 10].includes(p.id))
+          products: PRODUCTS.filter((p) => [3, 4, 10].map(String).includes(String(p.id)))
         }
       ]
     }
@@ -167,14 +167,14 @@ export function StylistClient() {
     setActiveSessionId(newId);
   };
 
-  const handleSizeClick = (productId: number, size: string) => {
+  const handleSizeClick = (productId: number | string, size: string) => {
     setSizePickerState((prev) => ({
       ...prev,
       [productId.toString()]: size
     }));
   };
 
-  const handleReserveSize = (productId: number, title: string) => {
+  const handleReserveSize = (productId: number | string, title: string) => {
     const sz = sizePickerState[productId.toString()] || "M";
     setIsReserved((prev) => ({
       ...prev,
@@ -343,7 +343,7 @@ export function StylistClient() {
     }, 1800);
   };
 
-  const handleProductCardClick = (id: number) => {
+  const handleProductCardClick = (id: number | string) => {
     window.location.href = `/product/${id}`;
   };
 
@@ -440,7 +440,7 @@ export function StylistClient() {
                               <h3 className="text-xs font-bold text-on-surface truncate group-hover:text-brand transition-colors">
                                 {prod.title}
                               </h3>
-                              <p className="text-xs font-extrabold text-brand">${prod.price}</p>
+                              <p className="text-xs font-extrabold text-brand">₹{prod.price}</p>
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -458,7 +458,7 @@ export function StylistClient() {
 
                     {/* Nested Size Picker Dialog Box */}
                     {msg.sizeSelectorProduct && (
-                      <div className="w-full max-w-sm min-w-[280px] sm:min-w-[340px] border border-error-container bg-gradient-to-br from-white to-primary-light-bg p-lg rounded-xl shadow-md ai-gradient-border relative select-none flex-shrink-0">
+                      <div className="w-full max-w-[384px] min-w-[280px] sm:min-w-[340px] border border-error-container bg-gradient-to-br from-white to-primary-light-bg p-lg rounded-xl shadow-md ai-gradient-border relative select-none flex-shrink-0">
                         <div className="flex items-center gap-sm mb-md">
                           <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
                           <span className="text-xs font-extrabold text-neutral-900 tracking-tight">

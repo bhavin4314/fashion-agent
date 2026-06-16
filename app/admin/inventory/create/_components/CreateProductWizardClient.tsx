@@ -10,41 +10,67 @@ import {
   Loader2 
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 import { Form } from "@/components/forms/Form";
+import { createClient } from "@/utils/supabase/client";
 import { productWizardSchema, type ProductWizardFormValues } from "../schema";
+import { type DbProduct } from "@/lib/db-products";
 import { Stepper } from "./Stepper";
+import { ConfirmationModal } from "@/components/ui";
 import { Step1Media } from "./Step1Media";
 import { Step2Garment } from "./Step2Garment";
 import { Step3Metadata } from "./Step3Metadata";
+import { analyzeProductMediaAction, createProductAction, updateProductAction } from "../actions";
 
 const DEFAULT_COVER_IMAGE = "https://lh3.googleusercontent.com/aida/AP1WRLvLL6pm-reCPtRqMuprVJq4uYIgYkhYYLqHWsE0UA6esWCrdw_zH-fh_LniYZdGk-ouobVfNHzV74tZoBdHtBSKqh4OCjfxz9QNJAhvkuxHhxyv3VIigNXUqpF6ojbWql1J8BEF3oz1BK7luzIchjg4Gfw4jDd7wZ1M3OVo5RtsfB4UC2FpEyv22L67TslEsiK9VeXGf8hDTYZU_hS2ru9gopffwK26WF6J955O-XdvsR83YvANEwRPTg";
 
 interface CreateProductWizardClientProps {
   editId?: string;
+  initialProduct?: DbProduct;
 }
 
-export function CreateProductWizardClient({ editId }: CreateProductWizardClientProps) {
-  const defaultValues: ProductWizardFormValues = {
-    images: [
-      DEFAULT_COVER_IMAGE,
-      "https://lh3.googleusercontent.com/aida/AP1WRLsQghMlatk0qLvdifNv-eRmUT7jPcKw8zlG2CNyMmEbSlCP1JPOdRX5Q_yODT-sD4iLahd7mrEnO-Z6XnGI9JXulqZtlYwuD_PCLuriQKR2kfblt-_4bvdHGRtb-FduRu71BJyndpMDL2TkI-LKpg3u3aJcJEF5t6916UBMnmwq1O9JugihwIpg3gue-Ujh9wwKbG2y1_7ohC_hXGC93BEnwLoxzQ1r6XpsEXMjew5Z8GGgda7eLF86AS4",
-      "https://lh3.googleusercontent.com/aida/AP1WRLsreLbgcSyWouFKHuiglA9tn94pmUeeLgotdRjogVghL9b_FL-5_cBHd3aVlFA7I8F0dq_fUTQLsXKv7ZjtMmksRexoxW43TOFt4YUR3-CE04oFucNYgILnLtuZCQh_bbNiFMeCjPQxXWaIL7_cE3-zMAGtL2YhCeKvIu8cAH9bSlI4HcNge-MENdrGqUZqMIqUISUyIqBt5ZrxziEb7SA0kVMXWZ769t4u2wu-JGt8aEjDpIZkxgNDDg"
-    ],
-    title: "Loro Piana Summer Walk Loafers",
-    description: "Crafted with the signature refined elegance of Loro Piana, these Summer Walk Loafers feature a streamlined silhouette tailored for sophisticated casual wear. Constructed from premium water-repellent suede, the unlined design provides exceptional breathability and a glove-like fit. The iconic white rubber soles, inspired by nautical heritage, ensure maximum comfort and grip for deck-to-city versatility. Hand-stitched detailing at the apron exemplifies the brand's commitment to artisanal excellence and timeless luxury.",
-    price: 850.00,
-    stock: 12,
-    category: "Footwear",
-    gender: "Unisex",
-    season: "Summer",
-    sizes: ["9", "10"],
-    aesthetics: ["Quiet Luxury", "Minimalist"],
-    occasions: ["Resort Casual", "Evening Lounge"],
-    materials: ["Suede", "Leather", "Cashmere"]
-  };
+export function CreateProductWizardClient({ editId, initialProduct }: CreateProductWizardClientProps) {
+  const defaultValues: ProductWizardFormValues = initialProduct
+    ? {
+        image_urls: initialProduct.image_urls || [],
+        title: initialProduct.title || "",
+        description: initialProduct.description || "",
+        price: Number(initialProduct.price),
+        stock_quantity: Number(initialProduct.stock_quantity),
+        category: (initialProduct.category === "footwear" || initialProduct.category === "accessories")
+          ? (initialProduct.category as "footwear" | "accessories")
+          : "apparel",
+        gender: (initialProduct.gender === "Men" || initialProduct.gender === "Women" || initialProduct.gender === "Unisex") ? initialProduct.gender : "Unisex",
+        season: Array.isArray(initialProduct.season)
+          ? initialProduct.season
+          : typeof (initialProduct.season as unknown) === "string"
+          ? (initialProduct.season as unknown as string).split(", ").map(s => s.trim())
+          : ["Summer"],
+        sizes: initialProduct.sizes || [],
+        materials: initialProduct.materials || [],
+        aesthetics: initialProduct.aesthetics || [],
+        occasions: initialProduct.occasions || [],
+        fit: initialProduct.fit || null,
+      }
+    : {
+        image_urls: [],
+        title: "",
+        description: "",
+        price: "" as unknown as number,
+        stock_quantity: "" as unknown as number,
+        category: "apparel",
+        gender: "Unisex",
+        season: ["Summer"],
+        sizes: [],
+        materials: [],
+        aesthetics: [],
+        occasions: [],
+        fit: null,
+      };
 
   const handleFinalSubmit = async (values: ProductWizardFormValues) => {
-    console.log("Submitting wizard model to database:", values);
+    console.log("Submitting wizard data:", values);
   };
 
   return (
@@ -54,129 +80,269 @@ export function CreateProductWizardClient({ editId }: CreateProductWizardClientP
       onSubmit={handleFinalSubmit}
       className="flex flex-col flex-grow select-none w-full min-h-screen gap-0"
     >
-      <WizardContent editId={editId} />
+      <WizardContent editId={editId} initialProduct={initialProduct} />
     </Form>
   );
 }
 
 interface WizardContentProps {
   editId?: string;
+  initialProduct?: DbProduct;
 }
 
-function WizardContent({ editId }: WizardContentProps) {
-  const { trigger, watch, setValue, reset } = useFormContext<ProductWizardFormValues>();
+function WizardContent({ editId, initialProduct }: WizardContentProps) {
+  const router = useRouter();
+  const { trigger, watch, setValue, reset, formState: { errors } } = useFormContext<ProductWizardFormValues>();
   
   const [currentStep, setCurrentStep] = React.useState<1 | 2 | 3>(1);
-  const [aiProgress, setAiProgress] = React.useState<number>(0);
   const [isAiProcessing, setIsAiProcessing] = React.useState<boolean>(false);
   const [isUploading, setIsUploading] = React.useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = React.useState<Record<number, number>>({});
+  const [isAbandonModalOpen, setIsAbandonModalOpen] = React.useState<boolean>(false);
   
-  // Submit state triggers
+  // Storage keys of uploaded files in Supabase (for Wizard Abandonment Cleanup Engine)
+  const [uploadedPaths, setUploadedPaths] = React.useState<string[]>([]);
+  const uploadedPathsRef = React.useRef<string[]>([]);
+  React.useEffect(() => {
+    uploadedPathsRef.current = uploadedPaths;
+  }, [uploadedPaths]);
+
+  // Selected files pending upload
+  const [selectedFiles, setSelectedFiles] = React.useState<File[]>([]);
+
+  // Submit states
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
-  const [submitStep, setSubmitStep] = React.useState<number>(0);
   const [isSuccess, setIsSuccess] = React.useState<boolean>(false);
+  const isSuccessRef = React.useRef<boolean>(false);
 
-  // Custom material input trigger
-  const [customMaterial, setCustomMaterial] = React.useState<string>("");
-  const [showAddMaterialInput, setShowAddMaterialInput] = React.useState<boolean>(false);
-
-  // Watching values for real-time summary display
-  const images = watch("images") || [];
+  // Watching values for summary preview card
   const title = watch("title") || "";
-  const price = watch("price");
-  const stock = watch("stock");
-  const sizes = watch("sizes") || [];
-  const materials = watch("materials") || [];
+
+  // WIZARD ABANDONMENT ENGINE:
+  // Purges all uploaded assets in the Supabase Storage Bucket immediately if creation process is interrupted.
+  const cleanupUploadedAssets = React.useCallback(async () => {
+    const paths = uploadedPathsRef.current;
+    if (paths.length > 0) {
+      console.log("Wizard Abandonment Engine: purging assets", paths);
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase.storage.from("product-bucket").remove(paths);
+        if (error) {
+          console.error("Abandonment cleanup failed:", error.message);
+        } else {
+          console.log("Abandonment cleanup purged assets:", data);
+        }
+      } catch (err) {
+        console.error("Error during storage cleanup:", err);
+      }
+      setUploadedPaths([]);
+      uploadedPathsRef.current = [];
+    }
+  }, []);
+
+  // Cleanup on unmount if product was not created successfully
+  React.useEffect(() => {
+    return () => {
+      if (!isSuccessRef.current) {
+        cleanupUploadedAssets();
+      }
+    };
+  }, [cleanupUploadedAssets]);
+
+  // Cancel wizard handler
+  const handleCancelClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsAbandonModalOpen(true);
+  };
+
+  const handleConfirmAbandon = async () => {
+    setIsAbandonModalOpen(false);
+    await cleanupUploadedAssets();
+    router.push("/admin/inventory");
+  };
 
   // Load editing item details on mount if present
   React.useEffect(() => {
-    if (typeof window !== "undefined" && editId) {
+    if (typeof window !== "undefined" && editId && !initialProduct) {
       const saved = localStorage.getItem("vistra_inventory_items");
       if (saved) {
         try {
-          const currentItems = JSON.parse(saved);
-          const item = currentItems.find((itm: any) => itm.id === editId);
+          interface SavedInventoryItem {
+            id: string;
+            image_urls?: string[];
+            image?: string;
+            title: string;
+            description?: string;
+            price: number | string;
+            stock_quantity?: number;
+            status?: string;
+            category?: string;
+            gender?: string;
+            season?: string | string[];
+            sizes?: string[];
+            aesthetics?: string[];
+            occasions?: string[];
+            materials?: string[];
+            fit?: string | null;
+          }
+          const currentItems = JSON.parse(saved) as SavedInventoryItem[];
+          const item = currentItems.find((itm) => itm.id === editId);
           if (item) {
             reset({
-              images: item.image ? [item.image] : [DEFAULT_COVER_IMAGE],
+              image_urls: item.image_urls || (item.image ? [item.image] : [DEFAULT_COVER_IMAGE]),
               title: item.title,
-              description: item.description || `This exquisite item represents the signature craftsmanship of the Vistra Concierge collection. Designed with a timeless silhouette tailored for sophisticated everyday luxury, it is constructed from premium materials. Hand-finished detailing exemplifies Vistra's commitment to artisanal excellence.`,
+              description: item.description || `This exquisite item represents the signature craftsmanship of the collection.`,
               price: Number(item.price),
-              stock: item.status === "In Stock" ? 24 : item.status === "Low Stock" ? 3 : 0,
-              category: item.category === "Footwear" ? "Footwear" : "Apparel",
-              gender: item.gender || "Unisex",
-              season: item.season || "Summer",
-              sizes: item.sizes || ["9", "10"],
-              aesthetics: item.aesthetics || ["Quiet Luxury"],
-              occasions: item.occasions || ["Everyday"],
-              materials: item.materials || ["Suede", "Leather"]
+              stock_quantity: item.stock_quantity || (item.status === "In Stock" ? 24 : item.status === "Low Stock" ? 3 : 0),
+              category: item.category ? (item.category.toLowerCase() as "apparel" | "footwear" | "accessories") : "apparel",
+              gender: (item.gender || "Unisex") as "Men" | "Women" | "Unisex",
+              season: Array.isArray(item.season)
+                ? item.season
+                : item.season
+                ? item.season.split(", ").map(s => s.trim())
+                : ["Summer"],
+              sizes: item.sizes || [],
+              aesthetics: item.aesthetics || [],
+              occasions: item.occasions || [],
+              materials: item.materials || [],
+              fit: item.fit || null
             });
-            setIsAiProcessing(false);
-            setAiProgress(100);
           }
         } catch (e) {
           console.error("Failed to parse edit item:", e);
         }
       }
     }
-  }, [editId, reset]);
+  }, [editId, reset, initialProduct]);
 
-  // Step 2: Simulate Vision AI Extraction
-  React.useEffect(() => {
-    if (currentStep === 2 && isAiProcessing && !editId) {
-      // Clear fields to show skeletons
-      setValue("title", "");
-      setValue("description", "");
-      
-      const interval = setInterval(() => {
-        setAiProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            setIsAiProcessing(false);
-            
-            // Auto populate values
-            setValue("title", "Loro Piana Summer Walk Loafers", { shouldValidate: true });
-            setValue("description", "Crafted with the signature refined elegance of Loro Piana, these Summer Walk Loafers feature a streamlined silhouette tailored for sophisticated casual wear. Constructed from premium water-repellent suede, the unlined design provides exceptional breathability and a glove-like fit. The iconic white rubber soles, inspired by nautical heritage, ensure maximum comfort and grip for deck-to-city versatility. Hand-stitched detailing at the apron exemplifies the brand's commitment to artisanal excellence and timeless luxury.", { shouldValidate: true });
-            setValue("category", "Footwear", { shouldValidate: true });
-            setValue("gender", "Unisex", { shouldValidate: true });
-            
-            return 100;
-          }
-          return prev + 10;
-        });
-      }, 300);
-      return () => clearInterval(interval);
-    }
-  }, [currentStep, isAiProcessing, editId, setValue]);
-
-  // Navigate forward after step validation and sequential upload loop
+  // Handle uploading and navigating next
   const handleNextStep = async () => {
     if (currentStep === 1) {
-      const isValid = await trigger("images");
+      const isValid = await trigger("image_urls");
       if (isValid) {
         setIsUploading(true);
-        const imagesList = watch("images") || [];
-        
-        // Simulate sequential upload loop
-        for (let i = 0; i < imagesList.length; i++) {
-          for (let percent = 0; percent <= 100; percent += 25) {
-            setUploadProgress((prev) => ({ ...prev, [i]: percent }));
-            await new Promise((resolve) => setTimeout(resolve, 80));
+        const currentUrls = watch("image_urls") || [];
+        const publicUrls: string[] = [];
+        const paths: string[] = [];
+        let fileIndex = 0;
+
+        try {
+          const supabase = createClient();
+          
+          for (let i = 0; i < currentUrls.length; i++) {
+            const currentUrl = currentUrls[i];
+            
+            if (currentUrl && !currentUrl.startsWith("blob:")) {
+              publicUrls.push(currentUrl);
+              continue;
+            }
+
+            const file = selectedFiles[fileIndex];
+            fileIndex++;
+
+            if (!file) {
+              continue;
+            }
+
+            const fileExt = file.name.split(".").pop();
+            const filePath = `products/${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+
+            // Initialize progress for visual rendering and simulate smooth progress
+            setUploadProgress((prev) => ({ ...prev, [i]: 0 }));
+            const interval = setInterval(() => {
+              setUploadProgress((prev) => {
+                const current = prev[i] || 0;
+                if (current < 90) {
+                  return { ...prev, [i]: current + 10 };
+                }
+                return prev;
+              });
+            }, 150);
+
+            const { error } = await supabase.storage
+              .from("product-bucket")
+              .upload(filePath, file, {
+                cacheControl: "3600",
+                upsert: false,
+              });
+
+            clearInterval(interval);
+
+            if (error) {
+              throw error;
+            }
+
+            const { data: urlData } = supabase.storage.from("product-bucket").getPublicUrl(filePath);
+            
+            publicUrls.push(urlData.publicUrl);
+            paths.push(filePath);
+            
+            setUploadProgress((prev) => ({ ...prev, [i]: 100 }));
           }
-        }
-        
-        setIsUploading(false);
-        setUploadProgress({});
-        setCurrentStep(2);
-        
-        if (!editId) {
-          setIsAiProcessing(true);
-          setAiProgress(0);
+
+          // Update tracked storage paths and hydrated form URLs
+          setUploadedPaths((prev) => [...prev, ...paths]);
+          setValue("image_urls", publicUrls, { shouldValidate: true });
+          
+          setIsUploading(false);
+          setUploadProgress({});
+          
+          // Transition to Step 2 and trigger Multi-Modal Vision Hydration (ACTION A)
+          setCurrentStep(2);
+          
+          // Only trigger Vision AI Analysis if a new cover image was uploaded (starts with "blob:")
+          const isNewCoverImage = currentUrls[0]?.startsWith("blob:");
+          if (isNewCoverImage) {
+            setIsAiProcessing(true);
+            const coverUrl = publicUrls[0];
+            if (coverUrl) {
+              const res = await analyzeProductMediaAction(coverUrl);
+              if (res.success && res.data) {
+                const parsed = res.data;
+                setValue("title", parsed.title, { shouldValidate: true });
+                setValue("description", parsed.description, { shouldValidate: true });
+                setValue("category", parsed.category as "apparel" | "footwear", { shouldValidate: true });
+                setValue("gender", parsed.gender as "Men" | "Women" | "Unisex", { shouldValidate: true });
+                
+                const aiSeason = parsed.season 
+                  ? (parsed.season.includes(",") 
+                     ? parsed.season.split(",").map(s => s.trim()) 
+                     : [parsed.season])
+                  : ["Summer"];
+                setValue("season", aiSeason, { shouldValidate: true });
+                
+                // Pre-populate step 3 fields
+                setValue("sizes", parsed.sizes || [], { shouldValidate: true });
+                setValue("materials", parsed.materials || [], { shouldValidate: true });
+                setValue("aesthetics", parsed.aesthetics || [], { shouldValidate: true });
+                setValue("occasions", parsed.occasions || [], { shouldValidate: true });
+                setValue("fit", parsed.fit || null, { shouldValidate: true });
+              } else {
+                console.error("AI Media Analysis failed:", res.error);
+                if ("isIrrelevant" in res && res.isIrrelevant) {
+                  toast.error(res.error || "The uploaded image is not relevant to apparel or footwear.", { position: "top-center" });
+                  await cleanupUploadedAssets();
+                  setSelectedFiles([]);
+                  setValue("image_urls", [], { shouldValidate: true });
+                  setCurrentStep(1);
+                } else {
+                  toast.error(res.error || "Failed to analyze product media using AI", { position: "top-center" });
+                }
+              }
+            }
+            setIsAiProcessing(false);
+          }
+
+        } catch (err: unknown) {
+          console.error("File upload failed:", err);
+          const errorMsg = err instanceof Error ? err.message : String(err);
+          toast.error("File upload failed: " + errorMsg, { position: "top-center" });
+          setIsUploading(false);
+          setUploadProgress({});
         }
       }
     } else if (currentStep === 2) {
-      const isValid = await trigger(["title", "description", "price", "stock", "category", "gender"]);
+      const isValid = await trigger(["title", "description", "price", "stock_quantity", "category", "gender"]);
       if (isValid) {
         setCurrentStep(3);
       }
@@ -189,197 +355,32 @@ function WizardContent({ editId }: WizardContentProps) {
     if (currentStep === 3) setCurrentStep(2);
   };
 
-  // Dynamic file upload mock addition
-  const handleMockAddFile = () => {
-    const mockImages = [
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCr1TUU79xoI0_LXD664wn0uvTe6JTH8K-uXBk4vDBLg-Eho4XwtOwgomxPh4DklcdkK6Bh5MA4MvUt7Wj_LbP7Cv5kXT7Q6GLDkLg0ZYjN_cOQG7YfKlCmq6v2bzhBg1G5Th_YrWN6s7iEWq5R1oK_-D7iwLbkEph30T8kmIuDmxPy5I_flD78NIS5TjztOsS6VSJFuZF16p6KFsVJ1xT-MSeTeXsc1zH3hYQ0Fqy_2jBpeTZJVra9a3ulRvCRCu5jJFlol-O5zH-E",
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuATRwT3qKv6AXZp7rRxFqG2hV0_oX3P3s03SHnm0jCgopxreYKDTsyV0r5Hdc_mmmT66sEbMWjXNiCn0jdTcj9pMkcNpgZDgEB3z5vO2cQLTUkmNSJvDw5QxYUW6QJFf3TlM97RcQytmFKn6Hr-bsHc1yT4LvHDX1sMK3yflvNKtISVVw1kxDPERlyjCJbMjYi3AVBLi7egTBLZfRx9yaAlTvh27qAcv72ozxfS2VYCMyMleti1m-KyPzyuuaIUujyZYi9ndobT6idc",
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuC5DTZFEu-io3P1eWQlOShCSRp0Z82UXXm0oIm-RPT_mW6Fp6aX8jMAlgUuz9hd5FH4_Wyo7lk04fwsUrgCT37LV0HsG3Xcv7MIsp7ZWQK49C04nLjwfLRPM37ptDhzjaCws_i9pcdw_n21ZhmMOvaPfRP_jp3wX5rAVCToGwrIUpuisfW6bQgXQ1q2BR1waH4TV8OJ1AAxHPAybuO3b_VDrz3TEij_2Iaa86uYHJotYpjpp5R9meO0zPr0AwbP20GlOX3Fuouw9_SM"
-    ];
-    const nextImg = mockImages[Math.floor(Math.random() * mockImages.length)];
-    if (nextImg) {
-      setValue("images", [...images, nextImg], { shouldValidate: true });
-    }
-  };
-
-  const handleRemoveImage = (index: number) => {
-    const updated = images.filter((_, i) => i !== index);
-    setValue("images", updated, { shouldValidate: true });
-  };
-
-  // Toggle selection functions for Step 3 bento
-  const toggleSize = (sz: string) => {
-    if (sizes.includes(sz)) {
-      setValue("sizes", sizes.filter((s) => s !== sz), { shouldValidate: true });
-    } else {
-      setValue("sizes", [...sizes, sz], { shouldValidate: true });
-    }
-  };
-
-  const toggleMaterial = (m: string) => {
-    if (materials.includes(m)) {
-      setValue("materials", materials.filter((mat) => mat !== m), { shouldValidate: true });
-    } else {
-      setValue("materials", [...materials, m], { shouldValidate: true });
-    }
-  };
-
-  const handleAddNewMaterial = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (customMaterial.trim() && !materials.includes(customMaterial.trim())) {
-      setValue("materials", [...materials, customMaterial.trim()], { shouldValidate: true });
-      setCustomMaterial("");
-      setShowAddMaterialInput(false);
-    }
-  };
-
-  // Final submit simulation
+  // Final submit triggering Server Action (ACTION C)
   const handleFinalSubmitTrigger = async () => {
     const isValid = await trigger();
-    if (!isValid) return;
+    if (!isValid) {
+      console.error("Validation errors:", errors);
+      if (errors.image_urls) {
+        toast.error(errors.image_urls.message || "Please upload at least one product image", { position: "top-center" });
+      }
+      return;
+    }
 
     setIsSubmitting(true);
-    setSubmitStep(1);
+    const values = watch();
+    
+    const res = editId 
+      ? await updateProductAction(editId, values)
+      : await createProductAction(values);
 
-    setTimeout(() => setSubmitStep(2), 1000);
-    setTimeout(() => setSubmitStep(3), 2000);
-    setTimeout(() => setSubmitStep(4), 3000);
-    setTimeout(() => {
-      // Construct the item profile
-      const skuSuffix = Math.floor(10000 + Math.random() * 90000);
-      const newProductItem = {
-        id: editId || `custom-${Date.now()}`,
-        title: title || "Loro Piana Summer Walk Loafers",
-        sku: `VIST-${skuSuffix}-AD`,
-        category: watch("category") || "Footwear",
-        price: Number(price) || 850.00,
-        status: Number(stock) > 0 ? "In Stock" : Number(stock) === 0 ? "Out of Stock" : "Low Stock",
-        image: images[0] || DEFAULT_COVER_IMAGE,
-        gender: watch("gender") || "Unisex",
-        season: watch("season") || "Summer",
-        sizes: watch("sizes") || [],
-        aesthetics: watch("aesthetics") || [],
-        occasions: watch("occasions") || [],
-        materials: watch("materials") || []
-      };
-
-      // Write to localStorage
-      if (typeof window !== "undefined") {
-        const saved = localStorage.getItem("vistra_inventory_items");
-        let currentItems = [
-          {
-            id: "m-1",
-            title: "Midnight Silk Gown",
-            sku: "VIST-29384-BL",
-            category: "Apparel",
-            price: 2450,
-            status: "In Stock",
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCr1TUU79xoI0_LXD664wn0uvTe6JTH8K-uXBk4vDBLg-Eho4XwtOwgomxPh4DklcdkK6Bh5MA4MvUt7Wj_LbP7Cv5kXT7Q6GLDkLg0ZYjN_cOQG7YfKlCmq6v2bzhBg1G5Th_YrWN6s7iEWq5R1oK_-D7iwLbkEph30T8kmIuDmxPy5I_flD78NIS5TjztOsS6VSJFuZF16p6KFsVJ1xT-MSeTeXsc1zH3hYQ0Fqy_2jBpeTZJVra9a3ulRvCRCu5jJFlol-O5zH-E",
-          },
-          {
-            id: "m-2",
-            title: "Artisan Leather Tote",
-            sku: "VIST-11029-BR",
-            category: "Apparel",
-            price: 1200,
-            status: "Low Stock",
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuATRwT3qKv6AXZp7rRxFqG2hV0_oX3P3s03SHnm0jCgopxreYKDTsyV0r5Hdc_mmmT66sEbMWjXNiCn0jdTcj9pMkcNpgZDgEB3z5vO2cQLTUkmNSJvDw5QxYUW6QJFf3TlM97RcQytmFKn6Hr-bsHc1yT4LvHDX1sMK3yflvNKtISVVw1kxDPERlyjCJbMjYi3AVBLi7egTBLZfRx9yaAlTvh27qAcv72ozxfS2VYCMyMleti1m-KyPzyuuaIUujyZYi9ndobT6idc",
-          },
-          {
-            id: "m-3",
-            title: "Classic Camel Coat",
-            sku: "VIST-55421-CM",
-            category: "Apparel",
-            price: 3800,
-            status: "In Stock",
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuC5DTZFEu-io3P1eWQlOShCSRp0Z82UXXm0oIm-RPT_mW6Fp6aX8jMAlgUuz9hd5FH4_Wyo7lk04fwsUrgCT37LV0HsG3Xcv7MIsp7ZWQK49C04nLjwfLRPM37ptDhzjaCws_i9pcdw_n21ZhmMOvaPfRP_jp3wX5rAVCToGwrIUpuisfW6bQgXQ1q2BR1waH4TV8OJ1AAxHPAybuO3b_VDrz3TEij_2Iaa86uYHJotYpjpp5R9meO0zPr0AwbP20GlOX3Fuouw9_SM",
-          },
-          {
-            id: "m-4",
-            title: "Crystal Stilettos",
-            sku: "VIST-88741-SV",
-            category: "Footwear",
-            price: 1550,
-            status: "Low Stock",
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBZcY-1t6F5K7tqGXE1xGSy3mBITf2Cv-EwVWtWpDUy5BoyitG1aBNfgE0k6puzTTwJRzuUh4oseQendKK9G11yhi21Pa1QGdw2JFHfhbWfKDAesKwcpWlve3Zg9_FjluYnGyw5d4o1WIJ6KcBybZQFcHDo14HYrBLI-c5YEyPPzNLCajVuB4blt0QyrMAclXck_WQGaqH76LxRie7PUA46tti7c69iy1mDsSuIzwwY61-tJsOhT8_b0_g0lqQFwexuEITZxUvehS9B",
-          },
-          {
-            id: "p-1",
-            title: "Relaxed Linen Shirt",
-            sku: "VIST-01098-LN",
-            category: "Apparel",
-            price: 98,
-            status: "In Stock",
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCaAN2V-vXoiEKBduVTos9cZE_1rMPdf_b1wHoMugjj1PDZhe0pSGR51uB_nURS7H-3ujmnikg8C09Q2GwV0Fi5gxB7YwCrG4q2a91pUial8xGuN2286yjT5ZxaakdAkTOx18z34l_UUB5dXArhurVZFgHZWrtcYNcw11y9cmU8LSwJWyn_FR_zEGLGLh45PPPaRorAI2twUg4eEipSFrU6Dx31NoCDFp_mLwcM-UuJpErU6Yz0isdHMZ8zwJlW6QU8SDcTThjEL1H-",
-          },
-          {
-            id: "p-2",
-            title: "Classic Cotton Chinos",
-            sku: "VIST-02120-CN",
-            category: "Apparel",
-            price: 120,
-            status: "In Stock",
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuANrKH3C5GQG-9QIHEPRD60ZZdTumcSIpD_heRUMeXnmz9ySPh5AFW_aTlW8g9LJJ8rzA2oH7_PQkNF0i46OVx3nOKPYBtiGSlSS3TXitXXmLYflCb8xqEZxr-FDyDSVg7hIwM-dHuF_mi3BuU5lGBT2VONNZPH4JvBqsI_3PT5SmzVnoDVg_pN2Rde0T5RJJ3c_83p3fY0yLXbIH_QzHi9ERzh9GyVhZwVZlXsfR2LL5fSO3sZKrVRKQxCdF9lDkjdMCmt799fi8D",
-          },
-          {
-            id: "p-3",
-            title: "Cashmere V-Neck",
-            sku: "VIST-03245-CM",
-            category: "Apparel",
-            price: 245,
-            status: "In Stock",
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAeEJwc7gbakHHTVGxYvf_NNhL5ZL5Ja4xuxOy2Jv9LIoZMJdv9qf3tmIkFzOfvF1SVVloXnFNlTCXccqbpuLropuxSw3ym5lXn0GnQwA56znE3TqshgBdP62pEu9xqOU8OY4-CZdzlRixeUDW43YRPar0vzN3o0v9GLWCfx8QihYway6kd8j95kN2L2ggZ4bRX0l9dSuFVfGGx5SrvCrO5qmGjGWondaTN_n9y6EDKUi2z7n-TwuVa1ANbZkXC_wV98b-l0kvDxN0a",
-          },
-          {
-            id: "p-6",
-            title: "Structured Blazer",
-            sku: "VIST-06420-WL",
-            category: "Apparel",
-            price: 420,
-            status: "Low Stock",
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCf7MeQJy7rqBKyOE-Y0GbUt1igVaI2k1eSXpLjBjUp1Qlq-ZTIG9L0bHcvpT1Oh4z_1wD7AwTuSCcUtRzLvOcGd3hS6UTNWI81fhpxFQPAKkN5z0BSrC7V023FvGYuybZ-taEkSwl06meaU9GgyI4f7ndx2VlY4u5aza76qhLc5BlxVlpMruuo_Zj8CU46Ve1ty_FZXENEix2FHNPX9qOJ47wZWJWoGzdPI95Zyc3bEZKLJplZcw_QIDpDwB64ln064DCv4FCCBknY",
-          }
-        ];
-        if (saved) {
-          try {
-            currentItems = JSON.parse(saved);
-          } catch (e) {
-            console.error("Failed to read local Vistra items:", e);
-          }
-        }
-        
-        let updated;
-        if (editId) {
-          updated = currentItems.map((item: any) => {
-            if (item.id === editId) {
-              return {
-                ...item,
-                title: title || item.title,
-                sku: item.sku,
-                category: watch("category") || item.category,
-                price: Number(price) || item.price,
-                status: Number(stock) > 0 ? "In Stock" : Number(stock) === 0 ? "Out of Stock" : "Low Stock",
-                image: images[0] || item.image,
-                gender: watch("gender") || item.gender,
-                season: watch("season") || item.season,
-                sizes: watch("sizes") || item.sizes,
-                aesthetics: watch("aesthetics") || item.aesthetics,
-                occasions: watch("occasions") || item.occasions,
-                materials: watch("materials") || item.materials
-              };
-            }
-            return item;
-          });
-        } else {
-          updated = [newProductItem, ...currentItems];
-        }
-        
-        localStorage.setItem("vistra_inventory_items", JSON.stringify(updated));
-      }
-
-      setIsSubmitting(false);
+    if (res.success) {
+      isSuccessRef.current = true;
       setIsSuccess(true);
-    }, 4000);
+    } else {
+      console.error(editId ? "Failed to update product:" : "Failed to create product:", res.error);
+      toast.error(editId ? "Failed to update product: " + res.error : "Failed to create product: " + res.error, { position: "top-center" });
+    }
+    setIsSubmitting(false);
   };
 
   return (
@@ -398,12 +399,13 @@ function WizardContent({ editId }: WizardContentProps) {
           </span>
         </div>
         <div className="flex items-center gap-md">
-          <Link
-            href="/admin/inventory"
-            className="text-xs font-bold uppercase tracking-wider text-primary hover:opacity-90 transition-colors"
+          <button
+            type="button"
+            onClick={handleCancelClick}
+            className="text-xs font-bold uppercase tracking-wider text-primary hover:opacity-90 transition-colors bg-transparent border-none cursor-pointer"
           >
             Cancel Wizard
-          </Link>
+          </button>
         </div>
       </header>
 
@@ -414,11 +416,10 @@ function WizardContent({ editId }: WizardContentProps) {
           {editId ? "Edit Product" : "Add New Product"}
         </h2>
 
-        {/* Visual Stepper Indicators Component */}
+        {/* Visual Stepper Indicators */}
         <Stepper 
           currentStep={currentStep} 
           onStepClick={(step) => {
-            // Allow clicking completed steps back for quick refinement
             if (step < currentStep) {
               setCurrentStep(step);
             }
@@ -431,9 +432,8 @@ function WizardContent({ editId }: WizardContentProps) {
           {/* STEP 1 CONTENT PAGE */}
           {currentStep === 1 && (
             <Step1Media
-              handleMockAddFile={handleMockAddFile}
-              handleRemoveImage={handleRemoveImage}
-              setValue={setValue}
+              selectedFiles={selectedFiles}
+              setSelectedFiles={setSelectedFiles}
               isUploading={isUploading}
               uploadProgress={uploadProgress}
             />
@@ -443,20 +443,13 @@ function WizardContent({ editId }: WizardContentProps) {
           {currentStep === 2 && (
             <Step2Garment 
               isAiProcessing={isAiProcessing}
-              aiProgress={aiProgress}
             />
           )}
 
           {/* STEP 3 CONTENT PAGE */}
           {currentStep === 3 && (
             <Step3Metadata
-              toggleSize={toggleSize}
-              toggleMaterial={toggleMaterial}
-              handleAddNewMaterial={handleAddNewMaterial}
-              customMaterial={customMaterial}
-              setCustomMaterial={setCustomMaterial}
-              showAddMaterialInput={showAddMaterialInput}
-              setShowAddMaterialInput={setShowAddMaterialInput}
+              editId={editId}
               handleFinalSubmitTrigger={handleFinalSubmitTrigger}
             />
           )}
@@ -473,12 +466,13 @@ function WizardContent({ editId }: WizardContentProps) {
                 Back
               </button>
             ) : (
-              <Link
-                href="/admin/inventory"
-                className="px-xl py-2.5 text-secondary hover:bg-surface-container-low rounded-xl text-xs font-bold transition-all flex items-center justify-center no-underline cursor-pointer"
+              <button
+                type="button"
+                onClick={handleCancelClick}
+                className="px-xl py-2.5 text-secondary hover:bg-surface-container-low rounded-xl text-xs font-bold transition-all flex items-center justify-center no-underline cursor-pointer border-none bg-transparent"
               >
                 Cancel
-              </Link>
+              </button>
             )}
 
             {currentStep < 3 ? (
@@ -507,15 +501,7 @@ function WizardContent({ editId }: WizardContentProps) {
             )}
           </div>
         </div>
-
-        {/* Footer info lock badge */}
-        <div className="mt-md flex justify-center">
-          <p className="text-[10px] font-bold text-secondary uppercase tracking-widest flex items-center gap-1 select-none">
-            <Lock className="w-3.5 h-3.5 text-primary" />
-            System drafts autosaved securely in real-time
-          </p>
-        </div>
-      </main>
+       </main>
 
       {/* Decorative gradient backdrops */}
       <div className="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none opacity-20">
@@ -523,10 +509,24 @@ function WizardContent({ editId }: WizardContentProps) {
         <div className="absolute bottom-[10%] left-[20%] w-[400px] h-[400px] bg-secondary-container rounded-full blur-[100px]" />
       </div>
 
+      {/* ABANDON CONFIRMATION MODAL */}
+      <ConfirmationModal
+        isOpen={isAbandonModalOpen}
+        onClose={() => setIsAbandonModalOpen(false)}
+        onConfirm={handleConfirmAbandon}
+        title="Abandon Wizard"
+        description="Are you sure you want to abandon? All uploaded images will be purged from storage. This action cannot be undone."
+        confirmLabel="Confirm"
+        cancelLabel="Cancel"
+        icon={
+          <span className="material-symbols-outlined text-[24px] text-primary">warning</span>
+        }
+      />
+
       {/* OVERLAY 1: PROCESSING LOADING STATE */}
       {isSubmitting && (
         <div className="fixed inset-0 z-50 bg-on-surface/45 backdrop-blur-xs flex items-center justify-center p-xl">
-          <div className="bg-white p-xl rounded-2xl max-w-sm w-full shadow-2xl text-center space-y-lg border border-secondary-container">
+          <div className="bg-white p-xl rounded-2xl max-w-[384px] w-full shadow-2xl text-center space-y-lg border border-secondary-container">
             <div className="relative w-20 h-20 mx-auto">
               <div className="absolute inset-0 border-4 border-surface-container-low rounded-full" />
               <div className="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -539,46 +539,9 @@ function WizardContent({ editId }: WizardContentProps) {
               <h3 className="text-lg font-bold text-charcoal mb-md">
                 {editId ? "Saving Modifications" : "Finalizing Creation"}
               </h3>
-              <div className="space-y-sm text-left max-w-[210px] mx-auto text-xs font-bold uppercase tracking-wider text-secondary">
-                <div className={`flex items-center gap-sm transition-all duration-200 ${submitStep >= 1 ? "text-charcoal" : "opacity-40"}`}>
-                  {submitStep >= 1 ? (
-                    <span className="material-symbols-outlined text-[20px] text-primary">check_circle</span>
-                  ) : (
-                    <Loader2 className="w-5 h-5 animate-spin text-primary" />
-                  )}
-                  <span>Saving Product...</span>
-                </div>
-                <div className={`flex items-center gap-sm transition-all duration-200 ${submitStep >= 2 ? "text-charcoal" : "opacity-40"}`}>
-                  {submitStep >= 2 ? (
-                    <span className="material-symbols-outlined text-[20px] text-primary">check_circle</span>
-                  ) : submitStep === 1 ? (
-                    <Loader2 className="w-5 h-5 animate-spin text-primary" />
-                  ) : (
-                    <div className="w-5 h-5 rounded-full border-2 border-dashed border-secondary-container" />
-                  )}
-                  <span>Generating Catalog...</span>
-                </div>
-                <div className={`flex items-center gap-sm transition-all duration-200 ${submitStep >= 3 ? "text-charcoal" : "opacity-40"}`}>
-                  {submitStep >= 3 ? (
-                    <span className="material-symbols-outlined text-[20px] text-primary">check_circle</span>
-                  ) : submitStep === 2 ? (
-                    <Loader2 className="w-5 h-5 animate-spin text-primary" />
-                  ) : (
-                    <div className="w-5 h-5 rounded-full border-2 border-dashed border-secondary-container" />
-                  )}
-                  <span>Syncing Vector DB...</span>
-                </div>
-                <div className={`flex items-center gap-sm transition-all duration-200 ${submitStep >= 4 ? "text-charcoal" : "opacity-40"}`}>
-                  {submitStep >= 4 ? (
-                    <span className="material-symbols-outlined text-[20px] text-primary">check_circle</span>
-                  ) : submitStep === 3 ? (
-                    <Loader2 className="w-5 h-5 animate-spin text-primary" />
-                  ) : (
-                    <div className="w-5 h-5 rounded-full border-2 border-dashed border-secondary-container" />
-                  )}
-                  <span>Indexing Search...</span>
-                </div>
-              </div>
+              <p className="text-xs font-semibold text-secondary uppercase tracking-wider">
+                {editId ? "Saving modifications & re-generating embeddings..." : "Saving product record & generating embeddings..."}
+              </p>
             </div>
           </div>
         </div>
@@ -587,7 +550,7 @@ function WizardContent({ editId }: WizardContentProps) {
       {/* OVERLAY 2: SUCCESS COMPLETED STATE */}
       {isSuccess && (
         <div className="fixed inset-0 z-50 bg-on-surface/45 backdrop-blur-xs flex items-center justify-center p-xl">
-          <div className="bg-white p-xl rounded-2xl max-w-md w-full shadow-2xl text-center space-y-xl border border-secondary-container animate-in zoom-in-95 duration-300">
+          <div className="bg-white p-xl rounded-2xl max-w-[448px] w-full shadow-2xl text-center space-y-xl border border-secondary-container animate-in zoom-in-95 duration-300">
             <div className="w-20 h-20 mx-auto bg-primary rounded-full flex items-center justify-center shadow-lg shadow-primary/35 text-white">
               <span className="material-symbols-outlined text-[40px] text-white">check</span>
             </div>
@@ -597,7 +560,7 @@ function WizardContent({ editId }: WizardContentProps) {
                 {editId ? "Product Updated Successfully" : "Product Added Successfully"}
               </h3>
               <p className="text-xs font-semibold text-secondary uppercase tracking-wider">
-                "{title || "Loro Piana Loafers"}" has been safely {editId ? "updated in" : "indexed in"} your boutique catalog.
+                &quot;{title || "Loro Piana Loafers"}&quot; has been safely {editId ? "updated in" : "indexed in"} your boutique catalog.
               </p>
             </div>
 

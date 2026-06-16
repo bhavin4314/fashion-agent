@@ -6,3 +6,6 @@ export { FormTextarea } from "./FormTextarea";
 export { FormCheckbox } from "./FormCheckbox";
 export { FormRadioGroup } from "./FormRadioGroup";
 export { FormFileUpload } from "./FormFileUpload";
+export { FormChips } from "./FormChips";
+export type { ChipOption } from "./FormChips";
+

@@ -6,29 +6,50 @@ import { useFormContext } from "react-hook-form";
 import type { ProductWizardFormValues } from "../schema";
 
 interface Step1MediaProps {
-  handleMockAddFile: () => void;
-  handleRemoveImage: (index: number) => void;
-  setValue: (name: keyof ProductWizardFormValues, value: any, options?: any) => void;
+  selectedFiles: File[];
+  setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
   isUploading: boolean;
   uploadProgress: Record<number, number>;
 }
 
 export function Step1Media({
-  handleMockAddFile,
-  handleRemoveImage,
-  setValue,
+  selectedFiles,
+  setSelectedFiles,
   isUploading,
   uploadProgress
 }: Step1MediaProps) {
-  const { watch, formState: { errors } } = useFormContext<ProductWizardFormValues>();
-  const images = watch("images") || [];
+  const { watch, setValue, setError, clearErrors, formState: { errors } } = useFormContext<ProductWizardFormValues>();
+  const imageUrls = watch("image_urls") || [];
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = Array.from(e.target.files || []);
-    if (selectedFiles.length > 0) {
-      const localUrls = selectedFiles.map((file) => URL.createObjectURL(file));
-      setValue("images", [...images, ...localUrls], { shouldValidate: true });
+    const selected = Array.from(e.target.files || []);
+    if (selected.length > 0) {
+      clearErrors("image_urls");
+
+      // Check count limit
+      if (imageUrls.length + selected.length > 4) {
+        setError("image_urls", {
+          type: "custom",
+          message: "You can upload a maximum of 4 images."
+        });
+        return;
+      }
+
+      // Check size limit (5MB = 5 * 1024 * 1024 bytes)
+      const MAX_SIZE = 5 * 1024 * 1024;
+      const oversizedFiles = selected.filter((file) => file.size > MAX_SIZE);
+      if (oversizedFiles.length > 0) {
+        setError("image_urls", {
+          type: "custom",
+          message: `Each image must be less than 5MB. Oversized: ${oversizedFiles.map(f => f.name).join(", ")}`
+        });
+        return;
+      }
+
+      setSelectedFiles((prev) => [...prev, ...selected]);
+      const localUrls = selected.map((file) => URL.createObjectURL(file));
+      setValue("image_urls", [...imageUrls, ...localUrls], { shouldValidate: true });
     }
   };
 
@@ -36,6 +57,25 @@ export function Step1Media({
     e.stopPropagation();
     if (isUploading) return;
     fileInputRef.current?.click();
+  };
+
+  const handleRemoveImage = (index: number) => {
+    clearErrors("image_urls");
+    
+    const targetUrl = imageUrls[index];
+    if (targetUrl && targetUrl.startsWith("blob:")) {
+      // Find how many blob URLs precede this index
+      let blobIndex = 0;
+      for (let i = 0; i < index; i++) {
+        if (imageUrls[i]?.startsWith("blob:")) {
+          blobIndex++;
+        }
+      }
+      // Remove that file from selectedFiles
+      setSelectedFiles((prev) => prev.filter((_, i) => i !== blobIndex));
+    }
+    
+    setValue("image_urls", imageUrls.filter((_, i) => i !== index), { shouldValidate: true });
   };
 
   return (
@@ -51,6 +91,12 @@ export function Step1Media({
         disabled={isUploading}
       />
       
+      {errors.image_urls?.message && (
+        <p role="alert" className="text-xs text-red-600 font-bold select-none mb-2 animate-in fade-in duration-200">
+          {String(errors.image_urls.message)}
+        </p>
+      )}
+
       {/* Drag-drop Upload Slot */}
       <div 
         onClick={triggerFileSelect}
@@ -87,11 +133,14 @@ export function Step1Media({
       {/* Selected Media Grid */}
       <div className="space-y-lg">
         <div className="flex items-center justify-between">
-          <h2 className="font-headline-md text-headline-md text-on-surface">Selected Media ({images.length})</h2>
-          {images.length > 0 && !isUploading && (
+          <h2 className="font-headline-md text-headline-md text-on-surface">Selected Media ({imageUrls.length})</h2>
+          {imageUrls.length > 0 && !isUploading && (
             <button
               type="button"
-              onClick={() => setValue("images", [], { shouldValidate: true })}
+              onClick={() => {
+                setSelectedFiles([]);
+                setValue("image_urls", [], { shouldValidate: true });
+              }}
               className="text-primary font-label-md text-label-md hover:underline bg-transparent border-none cursor-pointer"
             >
               Clear all
@@ -100,17 +149,9 @@ export function Step1Media({
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
-          {images.map((img, idx) => {
-            let filename = "collection_asset.jpg";
-            if (img.includes("loafers") || img.includes("AP1WRLvLL")) {
-              filename = "img_40_loafers.jpg";
-            } else if (img.includes("blazer") || img.includes("AP1WRLsQg")) {
-              filename = "img_41_blazer.jpg";
-            } else if (img.includes("dress") || img.includes("AP1WRLsre")) {
-              filename = "img_42_dress.jpg";
-            } else if (img.startsWith("blob:")) {
-              filename = `custom_upload_${idx + 1}.jpg`;
-            }
+          {imageUrls.map((img, idx) => {
+            const file = selectedFiles[idx];
+            const filename = file ? file.name : "uploaded_asset.jpg";
 
             return (
               <div key={idx} className="relative group aspect-[0.73] bg-surface-container-high rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-secondary-container/30">
@@ -166,7 +207,7 @@ export function Step1Media({
                 )}
 
                 <div className="absolute bottom-0 inset-x-0 p-md bg-gradient-to-t from-black/60 to-transparent">
-                  <p className="text-white font-label-sm">{filename}</p>
+                  <p className="text-white font-label-sm truncate">{filename}</p>
                 </div>
               </div>
             );
@@ -188,12 +229,6 @@ export function Step1Media({
             </div>
           )}
         </div>
-        
-        {errors.images?.message && (
-          <p role="alert" className="text-xs text-red-600 font-bold select-none mt-2">
-            {String(errors.images.message)}
-          </p>
-        )}
       </div>
     </div>
   );

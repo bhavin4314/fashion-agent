@@ -82,7 +82,7 @@ export default function SignUpPage() {
           />
           {/* Soft overlay for depth and text legibility */}
           <div className="absolute inset-0 editorial-overlay flex flex-col justify-end p-xxl pb-xxl">
-            <p className="text-white font-display-lg text-display-lg max-w-md drop-shadow-sm leading-tight">
+            <p className="text-white font-display-lg text-display-lg max-w-[448px] drop-shadow-sm leading-tight">
               Curated by AI. Designed for you.
             </p>
             <div className="mt-md w-16 h-1 bg-white opacity-40" />

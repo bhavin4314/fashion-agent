@@ -2,22 +2,17 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Heart, ShoppingBag, Sparkles, X, ChevronDown, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Heart } from "lucide-react";
 
-import { type Product, PRODUCTS } from "@/lib/products";
+import { type Product } from "@/lib/products";
 
-export function CollectionClient() {
-  // Modal states
-  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isAnimatingIn, setIsAnimatingIn] = React.useState(false);
+interface CollectionClientProps {
+  initialProducts: Product[];
+}
 
+export function CollectionClient({ initialProducts }: CollectionClientProps) {
   // Wishlist state
-  const [wishlist, setWishlist] = React.useState<number[]>([]);
-
-  // Selected size state
-  const [selectedSize, setSelectedSize] = React.useState<string>("M");
+  const [wishlist, setWishlist] = React.useState<Array<number | string>>([]);
 
   // Filtering & Sorting states
   const [priceRanges, setPriceRanges] = React.useState<string[]>([]);
@@ -26,25 +21,7 @@ export function CollectionClient() {
   const [selectedOccasions, setSelectedOccasions] = React.useState<string[]>([]);
   const [sortBy, setSortBy] = React.useState<string>("Recommended");
 
-  const openDetailView = (product: Product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-    document.body.style.overflow = "hidden";
-    setTimeout(() => {
-      setIsAnimatingIn(true);
-    }, 50);
-  };
-
-  const closeDetailView = () => {
-    setIsAnimatingIn(false);
-    setTimeout(() => {
-      setIsModalOpen(false);
-      setSelectedProduct(null);
-      document.body.style.overflow = "auto";
-    }, 400);
-  };
-
-  const toggleWishlist = (productId: number, e: React.MouseEvent) => {
+  const toggleWishlist = (productId: number | string, e: React.MouseEvent) => {
     e.stopPropagation();
     setWishlist((prev) =>
       prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
@@ -77,7 +54,7 @@ export function CollectionClient() {
 
   // Filtering Logic
   const filteredProducts = React.useMemo(() => {
-    return PRODUCTS.filter((product) => {
+    return initialProducts.filter((product) => {
       // Price filter
       if (priceRanges.length > 0) {
         const matchesPrice = priceRanges.some((range) => {
@@ -109,7 +86,7 @@ export function CollectionClient() {
 
       return true;
     });
-  }, [priceRanges, selectedColors, selectedMaterials, selectedOccasions]);
+  }, [initialProducts, priceRanges, selectedColors, selectedMaterials, selectedOccasions]);
 
   // Sorting Logic
   const sortedProducts = React.useMemo(() => {
@@ -121,20 +98,15 @@ export function CollectionClient() {
       return list.sort((a, b) => b.price - a.price);
     }
     if (sortBy === "Newest") {
-      return list.sort((a, b) => b.id - a.id);
+      return list.sort((a, b) => {
+        if (typeof a.id === "number" && typeof b.id === "number") {
+          return b.id - a.id;
+        }
+        return String(b.id).localeCompare(String(a.id));
+      });
     }
     return list; // Recommended / default
   }, [filteredProducts, sortBy]);
-
-  const handleAddToBag = () => {
-    if (!selectedProduct) return;
-    alert(`Added size ${selectedSize} of "${selectedProduct.title}" to your Shopping Bag!`);
-  };
-
-  const handleAskStylist = () => {
-    if (!selectedProduct) return;
-    alert(`Initiating AI Stylist consultation regarding "${selectedProduct.title}".`);
-  };
 
   return (
     <div className="flex flex-col lg:flex-row gap-gutter relative select-none">
@@ -154,7 +126,7 @@ export function CollectionClient() {
                   onChange={() => handlePriceChange("0-100")}
                   className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
-                <span className="text-body-md">$0 - $100</span>
+                <span className="text-body-md">₹0 - ₹100</span>
               </label>
               <label className="flex items-center gap-sm cursor-pointer select-none">
                 <input
@@ -163,7 +135,7 @@ export function CollectionClient() {
                   onChange={() => handlePriceChange("100-250")}
                   className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
-                <span className="text-body-md">$100 - $250</span>
+                <span className="text-body-md">₹100 - ₹250</span>
               </label>
               <label className="flex items-center gap-sm cursor-pointer select-none">
                 <input
@@ -172,7 +144,7 @@ export function CollectionClient() {
                   onChange={() => handlePriceChange("250+")}
                   className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
-                <span className="text-body-md">$250+</span>
+                <span className="text-body-md">₹250+</span>
               </label>
             </div>
           </div>
@@ -348,162 +320,21 @@ export function CollectionClient() {
                 <h3 className="text-body-md font-headline-md text-on-surface tracking-tight font-semibold">
                   {product.title}
                 </h3>
-                <p className="text-body-md font-bold text-on-surface">${product.price}</p>
+                <p className="text-body-md font-bold text-on-surface">₹{product.price}</p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Dynamic loading indicator pagination */}
-        <div className="flex flex-col items-center justify-center gap-md py-xxl select-none pointer-events-none">
-          <div className="flex items-center gap-sm text-secondary animate-pulse">
-            <RefreshCw className="h-4 w-4 text-sm animate-spin" />
-            <span className="text-label-md font-label-md tracking-wider uppercase font-bold text-xs">
-              Loading more items...
+        {/* Empty State message if no products found */}
+        {filteredProducts.length === 0 && (
+          <div className="flex flex-col items-center justify-center gap-md py-xxl select-none">
+            <span className="text-label-md text-secondary font-medium">
+              No products found matching active filters in our collection.
             </span>
           </div>
-          <div className="w-12 h-1 bg-surface-container-high rounded-full overflow-hidden">
-            <div className="h-full bg-brand/30 w-1/3 animate-[loading_1.5s_ease-in-out_infinite]"></div>
-          </div>
-        </div>
+        )}
       </div>
-
-      {/* Split-screen Product Detail View Modal */}
-      {isModalOpen && selectedProduct && (
-        <div className="fixed inset-0 z-[100] flex justify-end">
-          {/* Blur backdrop overlay */}
-          <div
-            className={`absolute inset-0 bg-on-surface/40 backdrop-blur-sm transition-opacity duration-300 ${
-              isAnimatingIn ? "opacity-100" : "opacity-0"
-            }`}
-            onClick={closeDetailView}
-          />
-
-          {/* Slider Drawer Content Panel */}
-          <div
-            className={`absolute right-0 top-0 h-full w-full lg:w-[90%] bg-surface flex flex-col lg:flex-row transform transition-transform duration-[400ms] ease-out shadow-2xl ${
-              isAnimatingIn ? "translate-x-0" : "translate-x-full"
-            }`}
-          >
-            {/* Modal Exit close button */}
-            <button
-              className="absolute top-md right-md z-10 w-12 h-12 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white hover:scale-105 active:scale-95 transition-all shadow-md border-none cursor-pointer"
-              onClick={closeDetailView}
-            >
-              <X className="h-5 w-5 text-charcoal font-bold" />
-            </button>
-
-            {/* Left: 60% Large Portrait Image Area */}
-            <div className="w-full lg:w-[60%] h-[512px] lg:h-full overflow-hidden bg-surface-container-lowest select-none relative">
-              <Image
-                src={selectedProduct.image}
-                alt={selectedProduct.title}
-                className="w-full h-full object-cover pointer-events-none"
-                fill
-                sizes="(max-width: 1024px) 100vw, 60vw"
-                unoptimized
-              />
-            </div>
-
-            {/* Right: 40% Product Information Detail Area */}
-            <div className="w-full lg:w-[40%] h-full p-xl lg:p-xxl flex flex-col overflow-y-auto justify-center bg-white">
-              <div className="mb-xxl">
-                <p className="text-label-md font-label-md text-secondary uppercase tracking-widest mb-xs font-bold text-xs select-none">
-                  {selectedProduct.material}
-                </p>
-                <h1 className="text-3xl lg:text-[40px] font-bold text-on-surface mb-sm leading-tight tracking-tight select-none">
-                  {selectedProduct.title}
-                </h1>
-                <p className="text-2xl font-bold text-brand mb-xl select-none">
-                  ${selectedProduct.price}
-                </p>
-
-                {/* Quiet luxury editorial brand description */}
-                <p className="text-body-md font-body-md text-secondary mb-xl leading-relaxed select-none">
-                  Ethically sourced and meticulously crafted for a timeless silhouette. This piece embodies Vistra's commitment to quiet luxury and sustainable fashion excellence.
-                </p>
-
-                {/* Sizing Selector */}
-                <div className="mb-xl">
-                  <span className="text-label-md font-label-md text-on-surface block mb-md font-bold text-sm select-none">
-                    Select Size
-                  </span>
-                  <div className="flex flex-wrap gap-sm select-none">
-                    {["S", "M", "L", "XL"].map((sz) => (
-                      <button
-                        key={sz}
-                        onClick={() => setSelectedSize(sz)}
-                        className={`w-14 h-14 rounded-lg flex items-center justify-center text-label-md font-label-md font-bold cursor-pointer transition-all duration-150 ${
-                          selectedSize === sz
-                            ? "border-2 border-neutral-800 bg-surface-container-high scale-105"
-                            : "border border-outline-variant hover:border-on-surface bg-white"
-                        }`}
-                      >
-                        {sz}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Add to Bag and Prominent Coral AI Stylist Buttons */}
-                <div className="flex flex-col gap-md">
-                  <button
-                    onClick={handleAddToBag}
-                    className="w-full py-lg bg-neutral-900 text-white rounded-xl font-label-md text-label-md hover:bg-neutral-850 transition-colors flex items-center justify-center gap-sm border-none cursor-pointer font-semibold shadow-md active:scale-[0.98]"
-                  >
-                    <ShoppingBag className="h-5 w-5 text-white" />
-                    Add to Bag
-                  </button>
-
-                  <button
-                    onClick={handleAskStylist}
-                    className="w-full py-lg bg-primary-fixed text-primary rounded-xl font-label-md text-label-md hover:shadow-md transition-all flex items-center justify-center gap-sm border-2 border-primary-fixed-dim/40 cursor-pointer font-bold active:scale-[0.98]"
-                  >
-                    <Sparkles className="h-5 w-5 fill-primary/20 text-primary" />
-                    Ask Stylist about this item
-                  </button>
-                </div>
-              </div>
-
-              {/* Product Specifications Accordions */}
-              <div className="border-t border-surface-container pt-xl select-none">
-                <div className="flex flex-col gap-lg">
-                  <div
-                    onClick={() => alert("100% sustainably sourced. Wash with similar colors.")}
-                    className="flex justify-between items-center cursor-pointer group py-2"
-                  >
-                    <span className="text-label-md font-label-md font-bold text-sm text-neutral-800 group-hover:text-brand transition-colors">
-                      Material & Care
-                    </span>
-                    <ChevronDown className="h-5 w-5 text-secondary group-hover:text-brand transition-colors" />
-                  </div>
-                  <div
-                    onClick={() => alert("Free global courier shipping and 30-day hassle-free returns.")}
-                    className="flex justify-between items-center cursor-pointer group py-2"
-                  >
-                    <span className="text-label-md font-label-md font-bold text-sm text-neutral-800 group-hover:text-brand transition-colors">
-                      Shipping & Returns
-                    </span>
-                    <ChevronDown className="h-5 w-5 text-secondary group-hover:text-brand transition-colors" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Continuous Loading bar CSS styling */}
-      <style jsx global>{`
-        @keyframes loading {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(300%);
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -1,11 +1,11 @@
 # Graph Report - fashion-agent  (2026-06-16)
 
 ## Corpus Check
-- 74 files · ~221,314 words
+- 73 files · ~220,891 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 393 nodes · 636 edges · 33 communities (27 shown, 6 thin omitted)
+- 390 nodes · 623 edges · 33 communities (26 shown, 7 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.95)
 - Token cost: 0 input · 0 output
 
@@ -49,11 +49,11 @@
 - [[_COMMUNITY_Community 34|Community 34]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `cn()` - 32 edges
+1. `cn()` - 31 edges
 2. `Antigravity — AI Agent Codebase Rules` - 17 edges
 3. `compilerOptions` - 16 edges
-4. `Button` - 10 edges
-5. `createClient()` - 10 edges
+4. `createClient()` - 10 edges
+5. `Button` - 9 edges
 6. `4. Forms & Validation` - 9 edges
 7. `Form System Architecture Stack` - 9 edges
 8. `Product` - 8 edges
@@ -79,11 +79,11 @@
 - **Vistra Design Tokens** — design_radical_coral, design_tonal_layers, design_rounded_corners [EXTRACTED 1.00]
 - **AI Agent Architecture Rules** — agents_typescript_strict, agents_form_stack, agents_rsc_default [EXTRACTED 1.00]
 
-## Communities (33 total, 6 thin omitted)
+## Communities (33 total, 7 thin omitted)
 
 ### Community 0 - "Form Components and UI Primitives"
-Cohesion: 0.08
-Nodes (47): Form System Architecture Stack, defaultValues, LoginFormValues, loginSchema, Form(), FormProps, FormCheckbox(), FormCheckboxProps (+39 more)
+Cohesion: 0.07
+Nodes (51): Form System Architecture Stack, defaultValues, LoginFormValues, loginSchema, defaultValues, SignUpForm(), SignUpFormValues, signUpSchema (+43 more)
 
 ### Community 1 - "Package Configuration & Project Dependencies"
 Cohesion: 0.05
@@ -99,7 +99,7 @@ Nodes (6): 1.1 Compiler Settings, 1.2 `any` is Forbidden, 1.3 Infer Types from Z
 
 ### Community 4 - "Vistra Design System and Secure Authentication"
 Cohesion: 0.07
-Nodes (24): metadata, AdminLogoutButton(), CreateProductWizardClient(), categoryOptions, INITIAL_ITEMS, InventoryClient(), InventoryClientProps, InventoryItem (+16 more)
+Nodes (26): metadata, AdminLogoutButton(), CreateProductWizardClient(), categoryOptions, INITIAL_ITEMS, InventoryClient(), InventoryClientProps, InventoryItem (+18 more)
 
 ### Community 5 - "AI Agent Architectural Guidelines and Form Conventions"
 Cohesion: 0.20
@@ -118,7 +118,7 @@ Cohesion: 0.33
 Nodes (4): geistMono, geistSans, inter, metadata
 
 ### Community 9 - "Standard Home Page Segment"
-Cohesion: 0.10
+Cohesion: 0.09
 Nodes (21): metadata, metadata, CollectionClient(), CollectionClientProps, Product, PRODUCTS, Navbar(), NavbarProps (+13 more)
 
 ### Community 14 - "Community 14"
@@ -131,7 +131,7 @@ Nodes (6): 6.1 Design Tokens First, 6.2 Class Ordering, 6.3 Conditional Classes,
 
 ### Community 16 - "Community 16"
 Cohesion: 0.09
-Nodes (31): CreateProductWizardClientProps, WizardContentProps, Step1Media(), Step1MediaProps, Step2Garment(), Step2GarmentProps, Step3Metadata(), Step3MetadataProps (+23 more)
+Nodes (30): CreateProductWizardClientProps, WizardContentProps, Step1Media(), Step1MediaProps, Step2Garment(), Step2GarmentProps, Step3Metadata(), Step3MetadataProps (+22 more)
 
 ### Community 17 - "Community 17"
 Cohesion: 0.33
@@ -144,10 +144,6 @@ Nodes (4): Antigravity Codebase Rules, RSC-First Component Rules, Strict TypeScr
 ### Community 19 - "Community 19"
 Cohesion: 0.50
 Nodes (3): Deploy on Vercel, Getting Started, Learn More
-
-### Community 23 - "Community 23"
-Cohesion: 0.23
-Nodes (8): defaultValues, SignUpForm(), SignUpFormValues, signUpSchema, signUpAction(), metadata, SignUpFormValues, signUpSchema
 
 ### Community 24 - "Community 24"
 Cohesion: 0.22
@@ -186,24 +182,24 @@ Cohesion: 0.60
 Nodes (3): config, proxy(), updateSession()
 
 ## Knowledge Gaps
-- **190 isolated node(s):** `NavbarProps`, `ActivityItem`, `FeaturedItem`, `RECENT_ACTIVITIES`, `FEATURED_ITEMS` (+185 more)
+- **189 isolated node(s):** `NavbarProps`, `ActivityItem`, `FeaturedItem`, `RECENT_ACTIVITIES`, `FEATURED_ITEMS` (+184 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Antigravity — AI Agent Codebase Rules` connect `AI Agent Architectural Guidelines and Form Conventions` to `Interactive Form Selectors and Layouts`, `Multi-line Text Inputs`, `Community 15`, `Community 17`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
-- **Why does `cn()` connect `Form Components and UI Primitives` to `Standard Home Page Segment`, `Community 23`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
-- **Why does `createClient()` connect `Vistra Design System and Secure Authentication` to `Community 16`, `Standard Home Page Segment`, `Community 23`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **Why does `createClient()` connect `Vistra Design System and Secure Authentication` to `Community 16`, `Standard Home Page Segment`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **What connects `NavbarProps`, `ActivityItem`, `FeaturedItem` to the rest of the system?**
-  _191 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _190 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Form Components and UI Primitives` be split into smaller, more focused modules?**
-  _Cohesion score 0.07784679089026915 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07367641614216956 - nodes in this community are weakly interconnected._
 - **Should `Package Configuration & Project Dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.05263157894736842 - nodes in this community are weakly interconnected._
 - **Should `TypeScript Compiler Settings` be split into smaller, more focused modules?**
   _Cohesion score 0.1 - nodes in this community are weakly interconnected._
+- **Should `Vistra Design System and Secure Authentication` be split into smaller, more focused modules?**
+  _Cohesion score 0.06620209059233449 - nodes in this community are weakly interconnected._

@@ -40,12 +40,12 @@ export async function updateSession(request: NextRequest) {
   }
 
   const isAdminPath = pathname.startsWith("/admin");
+  const isProductPath = pathname.startsWith("/product");
   const isCustomerPath =
     pathname.startsWith("/collection") ||
-    pathname.startsWith("/product") ||
     pathname.startsWith("/stylist");
   const isAuthPath = pathname.startsWith("/login") || pathname.startsWith("/signup");
-  const isProtectedPath = isAdminPath || isCustomerPath;
+  const isProtectedPath = isAdminPath || isCustomerPath || isProductPath;
 
   // Helper to create redirect response with copied session cookies and disabled cache
   const redirect = (targetUrl: string) => {

@@ -9,7 +9,7 @@ import {
   TrendingUp,
   ArrowUpRight,
   Sparkles,
-  DollarSign,
+  IndianRupee,
   Shirt,
   Sparkle,
   Users,
@@ -204,7 +204,7 @@ export function AdminOverviewClient() {
             <div className="bg-white border border-border-light rounded-2xl p-xl flex flex-col justify-between min-h-[140px] transition-all hover:shadow-lg duration-300">
               <div className="flex justify-between items-start select-none">
                 <span className="p-3 bg-primary-light-bg text-primary rounded-xl">
-                  <DollarSign className="w-6 h-6" />
+                  <IndianRupee className="w-6 h-6" />
                 </span>
                 <span className="bg-primary-fixed text-primary px-2.5 py-1 rounded-full text-[10px] font-extrabold">
                   +12.5%
@@ -214,7 +214,7 @@ export function AdminOverviewClient() {
                 <p className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">
                   Total Revenue
                 </p>
-                <h3 className="text-2xl font-black text-charcoal mt-1">$142,850.00</h3>
+                <h3 className="text-2xl font-black text-charcoal mt-1">₹142,850.00</h3>
               </div>
             </div>
 
@@ -474,7 +474,7 @@ export function AdminOverviewClient() {
                     </p>
                     <p className="text-xs font-bold text-charcoal mt-1 truncate">{item.name}</p>
                     <p className="text-xs font-black text-primary mt-1.5 leading-none">
-                      ${item.price.toLocaleString("en-US", { minimumFractionDigits: 0 })}
+                      ₹{item.price.toLocaleString("en-US", { minimumFractionDigits: 0 })}
                     </p>
                   </div>
                 </div>

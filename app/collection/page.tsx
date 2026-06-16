@@ -1,13 +1,23 @@
 import type { Metadata } from "next";
 import { Navbar } from "../_components/Navbar";
 import { CollectionClient } from "./_components/CollectionClient";
+import { createClient } from "@/utils/supabase/server";
+import { mapDbProduct } from "@/lib/db-products";
 
 export const metadata: Metadata = {
   title: "Vistra | Explore Collection",
   description: "Explore Vistra's curated premium fashion essentials.",
 };
 
-export default function CollectionPage() {
+export default async function CollectionPage() {
+  const supabase = await createClient();
+  const { data: dbProducts } = await supabase
+    .from("products")
+    .select("*")
+    .order("id", { ascending: false });
+
+  const initialProducts = (dbProducts || []).map(mapDbProduct);
+
   return (
     <div className="text-charcoal antialiased min-h-screen flex flex-col bg-white">
       {/* TopNavBar with Explore Collection active tab */}
@@ -15,7 +25,7 @@ export default function CollectionPage() {
 
       {/* Main Content Area */}
       <main className="pt-[100px] pb-xxl max-w-7xl w-full mx-auto px-margin-mobile md:px-margin-desktop flex-1">
-        <CollectionClient />
+        <CollectionClient initialProducts={initialProducts} />
       </main>
 
       {/* Footer Section */}

@@ -14,3 +14,5 @@ export { Textarea } from "./Textarea";
 export type { TextareaProps } from "./Textarea";
 export { FileUpload } from "./FileUpload";
 export type { FileUploadProps } from "./FileUpload";
+export { DeleteConfirmationModal } from "./DeleteConfirmationModal";
+export { ConfirmationModal } from "./ConfirmationModal";

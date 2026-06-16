@@ -4,17 +4,16 @@ import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import { FormInput } from "@/components/forms/FormInput";
 import { FormTextarea } from "@/components/forms/FormTextarea";
+import { FormChips } from "@/components/forms/FormChips";
 import type { ProductWizardFormValues } from "../schema";
+import { CATEGORY_OPTIONS, GENDER_OPTIONS } from "../constants";
 
 interface Step2GarmentProps {
   isAiProcessing: boolean;
-  aiProgress: number;
 }
 
-export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) {
-  const { watch, setValue } = useFormContext<ProductWizardFormValues>();
-  const category = watch("category");
-  const gender = watch("gender");
+export function Step2Garment({ isAiProcessing }: Step2GarmentProps) {
+  const { setValue } = useFormContext<ProductWizardFormValues>();
 
   return (
     <div className="grid grid-cols-12 gap-xxl animate-in fade-in duration-300">
@@ -24,12 +23,12 @@ export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) 
         {/* Vision AI Engine Status Banner */}
         <div className={`p-lg rounded-xl border flex items-center justify-between transition-all duration-300 ${
           isAiProcessing 
-            ? "bg-primary/5 border-primary/20" 
+            ? "bg-primary/5 border-primary/20 animate-pulse" 
             : "bg-emerald-50/50 border-emerald-100"
         }`}>
           <div className="flex items-center gap-md">
             <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white ${
-              isAiProcessing ? "bg-primary animate-pulse" : "bg-emerald-500"
+              isAiProcessing ? "bg-primary" : "bg-emerald-500"
             }`}>
               <span className="material-symbols-outlined font-extrabold text-[20px]">
                 {isAiProcessing ? "auto_awesome" : "check_circle"}
@@ -41,7 +40,7 @@ export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) 
               </h4>
               <p className="text-xs text-neutral-500 font-medium">
                 {isAiProcessing 
-                  ? "Extracting attributes from high-resolution images..." 
+                  ? "Extracting luxury attributes from images..." 
                   : "All specifications successfully extracted & mapped."}
               </p>
             </div>
@@ -50,7 +49,7 @@ export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) 
             <span className={`text-xs font-extrabold uppercase tracking-widest ${
               isAiProcessing ? "text-primary animate-pulse" : "text-emerald-600"
             }`}>
-              {isAiProcessing ? `${aiProgress}%` : "Complete"}
+              {isAiProcessing ? "Analyzing..." : "Complete"}
             </span>
           </div>
         </div>
@@ -75,7 +74,7 @@ export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) 
               label="" 
               placeholder="Product name" 
               className="w-full"
-              inputClassName="w-full px-md py-sm border border-outline rounded-lg font-body-md form-focus-ring bg-surface-container-low/30"
+              inputClassName="w-full px-md py-sm border border-outline rounded-lg font-body-md form-focus-ring bg-white"
             />
           )}
         </div>
@@ -107,7 +106,7 @@ export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) 
               placeholder="Product description" 
               rows={6}
               className="w-full"
-              inputClassName="w-full px-md py-sm border border-outline rounded-lg font-body-md form-focus-ring bg-surface-container-low/30 leading-relaxed"
+              inputClassName="w-full px-md py-sm border border-outline rounded-lg font-body-md form-focus-ring bg-white leading-relaxed"
             />
           )}
         </div>
@@ -127,29 +126,18 @@ export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) 
           {isAiProcessing ? (
             <div className="w-[200px] h-10 bg-neutral-100 rounded-xl animate-pulse border border-secondary-container/30" />
           ) : (
-            <div className="flex bg-surface-container-low p-1 rounded-xl border border-secondary-container/60 max-w-[280px]">
-              {(["Apparel", "Footwear"] as const).map((cat) => {
-                const isActive = category === cat;
-                return (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => {
-                      setValue("category", cat, { shouldValidate: true });
-                      // Reset sizes to prevent invalid state when Category toggles
-                      setValue("sizes", [], { shouldValidate: false });
-                    }}
-                    className={`flex-grow text-center py-2 text-xs font-bold rounded-lg transition-all border-none cursor-pointer ${
-                      isActive
-                        ? "bg-white text-primary shadow-sm"
-                        : "text-secondary hover:text-charcoal bg-transparent"
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                );
-              })}
-            </div>
+            <FormChips
+              name="category"
+              options={CATEGORY_OPTIONS}
+              variant="segmented"
+              className="max-w-[280px]"
+              onChange={(val) => {
+                setValue("sizes", [], { shouldValidate: false });
+                if (val !== "apparel") {
+                  setValue("fit", null, { shouldValidate: false });
+                }
+              }}
+            />
           )}
         </div>
 
@@ -168,25 +156,12 @@ export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) 
           {isAiProcessing ? (
             <div className="w-[300px] h-10 bg-neutral-100 rounded-xl animate-pulse border border-secondary-container/30" />
           ) : (
-            <div className="flex bg-surface-container-low p-1 rounded-xl border border-secondary-container/60 max-w-[340px]">
-              {(["Men", "Women", "Unisex"] as const).map((g) => {
-                const isActive = gender === g;
-                return (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => setValue("gender", g, { shouldValidate: true })}
-                    className={`flex-grow text-center py-2 text-xs font-bold rounded-lg transition-all border-none cursor-pointer ${
-                      isActive
-                        ? "bg-white text-primary shadow-sm"
-                        : "text-secondary hover:text-charcoal bg-transparent"
-                    }`}
-                  >
-                    {g}
-                  </button>
-                );
-              })}
-            </div>
+            <FormChips
+              name="gender"
+              options={GENDER_OPTIONS}
+              variant="segmented"
+              className="max-w-[340px]"
+            />
           )}
         </div>
 
@@ -220,16 +195,16 @@ export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) 
                 e.preventDefault();
               }
             }}
-            leftIcon={<span className="font-bold text-on-surface">$</span>}
+            leftIcon={<span className="font-bold text-on-surface">₹</span>}
             inputClassName="bg-white font-bold"
           />
         </div>
 
         {/* Stock Quantity */}
         <div className="flex flex-col gap-sm">
-          <label htmlFor="stock" className="font-label-md text-on-surface text-sm font-semibold">Stock Quantity</label>
+          <label htmlFor="stock_quantity" className="font-label-md text-on-surface text-sm font-semibold">Stock Quantity</label>
           <FormInput
-            name="stock"
+            name="stock_quantity"
             label=""
             type="number"
             placeholder="0"
@@ -251,7 +226,7 @@ export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) 
         </div>
 
         {/* Inventory Notes */}
-        <div className="pt-xl">
+        {/* <div className="pt-xl">
           <div className="p-lg rounded-xl bg-surface-container-high/50 border border-dashed border-outline flex items-start gap-sm">
             <span className="material-symbols-outlined text-primary shrink-0 mt-0.5">info</span>
             <div className="space-y-1">
@@ -263,7 +238,7 @@ export function Step2Garment({ isAiProcessing, aiProgress }: Step2GarmentProps) 
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
