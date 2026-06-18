@@ -41,6 +41,21 @@ export function SidebarNav() {
         </span>
         <span className="text-xs font-bold uppercase tracking-wider">Inventory</span>
       </Link>
+
+      {/* Orders */}
+      <Link
+        className={`flex items-center gap-sm px-lg py-md rounded-xl transition-all duration-200 ${
+          pathname?.startsWith("/admin/orders")
+            ? "text-primary font-bold border-r-4 border-primary bg-surface-container-low"
+            : "text-on-surface-variant hover:bg-surface-container-low"
+        }`}
+        href="/admin/orders"
+      >
+        <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: pathname?.startsWith("/admin/orders") ? "'FILL' 1" : "'FILL' 0" }}>
+          receipt_long
+        </span>
+        <span className="text-xs font-bold uppercase tracking-wider">Orders</span>
+      </Link>
     </nav>
   );
 }

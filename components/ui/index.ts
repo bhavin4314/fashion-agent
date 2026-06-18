@@ -17,3 +17,7 @@ export type { FileUploadProps } from "./FileUpload";
 export { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 export { ConfirmationModal } from "./ConfirmationModal";
 export { AlertModal } from "./AlertModal";
+export { Pagination } from "./Pagination";
+export type { PaginationProps } from "./Pagination";
+export { SearchInput } from "./SearchInput";
+export type { SearchInputProps } from "./SearchInput";

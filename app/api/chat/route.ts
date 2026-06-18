@@ -166,7 +166,7 @@ async function runHybridSearch(query: string, analysis: QueryAnalysis, maxPrice?
       
       // Filter by expected categories based on AI classification to prevent showing irrelevant types of products
       if (analysis.categories && analysis.categories.length > 0) {
-        filtered = filtered.filter((p) => analysis.categories.includes(p.category as any));
+        filtered = filtered.filter((p) => analysis.categories.includes(p.category as QueryAnalysis["categories"][number]));
       }
       
       // Filter by query product type alignment via deterministic code-level helper

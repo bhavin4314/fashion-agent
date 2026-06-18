@@ -11,11 +11,11 @@ import {
   type Resolver,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ZodType } from "zod";
+import { z } from "zod";
 import { cn } from "@/lib/utils";
 
 interface FormProps<TValues extends FieldValues> {
-  schema: ZodType<TValues, any, any>;
+  schema: z.ZodTypeAny;
   defaultValues: DefaultValues<TValues>;
   onSubmit: (values: TValues, methods: UseFormReturn<TValues>) => void | Promise<void>;
   children: React.ReactNode;
@@ -30,7 +30,7 @@ export function Form<TValues extends FieldValues>({
   className,
 }: FormProps<TValues>) {
   const methods = useForm<TValues>({
-    resolver: zodResolver(schema) as unknown as Resolver<TValues, any>,
+    resolver: zodResolver(schema as unknown as Parameters<typeof zodResolver>[0]) as unknown as Resolver<TValues>,
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import { Agentation } from "agentation";
+import { CartProvider } from "@/hooks/use-cart";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,7 +25,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet" />
       </head>
       <body className="min-h-full flex flex-col">
-        {children}
+        <CartProvider>
+          {children}
+        </CartProvider>
         <Toaster position="bottom-right" toastOptions={{
           style: {
             fontFamily: "Inter, sans-serif",

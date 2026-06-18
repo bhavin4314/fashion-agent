@@ -1,16 +1,16 @@
 # Graph Report - fashion-agent  (2026-06-18)
 
 ## Corpus Check
-- 80 files · ~223,912 words
+- 104 files · ~233,933 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 399 nodes · 652 edges · 33 communities (27 shown, 6 thin omitted)
+- 500 nodes · 844 edges · 34 communities (29 shown, 5 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `64eb74ab`
+- Built from commit: `00e2c936`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -47,18 +47,19 @@
 - [[_COMMUNITY_Community 29|Community 29]]
 - [[_COMMUNITY_Community 30|Community 30]]
 - [[_COMMUNITY_Community 32|Community 32]]
+- [[_COMMUNITY_Community 33|Community 33]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 32 edges
-2. `Antigravity — AI Agent Codebase Rules` - 17 edges
-3. `compilerOptions` - 16 edges
-4. `createClient()` - 13 edges
-5. `Button` - 10 edges
-6. `4. Forms & Validation` - 9 edges
-7. `Product` - 8 edges
-8. `4.4 Form Component Family — The Complete Primitives` - 8 edges
-9. `Design System: Vistra Fashion Concierge` - 8 edges
-10. `3. Next.js: Server vs. Client Components` - 7 edges
+2. `createClient()` - 22 edges
+3. `Antigravity — AI Agent Codebase Rules` - 17 edges
+4. `compilerOptions` - 16 edges
+5. `useCart()` - 11 edges
+6. `Button` - 10 edges
+7. `Navbar()` - 9 edges
+8. `4. Forms & Validation` - 9 edges
+9. `Modal()` - 8 edges
+10. `Product` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `runHybridSearch()` --calls--> `createClient()`  [EXTRACTED]
@@ -69,33 +70,33 @@
   app/product/[id]/_components/ProductDetailClient.tsx → lib/products.ts
 - `ProductDetailPage()` --calls--> `mapDbProduct()`  [EXTRACTED]
   app/product/[id]/page.tsx → lib/db-products.ts
-- `SignUpForm()` --calls--> `cn()`  [EXTRACTED]
-  app/signup/_components/SignUpForm.tsx → lib/utils.ts
+- `Navbar()` --calls--> `useCart()`  [EXTRACTED]
+  app/_components/Navbar.tsx → hooks/use-cart.tsx
 
 ## Import Cycles
 - None detected.
 
-## Communities (33 total, 6 thin omitted)
+## Communities (34 total, 5 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.07
-Nodes (49): Step2Garment(), Step2GarmentProps, Form(), FormProps, FormCheckbox(), FormCheckboxProps, ChipOption, FormChips() (+41 more)
+Cohesion: 0.06
+Nodes (56): defaultValues, LoginForm(), defaultValues, SignUpForm(), Form(), FormProps, FormCheckbox(), FormCheckboxProps (+48 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.09
-Nodes (26): fetchFilteredProductsAction(), FetchProductsParams, metadata, CollectionClient(), CollectionClientProps, CreateProductWizardClient(), categoryOptions, InventoryClient() (+18 more)
+Cohesion: 0.10
+Nodes (24): InvoiceModal(), InvoiceModalProps, Order, OrderItem, ProfileClient(), ProfileClientProps, ProfileItem, TrackingTimeline() (+16 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.09
-Nodes (30): CreateProductWizardClientProps, WizardContentProps, Step1Media(), Step1MediaProps, Step3Metadata(), Step3MetadataProps, Stepper(), StepperProps (+22 more)
+Cohesion: 0.08
+Nodes (35): CreateProductWizardClient(), CreateProductWizardClientProps, WizardContentProps, Step1Media(), Step1MediaProps, Step2Garment(), Step2GarmentProps, Step3Metadata() (+27 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.05
-Nodes (39): dependencies, ai, @ai-sdk/google, @ai-sdk/react, clsx, @hookform/resolvers, lucide-react, next (+31 more)
+Cohesion: 0.08
+Nodes (24): dependencies, ai, @ai-sdk/google, @ai-sdk/react, clsx, @hookform/resolvers, jspdf, lucide-react (+16 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.15
-Nodes (7): metadata, Navbar(), NavbarProps, SearchPill(), StylistClient(), metadata, createClient()
+Cohesion: 0.08
+Nodes (25): metadata, metadata, metadata, CheckoutSuccessClient(), OrderDetail, OrderItemDetail, Navbar(), NavbarProps (+17 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.10
@@ -106,12 +107,12 @@ Cohesion: 0.12
 Nodes (16): 4.1 Mandatory Stack, 4.2 Schema-First Workflow, 4.3 Centralized `<Form />` Wrapper, 4.4 Form Component Family — The Complete Primitives, 4.5 Form Component Family — Quick Reference, 4.6 The `components/forms/` Directory Structure, 4.7 Complete Form Usage Example, 4.8 Static Options & Default Values (+8 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.29
-Nodes (6): defaultValues, SignUpForm(), signUpAction(), metadata, SignUpFormValues, signUpSchema
+Cohesion: 0.20
+Nodes (8): metadata, ActivityItem, AdminOverviewClient(), AdminOverviewClientProps, CHART_DATA, FEATURED_ITEMS, FeaturedItem, RECENT_ACTIVITIES
 
 ### Community 8 - "Community 8"
-Cohesion: 0.22
-Nodes (7): metadata, ActivityItem, AdminOverviewClient(), CHART_DATA, FEATURED_ITEMS, FeaturedItem, RECENT_ACTIVITIES
+Cohesion: 0.06
+Nodes (32): CreateOrderInput, createOrderSchema, orderItemSchema, fetchFilteredProductsAction(), FetchProductsParams, metadata, AdminOrdersClient(), CollectionClient() (+24 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.20
@@ -146,8 +147,8 @@ Cohesion: 0.40
 Nodes (5): 12.1 Path Aliases, 12.2 Import Order, 12.3 Type-Only Imports, 12.4 Barrel Files (`index.ts`), 12. Imports & Module Resolution
 
 ### Community 17 - "Community 17"
-Cohesion: 0.40
-Nodes (5): 5.1 Mandatory Component Usage, 5.2 Component API Rules, 5.3 The `cn()` Utility, 5.4 Modal Component Rules, 5. Design System & Base Components
+Cohesion: 0.33
+Nodes (6): 5.1 Mandatory Component Usage, 5.2 Component API Rules, 5.3 The `cn()` Utility, 5.4 Modal Component Rules, 5.5 Shared & Common UI Components, 5. Design System & Base Components
 
 ### Community 18 - "Community 18"
 Cohesion: 0.60
@@ -170,36 +171,44 @@ Cohesion: 0.50
 Nodes (4): 14.1 Baseline Requirements, 14.2 ARIA Rules, 14.3 Form Accessibility, 14. Accessibility (a11y)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.16
-Nodes (10): metadata, AdminLogoutButton(), defaultValues, LoginForm(), SidebarNav(), loginAction(), signOutAction(), metadata (+2 more)
+Cohesion: 0.21
+Nodes (7): metadata, AdminLogoutButton(), SidebarNav(), loginAction(), signOutAction(), LoginFormValues, loginSchema
 
 ### Community 24 - "Community 24"
 Cohesion: 0.50
 Nodes (3): Deploy on Vercel, Getting Started, Learn More
 
+### Community 25 - "Community 25"
+Cohesion: 0.11
+Nodes (16): AdminOrdersClientProps, OrderItemDetail, OrderSummary, SelectedOrderDetails, statusOptions, ORDER_STATUS_OPTIONS, OrderStatus, DBOrderItem (+8 more)
+
 ### Community 32 - "Community 32"
-Cohesion: 0.27
-Nodes (11): analyzeQuery(), CHAT_MODEL, checkFashionRelevance(), classifyQuery(), DBProductRecord, EMBEDDING_MODEL, filterProductsByType(), google (+3 more)
+Cohesion: 0.11
+Nodes (18): devDependencies, agentation, eslint, eslint-config-next, tailwindcss, @tailwindcss/postcss, @types/node, @types/react (+10 more)
+
+### Community 33 - "Community 33"
+Cohesion: 0.25
+Nodes (12): analyzeQuery(), CHAT_MODEL, checkFashionRelevance(), classifyQuery(), DBProductRecord, EMBEDDING_MODEL, filterProductsByType(), google (+4 more)
 
 ## Knowledge Gaps
-- **189 isolated node(s):** `NavbarProps`, `ActivityItem`, `FeaturedItem`, `RECENT_ACTIVITIES`, `FEATURED_ITEMS` (+184 more)
+- **229 isolated node(s):** `NavbarProps`, `ActivityItem`, `FeaturedItem`, `RECENT_ACTIVITIES`, `CHART_DATA` (+224 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+- **Why does `createClient()` connect `Community 8` to `Community 0`, `Community 33`, `Community 2`, `Community 1`, `Community 4`, `Community 7`, `Community 23`, `Community 25`?**
+  _High betweenness centrality (0.070) - this node is a cross-community bridge._
+- **Why does `cn()` connect `Community 0` to `Community 8`?**
+  _High betweenness centrality (0.033) - this node is a cross-community bridge._
 - **Why does `Antigravity — AI Agent Codebase Rules` connect `Community 9` to `Community 6`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 20`, `Community 21`, `Community 22`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
-- **Why does `cn()` connect `Community 0` to `Community 1`, `Community 7`, `Community 23`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Why does `createClient()` connect `Community 1` to `Community 32`, `Community 2`, `Community 7`, `Community 23`?**
-  _High betweenness centrality (0.024) - this node is a cross-community bridge._
+  _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **What connects `NavbarProps`, `ActivityItem`, `FeaturedItem` to the rest of the system?**
-  _189 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _229 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.07077625570776255 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0590751136059877 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.08710801393728224 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09659090909090909 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.08961593172119488 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07536231884057971 - nodes in this community are weakly interconnected._

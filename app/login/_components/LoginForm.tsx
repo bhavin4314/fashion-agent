@@ -136,7 +136,7 @@ export function LoginForm() {
       {/* Sign-up option divider */}
       <div className="mt-xl pt-xl border-t border-surface-container-highest text-center select-none">
         <p className="font-body-md text-body-md text-secondary">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link
             className="text-on-surface font-semibold hover:underline decoration-2 underline-offset-4 transition-all duration-150"
             href="/signup"

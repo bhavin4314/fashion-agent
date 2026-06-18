@@ -1,7 +1,7 @@
 {
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/_components/Navbar.tsx": {
-    "mtime": 1781612318.020388,
-    "ast_hash": "497c2d86b2ea33ab79abacdfae8559ac",
+    "mtime": 1781771579.1018147,
+    "ast_hash": "a999b6e4ebf573d81fb82490c426543e",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/_components/SearchPill.tsx": {
@@ -15,18 +15,18 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/_components/AdminOverviewClient.tsx": {
-    "mtime": 1781594861.599625,
-    "ast_hash": "c1fae8b4bf108360109402ab94c78cd5",
+    "mtime": 1781779852.977008,
+    "ast_hash": "ece7fb2cf966e0d3fae63597535210f3",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/_components/SidebarNav.tsx": {
-    "mtime": 1780552545.3248963,
-    "ast_hash": "ca814408724f2e747b57d6db89a8b9bf",
+    "mtime": 1781771753.2530658,
+    "ast_hash": "15ff804daf96c3eaa4a04ae3c4fb5bc2",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/inventory/_components/InventoryClient.tsx": {
-    "mtime": 1781676814.5179644,
-    "ast_hash": "1bc88f9e14db28cebb380fa7040fc233",
+    "mtime": 1781784730.2633944,
+    "ast_hash": "c15797128354ae53648db36445fef5c2",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/inventory/actions.ts": {
@@ -90,18 +90,18 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/page.tsx": {
-    "mtime": 1780376837.0218625,
-    "ast_hash": "2e55897f16ec3c532542f974ec81c8db",
+    "mtime": 1781771805.9930816,
+    "ast_hash": "361e48d508efdfa92acf9df52b171c17",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/api/chat/route.ts": {
-    "mtime": 1781762849.0296998,
-    "ast_hash": "d5bfa1f19325facc8ea58ee3fe040891",
+    "mtime": 1781771912.1634219,
+    "ast_hash": "a108510a074c2f416f237c2d3945f280",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/collection/_components/CollectionClient.tsx": {
-    "mtime": 1781610336.2932997,
-    "ast_hash": "a0ebf7b80ed85c664ad237b3ed120688",
+    "mtime": 1781763633.9527729,
+    "ast_hash": "a965eee87a812746db3a991273287688",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/collection/actions.ts": {
@@ -115,13 +115,13 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/layout.tsx": {
-    "mtime": 1781674198.6578135,
-    "ast_hash": "93cfdf3bffef7d4c1fed4b790769f0e0",
+    "mtime": 1781771549.8571055,
+    "ast_hash": "d404b15f69d93be32301a7e28f3242a5",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/login/_components/LoginForm.tsx": {
-    "mtime": 1780554459.3029711,
-    "ast_hash": "982029c80248831cb248e8a804ef4465",
+    "mtime": 1781772175.7041261,
+    "ast_hash": "f7810ac594ce3aca3e674a3e28365987",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/login/actions.ts": {
@@ -140,18 +140,18 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/page.tsx": {
-    "mtime": 1780554449.208732,
-    "ast_hash": "91846972930c603c69af38ac144dbd35",
+    "mtime": 1781772181.8846185,
+    "ast_hash": "0c147c173bb4c6161147c16d61ba0264",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/product/[id]/_components/ProductDetailClient.tsx": {
-    "mtime": 1781676702.0119305,
-    "ast_hash": "16ffa606dc6a519c66ab0e2154632e1d",
+    "mtime": 1781771993.9190824,
+    "ast_hash": "febebdb9066c4248b661a0d260cd365f",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/product/[id]/page.tsx": {
-    "mtime": 1781607719.0675256,
-    "ast_hash": "8570798655a11cd2cf9e8195abbda256",
+    "mtime": 1781763814.978314,
+    "ast_hash": "3a58493a24547cbf2f966ca79a721a6e",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/signup/_components/SignUpForm.tsx": {
@@ -185,8 +185,8 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/forms/Form.tsx": {
-    "mtime": 1780466687.1650808,
-    "ast_hash": "4c9dc7beb0e2081c0a18c8b26f81c187",
+    "mtime": 1781772148.8695564,
+    "ast_hash": "fbcd1eb729210765e2c9977dcdae17c7",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/forms/FormCheckbox.tsx": {
@@ -205,7 +205,7 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/forms/FormInput.tsx": {
-    "mtime": 1780554502.5692556,
+    "mtime": 1781779319.7511148,
     "ast_hash": "ab43011696167d2e56e39263f952907f",
     "semantic_hash": ""
   },
@@ -245,8 +245,8 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/Checkbox.tsx": {
-    "mtime": 1780553264.4819803,
-    "ast_hash": "c0b4e278309b0d271b84f89bd4ea7004",
+    "mtime": 1781772031.2281399,
+    "ast_hash": "e3d449d5d752e2a900e4a1722764d4fc",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/ConfirmationModal.tsx": {
@@ -265,33 +265,33 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/Input.tsx": {
-    "mtime": 1780553230.9947765,
-    "ast_hash": "3810a00614bb2039f44f949c475a06b3",
+    "mtime": 1781772025.2898605,
+    "ast_hash": "2fe4a9e51c82c00580cff1d96d653f7d",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/Modal.tsx": {
-    "mtime": 1781160078.4276795,
-    "ast_hash": "4df3e530c3e1bac529bf1057bd9b4054",
+    "mtime": 1781781769.99371,
+    "ast_hash": "3464b534cad00a36458760b82b3b5b1f",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/RadioGroup.tsx": {
-    "mtime": 1780553256.0553956,
-    "ast_hash": "5ac80bcee9e310a0d8433ab304d9fd82",
+    "mtime": 1781772037.1782784,
+    "ast_hash": "689713398dec91f05899b3d26e93b7e5",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/Select.tsx": {
-    "mtime": 1780553248.7569475,
-    "ast_hash": "443e7445b48759ce606c4f76406cad55",
+    "mtime": 1781780831.2947936,
+    "ast_hash": "7bb41bfde2b329c7d0f5568e09d28596",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/Textarea.tsx": {
-    "mtime": 1780553241.7667716,
-    "ast_hash": "1826f8350a6faabd0fff27833473d285",
+    "mtime": 1781772043.359498,
+    "ast_hash": "2f4727bf0e787f1c472d91970c876975",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/index.ts": {
-    "mtime": 1781673650.3814201,
-    "ast_hash": "d943da04b042e7d3e21cea907ef6dee1",
+    "mtime": 1781784331.9331079,
+    "ast_hash": "ae48da8028b47ac24e2f12771f4a3103",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/eslint.config.mjs": {
@@ -320,8 +320,8 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/package.json": {
-    "mtime": 1781693276.812739,
-    "ast_hash": "9d9c730095e3f8b248beaad89d26648a",
+    "mtime": 1781781450.6641567,
+    "ast_hash": "6c985a2452d4bfa329f81b72a85816ec",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/postcss.config.mjs": {
@@ -380,8 +380,8 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/AGENTS.md": {
-    "mtime": 1781676615.6368113,
-    "ast_hash": "c833cf62909d2ea6b50f2565f773e2e8",
+    "mtime": 1781783091.525505,
+    "ast_hash": "1f378873086aed61f2c244e1d4d48fec",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/CLAUDE.md": {
@@ -457,6 +457,126 @@
   "/Users/ztlab157/new-learning-projects/fashion-agent/public/window.svg": {
     "mtime": 1780300944.7190435,
     "ast_hash": "a2760511c65806022ad20adf74370ff3",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/orders/_components/AdminOrdersClient.tsx": {
+    "mtime": 1781784746.5123389,
+    "ast_hash": "8d73d7b1403590f0ba86603d06f7f81d",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/orders/actions.ts": {
+    "mtime": 1781781170.1339192,
+    "ast_hash": "7a2fdbd0e24c595a31fcf7c1909e9b43",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/orders/page.tsx": {
+    "mtime": 1781782909.5726714,
+    "ast_hash": "eed83bb39aace3b544a7f34650c6bb71",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/api/checkout/route.ts": {
+    "mtime": 1781775787.7568746,
+    "ast_hash": "57d8bc30a9b3d1a41d1d078581aad107",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/checkout/_components/StripeRedirectClient.tsx": {
+    "mtime": 1781778539.956023,
+    "ast_hash": "2df78289d1d0d5e7d0dd0ce925aff46c",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/checkout/actions.ts": {
+    "mtime": 1781781174.496527,
+    "ast_hash": "fae739b38ee19abef5eff30021b6936b",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/checkout/page.tsx": {
+    "mtime": 1781779322.9137614,
+    "ast_hash": "e2c8f90d4f4b9d09b16d5d87ce36bad8",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/checkout/success/_components/CheckoutSuccessClient.tsx": {
+    "mtime": 1781779803.4605474,
+    "ast_hash": "36577ecd6d1389ed480edcbec3ebf336",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/checkout/success/actions.ts": {
+    "mtime": 1781781178.5366867,
+    "ast_hash": "f204b72f3cb271847c0186fd737aacd7",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/checkout/success/page.tsx": {
+    "mtime": 1781776636.0686307,
+    "ast_hash": "8369d9ddf962ec1d36f3ff2cf5742711",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/profile/_components/ProfileClient.tsx": {
+    "mtime": 1781787364.22439,
+    "ast_hash": "7e407bed02f2d0a3ebf273519b202fe8",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/profile/actions.ts": {
+    "mtime": 1781782615.4356234,
+    "ast_hash": "5d99dbe21677df93400cd1379bb5b2d4",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/profile/page.tsx": {
+    "mtime": 1781772062.9567122,
+    "ast_hash": "aa16adb31a64e1351a506172edd33085",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/components/shared/CartDrawer.tsx": {
+    "mtime": 1781771558.522953,
+    "ast_hash": "51f290fe6de1bbc3ee452bd8dde58253",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/hooks/use-cart.tsx": {
+    "mtime": 1781772019.4865618,
+    "ast_hash": "bba745cc90c620fac0f1f5e6e25dfae2",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/supabase/migrations/20260618000000_add_orders_and_profile_fields.sql": {
+    "mtime": 1781781198.353381,
+    "ast_hash": "ab9a59c8f2c7b2d7a7ba12e32d6797a0",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/lib/constants.ts": {
+    "mtime": 1781781374.3977761,
+    "ast_hash": "2790790ca0c4b747e396f392bbadd3f5",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/lib/invoice.ts": {
+    "mtime": 1781782132.2005134,
+    "ast_hash": "eaf3ed647e62f57bff6e78f55828b82f",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/profile/_components/InvoiceModal.tsx": {
+    "mtime": 1781782359.4218366,
+    "ast_hash": "6d37bb6f9a9d542e346d5a4c12dec3e1",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/profile/_components/TrackingTimeline.tsx": {
+    "mtime": 1781781988.294862,
+    "ast_hash": "fd4f15f8122256170bed8862ebde7c9a",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/app/profile/schemas.ts": {
+    "mtime": 1781782585.234589,
+    "ast_hash": "85db11e538c80cd1e4240631abdb2eec",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/Pagination.tsx": {
+    "mtime": 1781783052.6216621,
+    "ast_hash": "e7931684ca47dfba48491641ee6e3ad5",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/SearchInput.tsx": {
+    "mtime": 1781784325.3206296,
+    "ast_hash": "3737c25ebe3f5f76401f11bf0edc072a",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/hooks/use-debounce.ts": {
+    "mtime": 1781784720.302959,
+    "ast_hash": "5d73ff20690396f47d80b8e73713c0e0",
     "semantic_hash": ""
   }
 }

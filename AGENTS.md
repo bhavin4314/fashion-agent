@@ -1060,6 +1060,11 @@ export function cn(...inputs: ClassValue[]) {
 - Modal open/close state is managed by the **parent** component via props — the `<Modal />` component itself is never self-managing.
 - Focus trapping and `aria-` attributes are handled by the primitive, **not** manually.
 
+### 5.5 Shared & Common UI Components
+
+- **Create Reusable Components**: If a component or interactive layout pattern is used in more than one place (e.g., `<Pagination />` used in products and orders tables), **always** extract it to a shared component inside `components/ui/` (for design primitives) or `components/shared/` (for composite elements).
+- **Never Duplicate Layout or Interactivity**: Avoid inline implementations of repeated patterns. Extracting common components prevents drift, makes maintenance simpler, and ensures accessibility/style fixes apply system-wide.
+
 ---
 
 ## 6. Styling & Tailwind CSS

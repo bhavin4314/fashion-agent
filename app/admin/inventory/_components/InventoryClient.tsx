@@ -3,13 +3,14 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, Bell, HelpCircle, ChevronRight, ChevronLeft, Edit, Trash2 } from "lucide-react";
+import { Bell, HelpCircle, Edit, Trash2 } from "lucide-react";
 
 import { type InventoryItem } from "@/lib/db-products";
 import { archiveProductAction } from "../actions";
-import { DeleteConfirmationModal, Select } from "@/components/ui";
+import { DeleteConfirmationModal, Select, Pagination, SearchInput } from "@/components/ui";
 import { toast } from "react-hot-toast";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useDebounce } from "@/hooks/use-debounce";
 
 const categoryOptions = [
   { value: "All", label: "Category: All" },
@@ -61,7 +62,7 @@ export function InventoryClient({
 
   // Search input local state to keep typing responsive
   const [localSearch, setLocalSearch] = React.useState<string>(searchQuery);
-  const [isSearchFocused, setIsSearchFocused] = React.useState<boolean>(false);
+  const debouncedSearch = useDebounce(localSearch, 300);
 
   // Track the last query value that was pushed to the URL
   const lastPushedQueryRef = React.useRef<string>(searchQuery);
@@ -100,13 +101,10 @@ export function InventoryClient({
 
   // Debounce search query input to update the URL
   React.useEffect(() => {
-    const timer = setTimeout(() => {
-      if (localSearch !== searchQuery) {
-        updateQueryParams({ q: localSearch });
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [localSearch, searchQuery, updateQueryParams]);
+    if (debouncedSearch !== searchQuery) {
+      updateQueryParams({ q: debouncedSearch });
+    }
+  }, [debouncedSearch, searchQuery, updateQueryParams]);
 
   // Keep local search query in sync with URL changes (e.g. back/forward navigation)
   React.useEffect(() => {
@@ -144,22 +142,11 @@ export function InventoryClient({
       {/* TopAppBar Navigation (Horizontal) */}
       <header className="flex justify-between items-center w-full px-margin-desktop py-md bg-white border-b border-secondary-container z-40 select-none">
         <div className="flex items-center flex-1">
-          <div
-            className={`relative w-96 flex items-center bg-surface-container-low rounded-xl px-md transition-all duration-200 border ${
-              isSearchFocused ? "border-primary ring-2 ring-primary/10 bg-white" : "border-transparent"
-            }`}
-          >
-            <Search className="h-4 w-4 text-on-surface-variant shrink-0" />
-            <input
-              type="text"
-              value={localSearch}
-              onChange={(e) => setLocalSearch(e.target.value)}
-              onFocus={() => setIsSearchFocused(true)}
-              onBlur={() => setIsSearchFocused(false)}
-              className="flex-1 min-w-0 pl-sm pr-md bg-transparent border-none text-xs font-semibold text-charcoal focus:outline-none focus:ring-0 placeholder:text-on-surface-variant/50 h-10"
-              placeholder="Search product collection..."
-            />
-          </div>
+          <SearchInput
+            value={localSearch}
+            onChange={setLocalSearch}
+            placeholder="Search product collection..."
+          />
         </div>
 
         <div className="flex items-center gap-md select-none">
@@ -171,7 +158,7 @@ export function InventoryClient({
               <Bell className="h-5 w-5" />
             </button>
             <button
-              onClick={() => alert("Curator Support Center. Contact milan-concierge@vistra.ai")}
+              onClick={() => alert("Stylist Support Center. Contact milan-concierge@vistra.ai")}
               className="p-2 hover:bg-surface-container-low rounded-full transition-all text-on-surface-variant border-none bg-transparent cursor-pointer shrink-0"
             >
               <HelpCircle className="h-5 w-5" />
@@ -338,43 +325,12 @@ export function InventoryClient({
             </table>
 
             {/* Pagination Controls */}
-            <div className="px-xl py-md bg-surface-container-low border-t border-secondary-container flex items-center justify-between select-none">
-              <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">
-                Showing {totalCount > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} to{" "}
-                {Math.min(totalCount, currentPage * itemsPerPage)} of {totalCount} items
-              </p>
-              <div className="flex items-center gap-sm">
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => updateQueryParams({ page: String(Math.max(1, currentPage - 1)) })}
-                  className="p-1.5 bg-white border border-secondary-container hover:border-charcoal disabled:opacity-40 disabled:hover:border-secondary-container rounded-lg transition-all cursor-pointer flex items-center"
-                >
-                  <ChevronLeft className="h-4 w-4 text-charcoal" />
-                </button>
-                <div className="flex items-center gap-xs">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => updateQueryParams({ page: String(page) })}
-                      className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold cursor-pointer transition-all ${
-                        currentPage === page
-                          ? "bg-primary text-white shadow-sm"
-                          : "bg-white border border-secondary-container hover:border-charcoal text-charcoal"
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  disabled={currentPage === totalPages}
-                  onClick={() => updateQueryParams({ page: String(Math.min(totalPages, currentPage + 1)) })}
-                  className="p-1.5 bg-white border border-secondary-container hover:border-charcoal disabled:opacity-40 disabled:hover:border-secondary-container rounded-lg transition-all cursor-pointer flex items-center"
-                >
-                  <ChevronRight className="h-4 w-4 text-charcoal" />
-                </button>
-              </div>
-            </div>
+            <Pagination
+              totalCount={totalCount}
+              currentPage={currentPage}
+              itemsPerPage={itemsPerPage}
+              onPageChange={(page) => updateQueryParams({ page: String(page) })}
+            />
           </div>
 
 

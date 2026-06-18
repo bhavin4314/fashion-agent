@@ -64,7 +64,7 @@ export default function Home() {
                   Instant Coordination
                 </h3>
                 <p className="text-sm leading-relaxed text-muted">
-                  Our system matches separate garments to build complete outfits in real-time, ensuring you never buy a piece that doesn't fit your wardrobe.
+                  Our system matches separate garments to build complete outfits in real-time, ensuring you never buy a piece that doesn&apos;t fit your wardrobe.
                 </p>
               </div>
             </div>

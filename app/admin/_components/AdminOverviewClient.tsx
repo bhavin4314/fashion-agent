@@ -1,20 +1,14 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import {
   Search,
   Bell,
   HelpCircle,
-  TrendingUp,
-  ArrowUpRight,
-  Sparkles,
   IndianRupee,
   Shirt,
   Sparkle,
   Users,
-  ChevronLeft,
-  ChevronRight,
   Plus
 } from "lucide-react";
 
@@ -73,38 +67,6 @@ const RECENT_ACTIVITIES: ActivityItem[] = [
   },
 ];
 
-const FEATURED_ITEMS: FeaturedItem[] = [
-  {
-    id: "feat-1",
-    designer: "Loro Piana",
-    name: "Silk Evening Gown",
-    price: 4200,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBKJZGEXi7-WXNbjqneE4rDNHBpoax1JYBPU1cBR2RsmpEUULna5DUcfcdPVX1YVwy-f78MYjeJhvIeziuaC4_epJmChu3vvWmYWrqabg10Hos7PGXRSRh68xfJATKiBaIx99BOJNmyT4pyvAGz-LSxKx4y9jzyFseAlHREST2W_P42RJOOLelf42uUXKzdM8pnvLubVvedIt8Tu8WezLMI9iUAabBaIrFDP2r1RhyiazjP1HShr9029mjhRozCaRNeoHscT-Mg-fpD",
-    isNew: true,
-  },
-  {
-    id: "feat-2",
-    designer: "The Row",
-    name: "Margaux 15 Bag",
-    price: 5800,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCCiahCGQx9w2TYOdicl54WxbYgl-z_b34hbGTb6OQpigngIdbhe2wwmw58bXOCvaNz6OQSPoJMUUtBNV9g9yb1v8YvDn7PqwCiGhQ4xZDowJJL7uxWOSnbbmt5WmzyCmFWbgjgsp2zmusLJY0CxWk1vEptJfyZ5vu9uiOP-gIToG2oSlzIvEDHMF6v0Hx3_GwTVmoalscDjoNo4U6k7hRbpr7wKtyl98Ze9ixAfSaet6sjpUTk18Jk76l5l9rxn6riu8c9RDvqdQXf",
-  },
-  {
-    id: "feat-3",
-    designer: "Saint Laurent",
-    name: "Le Loafer 15",
-    price: 895,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCtEYJpt8rFU2Os8CB3s62upgFuH93j0yFf2FwQfWmHNYLMdjlz-2Ir6sRHGSHxStx2kx2ouW4J2f3c_4ywJgcb4Oh7Hhya1dCP2dj0tnWSku2GbUwrX2e-DwgHD1EYVGIGdTMFscqGtmlUhZTYDV7w23pYLloWUoX2FOTek9TNGbn_Q8hAdaFMo_-FtzbmEoeEgunzButtbMDCj4zkE0dNPmxKjSra0nwqKJFY8LhgYqn9PS6atCTORnx3t7XULycTI4Zfo1FTGr9O",
-  },
-  {
-    id: "feat-4",
-    designer: "Celine",
-    name: "Triomphe Sunglasses",
-    price: 510,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCSvKTDw_TPM5V23o4nlBYhWVrG3rxI60fTv12TC2pjSmwFxP-paNkr3c6n6VxN9GwNygeTDGf0wcWqFUD7MRHyVT55PClEOzTtURezx7ATuJiinZW_Mu1cpF_-QvuL-Quz-PuU9_tCxg3jnlCigTwg8ZeO71o3kV7mLrsdsqShr_0QOabuXAudy0uHQvlgrclrg0yF7k3iRRnQZ58bOAFKvybaoQH0YWJTzeKu5vJi_U-Kq7jP_BEjgubtT_8qNu57E-78sI-8L7vC",
-  },
-];
-
 // Interactive styling engagement data points
 const CHART_DATA = [
   { day: "Mon", value: 120, x: 50, y: 150 },
@@ -116,20 +78,20 @@ const CHART_DATA = [
   { day: "Sun", value: 380, x: 746, y: 15 },
 ];
 
-export function AdminOverviewClient() {
+interface AdminOverviewClientProps {
+  stats: {
+    totalRevenue: number;
+    activeProductsCount: number;
+    customersCount: number;
+  };
+}
+
+export function AdminOverviewClient({ stats }: AdminOverviewClientProps) {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [isSearchFocused, setIsSearchFocused] = React.useState(false);
   const [hoveredDotIndex, setHoveredDotIndex] = React.useState<number | null>(null);
 
-  // Dynamic search suggestion states
-  const filteredFeatured = React.useMemo(() => {
-    if (!searchQuery.trim()) return FEATURED_ITEMS;
-    return FEATURED_ITEMS.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.designer.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery]);
+
 
   const handleCreateProduct = () => {
     window.location.href = "/admin/inventory/create";
@@ -169,7 +131,7 @@ export function AdminOverviewClient() {
               <Bell className="h-5 w-5" />
             </button>
             <button
-              onClick={() => alert("Curator Support Center. Contact milan-concierge@vistra.ai")}
+              onClick={() => alert("Stylist Support Center. Contact milan-concierge@vistra.ai")}
               className="p-2 hover:bg-surface-container-low rounded-full transition-all text-on-surface-variant border-none bg-transparent cursor-pointer shrink-0"
             >
               <HelpCircle className="h-5 w-5" />
@@ -214,7 +176,9 @@ export function AdminOverviewClient() {
                 <p className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">
                   Total Revenue
                 </p>
-                <h3 className="text-2xl font-black text-charcoal mt-1">₹142,850.00</h3>
+                <h3 className="text-2xl font-black text-charcoal mt-1">
+                  ₹{stats.totalRevenue.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                </h3>
               </div>
             </div>
 
@@ -232,7 +196,9 @@ export function AdminOverviewClient() {
                 <p className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">
                   Active Products
                 </p>
-                <h3 className="text-2xl font-black text-charcoal mt-1">3,240</h3>
+                <h3 className="text-2xl font-black text-charcoal mt-1">
+                  {stats.activeProductsCount.toLocaleString("en-US")}
+                </h3>
               </div>
             </div>
 
@@ -268,7 +234,9 @@ export function AdminOverviewClient() {
                 <p className="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">
                   New Customers
                 </p>
-                <h3 className="text-2xl font-black text-charcoal mt-1">156</h3>
+                <h3 className="text-2xl font-black text-charcoal mt-1">
+                  {stats.customersCount.toLocaleString("en-US")}
+                </h3>
               </div>
             </div>
           </div>
@@ -424,69 +392,7 @@ export function AdminOverviewClient() {
             </div>
           </div>
 
-          {/* Featured Curation: Recent Inventory Arrivals */}
-          <section className="select-none">
-            <div className="flex justify-between items-center mb-xl">
-              <div>
-                <h4 className="text-lg font-black text-charcoal tracking-tight">Recent Inventory Additions</h4>
-                <p className="text-xs font-semibold text-secondary uppercase tracking-wider mt-0.5">
-                  Exclusive luxury items recently verified into the Vistra concierge catalog.
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => alert("Slide view is fully optimized.")}
-                  className="hover:text-black hover:border-black transition-all border border-secondary-container p-2 rounded-full cursor-pointer flex items-center justify-center"
-                >
-                  <ChevronLeft className="w-4 h-4 text-charcoal" />
-                </button>
-                <button
-                  onClick={() => alert("Slide view is fully optimized.")}
-                  className="hover:text-black hover:border-black transition-all border border-secondary-container p-2 rounded-full cursor-pointer flex items-center justify-center"
-                >
-                  <ChevronRight className="w-4 h-4 text-charcoal" />
-                </button>
-              </div>
-            </div>
 
-            {/* Grid display for arrivals */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-lg">
-              {filteredFeatured.map((item) => (
-                <div key={item.id} className="flex flex-col gap-sm select-none group">
-                  <div className="aspect-[4/5] bg-stone-100 rounded-2xl overflow-hidden relative border border-border-light shadow-sm select-none shrink-0">
-                    <Image
-                      alt={item.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
-                      src={item.image}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw"
-                      unoptimized
-                    />
-                    {item.isNew && (
-                      <div className="absolute top-md right-md bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl font-extrabold text-[9px] uppercase tracking-widest text-primary shadow-sm select-none">
-                        New
-                      </div>
-                    )}
-                  </div>
-                  <div className="mt-2 select-none">
-                    <p className="text-[10px] font-extrabold text-secondary uppercase tracking-widest leading-none">
-                      {item.designer}
-                    </p>
-                    <p className="text-xs font-bold text-charcoal mt-1 truncate">{item.name}</p>
-                    <p className="text-xs font-black text-primary mt-1.5 leading-none">
-                      ₹{item.price.toLocaleString("en-US", { minimumFractionDigits: 0 })}
-                    </p>
-                  </div>
-                </div>
-              ))}
-
-              {filteredFeatured.length === 0 && (
-                <div className="col-span-full py-xxl bg-white border border-border-light rounded-2xl text-center text-xs font-bold text-secondary select-none">
-                  No arrivals found matching current search query filters.
-                </div>
-              )}
-            </div>
-          </section>
         </div>
       </div>
     </div>

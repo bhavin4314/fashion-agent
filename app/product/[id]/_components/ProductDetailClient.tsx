@@ -3,9 +3,11 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Star, ShoppingBag, Sparkles, Heart, ArrowLeft, Edit } from "lucide-react";
 import { type Product } from "@/lib/products";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/hooks/use-cart";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -19,7 +21,8 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
   // Client state
   const [selectedSize, setSelectedSize] = React.useState<string>(availableSizes[0] || "M");
   const [wishlist, setWishlist] = React.useState<boolean>(false);
-  const [isBagging, setIsBagging] = React.useState<boolean>(false);
+  const router = useRouter();
+  const { addToCart, clearCart, setIsDrawerOpen } = useCart();
   
 
 
@@ -36,12 +39,30 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
 
 
   const handleAddToBag = () => {
-    setIsBagging(true);
-    setTimeout(() => {
-      setIsBagging(false);
-      const sizeMsg = isAccessory ? "" : ` size ${selectedSize}`;
-      alert(`Added${sizeMsg} of "${product.title}" to your Shopping Bag!`);
-    }, 800);
+    const itemId = isAccessory ? String(product.id) : `${String(product.id)}-${selectedSize}`;
+    addToCart({
+      id: itemId,
+      productId: String(product.id),
+      title: product.title,
+      price: product.price,
+      size: isAccessory ? null : selectedSize,
+      image: product.galleryImages[0] || "https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg",
+    });
+  };
+
+  const handleBuyNow = () => {
+    clearCart();
+    const itemId = isAccessory ? String(product.id) : `${String(product.id)}-${selectedSize}`;
+    addToCart({
+      id: itemId,
+      productId: String(product.id),
+      title: product.title,
+      price: product.price,
+      size: isAccessory ? null : selectedSize,
+      image: product.galleryImages[0] || "https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg",
+    });
+    setIsDrawerOpen(false);
+    router.push("/checkout");
   };
 
 
@@ -184,16 +205,22 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
             )}
 
             {!isAdmin && (
-              <button
-                onClick={handleAddToBag}
-                disabled={isBagging}
-                className={`w-full h-14 text-white rounded-xl font-label-md text-label-md flex items-center justify-center gap-sm active:scale-95 transition-all duration-200 shadow-md border-none cursor-pointer font-semibold ${
-                  isBagging ? "bg-neutral-700" : "bg-primary hover:bg-primary-dark"
-                }`}
-              >
-                <ShoppingBag className="h-5 w-5 text-white" />
-                {isBagging ? "Adding to Bag..." : "Add to Bag"}
-              </button>
+              <>
+                <button
+                  onClick={handleAddToBag}
+                  className="w-full h-14 bg-primary hover:bg-primary-dark text-white rounded-xl font-label-md text-label-md flex items-center justify-center gap-sm active:scale-95 transition-all duration-200 shadow-md border-none cursor-pointer font-semibold"
+                >
+                  <ShoppingBag className="h-5 w-5 text-white" />
+                  Add to Bag
+                </button>
+                <button
+                  onClick={handleBuyNow}
+                  className="w-full h-14 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl font-label-md text-label-md flex items-center justify-center gap-sm active:scale-95 transition-all duration-200 shadow-md border-none cursor-pointer font-semibold"
+                >
+                  <ShoppingBag className="h-5 w-5 text-white" />
+                  Buy Now
+                </button>
+              </>
             )}
 
 

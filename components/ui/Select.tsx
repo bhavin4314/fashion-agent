@@ -44,7 +44,7 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
         <SelectPrimitive.Portal>
           <SelectPrimitive.Content
             className={cn(
-              "relative z-50 min-w-[8rem] overflow-hidden bg-white text-on-surface shadow-[0px_12px_28px_rgba(0,0,0,0.15)] rounded-xl border border-border-light",
+              "relative z-[150] min-w-[8rem] overflow-hidden bg-white text-on-surface shadow-[0px_12px_28px_rgba(0,0,0,0.15)] rounded-xl border border-border-light",
               "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
             )}
             position="popper"
