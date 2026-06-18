@@ -114,7 +114,7 @@ export function Step1Media({
           <p className="font-headline-md text-headline-md text-on-surface">
             {isUploading ? "Uploading boutique assets..." : "Drag and drop collection images"}
           </p>
-          <p className="text-secondary body-md mt-xs">Support for high-resolution PNG, JPG (Max 20MB each)</p>
+          <p className="text-secondary body-md mt-xs">Support for high-resolution PNG, JPG (Max 5MB each)</p>
         </div>
         <button
           type="button"

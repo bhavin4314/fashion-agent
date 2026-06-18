@@ -247,6 +247,11 @@ export const metadata: Metadata = {
 };
 ```
 
+### 3.6 Navigation & Redirection
+
+- **Always** use Next.js `<Link>` component from `next/link` for redirection/navigation to another page within the application.
+- **Never** use `window.location` (e.g., `window.location.href`, `window.location.replace`) or similar browser-native commands to redirect, as they trigger full page reloads.
+
 ---
 
 ## 4. Forms & Validation

@@ -14,7 +14,7 @@ export default function StylistPage() {
       <Navbar activeTab="stylist" />
 
       {/* Main interactive split-screen chat and search board */}
-      <main className="flex-1 flex pt-[80px] overflow-hidden">
+      <main className="h-screen w-full flex pt-[80px] overflow-hidden">
         <StylistClient />
       </main>
     </div>

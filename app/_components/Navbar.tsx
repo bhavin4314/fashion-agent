@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { signOutAction } from "@/app/login/actions";
 
@@ -16,6 +16,7 @@ export function Navbar({ activeTab }: NavbarProps) {
   const [user, setUser] = React.useState<any | null>(null);
   const [role, setRole] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [avatarError, setAvatarError] = React.useState(false);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -154,15 +155,20 @@ export function Navbar({ activeTab }: NavbarProps) {
                   <LogOut className="h-4 w-4" />
                   Log out
                 </button>
-                <div className="w-10 h-10 rounded-full overflow-hidden border border-border-light bg-surface-container shrink-0 select-none">
-                  <Image
-                    alt="User profile"
-                    className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmuqdX4FM3xMfoKGOV9pqobOx9lysFIZNKePzrA9CsBBeBJUWSKs2zuLy5PzOPadgT0Lnq4BupJyeXHG5FpnG6bDrwsREE4o6E-ZVHsLzAclxx0wonMChWn8EZT5N-4zfVAN2NvYSS4yeHOoz_UdixCL5fBkUQTIYtf8iZXqy9ghWrpZgNB7pgOqypMK6DZXjXc39R0DLl5d5hdH_CtKknIpOFNJHxjip0zhWPmg4KSmrgNDLm6LbOC5hXT-YvtkpXVb7a521otyiND"
-                    width={40}
-                    height={40}
-                    unoptimized
-                  />
+                <div className="w-10 h-10 rounded-full overflow-hidden border border-border-light bg-secondary-container flex items-center justify-center shrink-0 select-none">
+                  {avatarError ? (
+                    <User className="h-5 w-5 text-on-secondary-container" />
+                  ) : (
+                    <Image
+                      alt="User profile"
+                      className="w-full h-full object-cover"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmuqdX4FM3xMfoKGOV9pqobOx9lysFIZNKePzrA9CsBBeBJUWSKs2zuLy5PzOPadgT0Lnq4BupJyeXHG5FpnG6bDrwsREE4o6E-ZVHsLzAclxx0wonMChWn8EZT5N-4zfVAN2NvYSS4yeHOoz_UdixCL5fBkUQTIYtf8iZXqy9ghWrpZgNB7pgOqypMK6DZXjXc39R0DLl5d5hdH_CtKknIpOFNJHxjip0zhWPmg4KSmrgNDLm6LbOC5hXT-YvtkpXVb7a521otyiND"
+                      width={40}
+                      height={40}
+                      unoptimized
+                      onError={() => setAvatarError(true)}
+                    />
+                  )}
                 </div>
               </>
             ) : (

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
+import { Agentation } from "agentation";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export default function RootLayout({
             boxShadow: "0px 12px 28px rgba(0, 0, 0, 0.15)",
           }
         }} />
+        {process.env.NODE_ENV === "development" && <Agentation />}
       </body>
     </html>
   );

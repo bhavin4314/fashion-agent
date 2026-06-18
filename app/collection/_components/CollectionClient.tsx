@@ -2,31 +2,27 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Heart } from "lucide-react";
-
+import Link from "next/link";
+import { Loader2 } from "lucide-react";
 import { type Product } from "@/lib/products";
+import { Select } from "@/components/ui";
+import { fetchFilteredProductsAction } from "../actions";
 
 interface CollectionClientProps {
   initialProducts: Product[];
 }
 
 export function CollectionClient({ initialProducts }: CollectionClientProps) {
-  // Wishlist state
-  const [wishlist, setWishlist] = React.useState<Array<number | string>>([]);
-
   // Filtering & Sorting states
   const [priceRanges, setPriceRanges] = React.useState<string[]>([]);
-  const [selectedColors, setSelectedColors] = React.useState<string[]>([]);
-  const [selectedMaterials, setSelectedMaterials] = React.useState<string[]>([]);
-  const [selectedOccasions, setSelectedOccasions] = React.useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
   const [sortBy, setSortBy] = React.useState<string>("Recommended");
 
-  const toggleWishlist = (productId: number | string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setWishlist((prev) =>
-      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
-    );
-  };
+  // Infinite Scroll & Backend Filtering states
+  const [products, setProducts] = React.useState<Product[]>(initialProducts);
+  const [page, setPage] = React.useState<number>(1);
+  const [hasMore, setHasMore] = React.useState<boolean>(initialProducts.length >= 8);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const handlePriceChange = (range: string) => {
     setPriceRanges((prev) =>
@@ -34,79 +30,95 @@ export function CollectionClient({ initialProducts }: CollectionClientProps) {
     );
   };
 
-  const handleColorToggle = (color: string) => {
-    setSelectedColors((prev) =>
-      prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
     );
   };
 
-  const handleMaterialChange = (material: string) => {
-    setSelectedMaterials((prev) =>
-      prev.includes(material) ? prev.filter((m) => m !== material) : [...prev, material]
-    );
-  };
+  const isFirstMount = React.useRef(true);
 
-  const handleOccasionChange = (occasion: string) => {
-    setSelectedOccasions((prev) =>
-      prev.includes(occasion) ? prev.filter((o) => o !== occasion) : [...prev, occasion]
-    );
-  };
-
-  // Filtering Logic
-  const filteredProducts = React.useMemo(() => {
-    return initialProducts.filter((product) => {
-      // Price filter
-      if (priceRanges.length > 0) {
-        const matchesPrice = priceRanges.some((range) => {
-          if (range === "0-100") return product.price <= 100;
-          if (range === "100-250") return product.price > 100 && product.price <= 250;
-          if (range === "250+") return product.price > 250;
-          return false;
-        });
-        if (!matchesPrice) return false;
-      }
-
-      // Color filter
-      if (selectedColors.length > 0 && !selectedColors.includes(product.color)) {
-        return false;
-      }
-
-      // Material filter
-      if (selectedMaterials.length > 0) {
-        const matchesMaterial = selectedMaterials.some((mat) =>
-          product.material.toLowerCase().includes(mat.toLowerCase())
-        );
-        if (!matchesMaterial) return false;
-      }
-
-      // Occasion filter
-      if (selectedOccasions.length > 0 && !selectedOccasions.includes(product.occasion)) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [initialProducts, priceRanges, selectedColors, selectedMaterials, selectedOccasions]);
-
-  // Sorting Logic
-  const sortedProducts = React.useMemo(() => {
-    const list = [...filteredProducts];
-    if (sortBy === "Price: Low to High") {
-      return list.sort((a, b) => a.price - b.price);
+  // Trigger backend fetch when filters or sort changes
+  React.useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
     }
-    if (sortBy === "Price: High to Low") {
-      return list.sort((a, b) => b.price - a.price);
-    }
-    if (sortBy === "Newest") {
-      return list.sort((a, b) => {
-        if (typeof a.id === "number" && typeof b.id === "number") {
-          return b.id - a.id;
-        }
-        return String(b.id).localeCompare(String(a.id));
+
+    const reloadProducts = async () => {
+      setIsLoading(true);
+      setPage(1);
+      
+      const res = await fetchFilteredProductsAction({
+        page: 1,
+        limit: 8,
+        priceRanges,
+        selectedCategories,
+        sortBy,
       });
+
+      if (res.success) {
+        setProducts(res.products);
+        setHasMore(res.hasMore);
+      } else {
+        console.error("Failed to load products:", res.error);
+      }
+      setIsLoading(false);
+    };
+
+    reloadProducts();
+  }, [priceRanges, selectedCategories, sortBy]);
+
+  // Load more callback for infinite scroll
+  const loadMoreProducts = React.useCallback(async () => {
+    if (isLoading || !hasMore) return;
+    
+    setIsLoading(true);
+    const nextPage = page + 1;
+    
+    const res = await fetchFilteredProductsAction({
+      page: nextPage,
+      limit: 8,
+      priceRanges,
+      selectedCategories,
+      sortBy,
+    });
+
+    if (res.success) {
+      setProducts((prev) => {
+        const existingIds = new Set(prev.map((p) => String(p.id)));
+        const newProducts = res.products.filter((p) => !existingIds.has(String(p.id)));
+        return [...prev, ...newProducts];
+      });
+      setPage(nextPage);
+      setHasMore(res.hasMore);
+    } else {
+      console.error("Failed to load more products:", res.error);
     }
-    return list; // Recommended / default
-  }, [filteredProducts, sortBy]);
+    setIsLoading(false);
+  }, [page, isLoading, hasMore, priceRanges, selectedCategories, sortBy]);
+
+  const observerTargetRef = React.useRef<HTMLDivElement>(null);
+
+  // IntersectionObserver effect for triggering loadMore
+  React.useEffect(() => {
+    const target = observerTargetRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          loadMoreProducts();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(target);
+    return () => {
+      observer.unobserve(target);
+    };
+  }, [loadMoreProducts]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-gutter relative select-none">
@@ -149,105 +161,36 @@ export function CollectionClient({ initialProducts }: CollectionClientProps) {
             </div>
           </div>
 
-          {/* Color Filter */}
+          {/* Product Type (Category) Filter */}
           <div className="space-y-md">
-            <h3 className="text-label-md font-label-md select-none">Color</h3>
-            <div className="flex flex-wrap gap-sm">
-              <button
-                onClick={() => handleColorToggle("white")}
-                className={`w-8 h-8 rounded-full border border-outline-variant bg-white transition-all cursor-pointer ${
-                  selectedColors.includes("white") ? "ring-2 ring-neutral-800 ring-offset-2 scale-110" : ""
-                }`}
-                title="White"
-              />
-              <button
-                onClick={() => handleColorToggle("black")}
-                className={`w-8 h-8 rounded-full border border-outline-variant bg-black transition-all cursor-pointer ${
-                  selectedColors.includes("black") ? "ring-2 ring-neutral-800 ring-offset-2 scale-110" : ""
-                }`}
-                title="Black"
-              />
-              <button
-                onClick={() => handleColorToggle("grey")}
-                className={`w-8 h-8 rounded-full border border-outline-variant bg-stone-400 transition-all cursor-pointer ${
-                  selectedColors.includes("grey") ? "ring-2 ring-neutral-800 ring-offset-2 scale-110" : ""
-                }`}
-                title="Grey"
-              />
-              <button
-                onClick={() => handleColorToggle("tan")}
-                className={`w-8 h-8 rounded-full border border-outline-variant bg-amber-800 transition-all cursor-pointer ${
-                  selectedColors.includes("tan") ? "ring-2 ring-neutral-800 ring-offset-2 scale-110" : ""
-                }`}
-                title="Tan"
-              />
-            </div>
-          </div>
-
-          {/* Material Filter */}
-          <div className="space-y-md">
-            <h3 className="text-label-md font-label-md select-none">Material</h3>
+            <h3 className="text-label-md font-label-md select-none">Product Type</h3>
             <div className="space-y-sm">
               <label className="flex items-center gap-sm cursor-pointer select-none">
                 <input
                   type="checkbox"
-                  checked={selectedMaterials.includes("linen")}
-                  onChange={() => handleMaterialChange("linen")}
+                  checked={selectedCategories.includes("apparel")}
+                  onChange={() => handleCategoryChange("apparel")}
                   className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
-                <span className="text-body-md">Linen</span>
+                <span className="text-body-md">Apparel</span>
               </label>
               <label className="flex items-center gap-sm cursor-pointer select-none">
                 <input
                   type="checkbox"
-                  checked={selectedMaterials.includes("cashmere")}
-                  onChange={() => handleMaterialChange("cashmere")}
+                  checked={selectedCategories.includes("footwear")}
+                  onChange={() => handleCategoryChange("footwear")}
                   className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
-                <span className="text-body-md">Cashmere</span>
+                <span className="text-body-md">Footwear</span>
               </label>
               <label className="flex items-center gap-sm cursor-pointer select-none">
                 <input
                   type="checkbox"
-                  checked={selectedMaterials.includes("cotton")}
-                  onChange={() => handleMaterialChange("cotton")}
+                  checked={selectedCategories.includes("accessories")}
+                  onChange={() => handleCategoryChange("accessories")}
                   className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
                 />
-                <span className="text-body-md">Cotton</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Occasion Filter */}
-          <div className="space-y-md">
-            <h3 className="text-label-md font-label-md select-none">Occasion</h3>
-            <div className="space-y-sm">
-              <label className="flex items-center gap-sm cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={selectedOccasions.includes("Formal")}
-                  onChange={() => handleOccasionChange("Formal")}
-                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
-                />
-                <span className="text-body-md">Formal</span>
-              </label>
-              <label className="flex items-center gap-sm cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={selectedOccasions.includes("Casual")}
-                  onChange={() => handleOccasionChange("Casual")}
-                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
-                />
-                <span className="text-body-md">Casual</span>
-              </label>
-              <label className="flex items-center gap-sm cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={selectedOccasions.includes("Workwear")}
-                  onChange={() => handleOccasionChange("Workwear")}
-                  className="rounded border-outline-variant text-brand focus:ring-brand h-4 w-4 cursor-pointer"
-                />
-                <span className="text-body-md">Workwear</span>
+                <span className="text-body-md">Accessories</span>
               </label>
             </div>
           </div>
@@ -259,31 +202,30 @@ export function CollectionClient({ initialProducts }: CollectionClientProps) {
         {/* Grid Header Controls */}
         <div className="flex justify-between items-center mb-xl select-none">
           <span className="text-label-md text-secondary font-medium">
-            {sortedProducts.length} items found
+            {products.length} {products.length === 1 ? "item" : "items"} displayed
           </span>
-          <div className="flex items-center gap-sm">
-            <span className="text-label-md text-secondary">Sort by:</span>
-            <select
+          <div className="flex items-center gap-sm select-none">
+            <span className="text-label-md text-secondary whitespace-nowrap">Sort by:</span>
+            <Select
+              options={[
+                { value: "Recommended", label: "Recommended" },
+                { value: "Newest", label: "Newest" },
+                { value: "Price: Low to High", label: "Price: Low to High" },
+                { value: "Price: High to Low", label: "Price: High to Low" },
+              ]}
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="bg-transparent border-none text-label-md font-bold focus:ring-0 cursor-pointer h-10 select-none"
-            >
-              <option>Recommended</option>
-              <option>Newest</option>
-              <option>Price: Low to High</option>
-              <option>Price: High to Low</option>
-            </select>
+              onChange={(val) => setSortBy(val)}
+              className="w-48 text-xs font-bold border-secondary-container text-charcoal hover:border-primary"
+            />
           </div>
         </div>
 
         {/* Product Cards Catalog */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter mb-xxl">
-          {sortedProducts.map((product) => (
-            <div
+          {products.map((product) => (
+            <Link
               key={product.id}
-              onClick={() => {
-                window.location.href = `/product/${product.id}`;
-              }}
+              href={`/product/${product.id}`}
               className="group cursor-pointer flex flex-col"
             >
               <div className="aspect-[3/4] w-full rounded-xl overflow-hidden bg-surface-container-low mb-sm relative select-none">
@@ -300,18 +242,6 @@ export function CollectionClient({ initialProducts }: CollectionClientProps) {
                     Quick View
                   </span>
                 </div>
-                <button
-                  onClick={(e) => toggleWishlist(product.id, e)}
-                  className="absolute top-md right-md bg-white/60 backdrop-blur-md w-10 h-10 rounded-full flex items-center justify-center hover:bg-white hover:scale-110 active:scale-95 transition-all duration-300 shadow-sm border border-white/40 group/heart"
-                >
-                  <Heart
-                    className={`h-5 w-5 transition-colors ${
-                      wishlist.includes(product.id)
-                        ? "text-brand fill-brand"
-                        : "text-on-surface group-hover/heart:text-brand"
-                    }`}
-                  />
-                </button>
               </div>
               <div className="flex flex-col gap-xs pt-2 select-none">
                 <p className="text-label-sm font-bold uppercase tracking-widest text-secondary mb-0.5">
@@ -322,18 +252,33 @@ export function CollectionClient({ initialProducts }: CollectionClientProps) {
                 </h3>
                 <p className="text-body-md font-bold text-on-surface">₹{product.price}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
         {/* Empty State message if no products found */}
-        {filteredProducts.length === 0 && (
+        {products.length === 0 && !isLoading && (
           <div className="flex flex-col items-center justify-center gap-md py-xxl select-none">
             <span className="text-label-md text-secondary font-medium">
               No products found matching active filters in our collection.
             </span>
           </div>
         )}
+
+        {/* Intersection Target / Loading Indicator */}
+        <div ref={observerTargetRef} className="w-full flex justify-center py-xl select-none">
+          {isLoading && (
+            <div className="flex items-center gap-sm text-secondary font-semibold text-xs animate-pulse">
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+              <span>Loading more exquisite items...</span>
+            </div>
+          )}
+          {!hasMore && products.length > 0 && (
+            <span className="text-[10px] text-muted font-bold uppercase tracking-widest">
+              You have viewed all items in this collection.
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

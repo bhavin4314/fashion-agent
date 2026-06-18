@@ -157,7 +157,7 @@ export function InventoryClient({
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
               className="flex-1 min-w-0 pl-sm pr-md bg-transparent border-none text-xs font-semibold text-charcoal focus:outline-none focus:ring-0 placeholder:text-on-surface-variant/50 h-10"
-              placeholder="Search product collection or SKU..."
+              placeholder="Search product collection..."
             />
           </div>
         </div>
@@ -235,7 +235,7 @@ export function InventoryClient({
                     Product Detail
                   </th>
                   <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                    SKU Code
+                    Category
                   </th>
                   <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">
                     Retail Price
@@ -244,7 +244,7 @@ export function InventoryClient({
                     Stock Level
                   </th>
                   <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">
-                    Curation
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -270,14 +270,11 @@ export function InventoryClient({
                         <div className="min-w-0">
                           <Link
                             href={`/product/${item.id}`}
-                            className="text-xs font-bold text-charcoal truncate hover:text-primary hover:underline transition-colors block"
+                            className="text-sm font-bold text-charcoal truncate hover:text-primary hover:underline transition-colors block"
                             title="View Detail Page"
                           >
                             {item.title}
                           </Link>
-                          <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mt-0.5 select-none">
-                            SKU: {item.sku}
-                          </p>
                         </div>
                       </div>
                     </td>

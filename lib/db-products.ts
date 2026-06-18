@@ -80,7 +80,8 @@ export function mapDbProduct(db: DbProduct): Product {
     reviewsCount: 12,
     description: db.description || "",
     aiRecommendation: `This item highlights your ${db.aesthetics?.join(" or ") || "refined"} aesthetic.`,
-    completeTheLook: []
+    completeTheLook: [],
+    sizes: db.sizes || []
   };
 }
 

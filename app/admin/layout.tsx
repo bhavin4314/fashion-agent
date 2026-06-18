@@ -64,15 +64,8 @@ export default async function AdminLayout({
 
           {/* Admin Avatar Identity */}
           <div className="flex items-center gap-sm px-lg pt-sm border-t border-secondary-container mt-sm">
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-secondary-container bg-surface-container shrink-0">
-              <Image
-                alt="Vistra Admin Avatar"
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgg56leU2hgWzQyQsNeHNxFEX4dGHR9bMUf-hViVLujQwyrKsAtEtg1VRURIftHOdk8mx28sEfOtYD7fAZZx-wG-KfG_FOp2N7KHKVev-JkIUNQTEIbOZe-4PHl_TsITFWRt6yFH7KPhFY1UrKwNF9lTmqAJ2Q8svLEXt9nYTK6YcrlG1ZC7prTCbZ5JnDaetcaYsGB91El053mCocbRJ8tq-mStX0DFgKH20-M7CSNmtLdse1uyAVBcMs7dmBYyTAADonJBSnP02P"
-                width={32}
-                height={32}
-                unoptimized
-              />
+            <div className="w-8 h-8 rounded-full flex items-center justify-center border border-secondary-container bg-secondary-container text-on-secondary-container shrink-0 select-none">
+              <span className="material-symbols-outlined text-[18px]">person</span>
             </div>
             <div className="overflow-hidden">
               <p className="text-xs font-bold truncate text-charcoal">{adminName}</p>

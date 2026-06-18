@@ -3,8 +3,8 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, ShoppingBag, Sparkles, Heart, Plus, ArrowLeft, Edit } from "lucide-react";
-import { type Product, PRODUCTS } from "@/lib/products";
+import { Star, ShoppingBag, Sparkles, Heart, ArrowLeft, Edit } from "lucide-react";
+import { type Product } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
 interface ProductDetailClientProps {
@@ -15,8 +15,9 @@ interface ProductDetailClientProps {
 export function ProductDetailClient({ product, userRole }: ProductDetailClientProps) {
   const isAdmin = userRole === "admin";
   const isAccessory = product.category === "Accessories" || product.category?.toLowerCase() === "accessories";
+  const availableSizes = product.sizes && product.sizes.length > 0 ? product.sizes : ["S", "M", "L", "XL"];
   // Client state
-  const [selectedSize, setSelectedSize] = React.useState<string>("M");
+  const [selectedSize, setSelectedSize] = React.useState<string>(availableSizes[0] || "M");
   const [wishlist, setWishlist] = React.useState<boolean>(false);
   const [isBagging, setIsBagging] = React.useState<boolean>(false);
   
@@ -43,9 +44,7 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
     }, 800);
   };
 
-  const handleCrossSellAdd = (title: string, price: number) => {
-    alert(`Added "${title}" (₹${price}) to your Shopping Bag to complete the look!`);
-  };
+
 
   const handleSendChat = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,13 +76,13 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
     <div className="text-charcoal antialiased bg-white select-none">
       {/* Back button */}
       <div className="mb-8">
-        <button
-          onClick={() => (window.location.href = "/collection")}
-          className="flex items-center gap-2 text-sm font-semibold text-muted hover:text-charcoal transition-colors duration-150 border-none bg-transparent cursor-pointer"
+        <Link
+          href="/collection"
+          className="flex items-center gap-2 text-sm font-semibold text-muted hover:text-charcoal transition-colors duration-150 border-none bg-transparent cursor-pointer no-underline"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Explore Collection
-        </button>
+        </Link>
       </div>
 
       {/* Main product detail grid */}
@@ -108,7 +107,7 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
                 <Image
                   alt={`${product.title} View ${index + 1}`}
                   className={cn(
-                    "w-full h-full object-cover transition-all ease-out pointer-events-none",
+                    "w-full h-full object-contain transition-all ease-out pointer-events-none",
                     index === 0 ? "hover:scale-105 duration-700 cursor-zoom-in" : "hover:scale-110 duration-500"
                   )}
                   src={imgUrl}
@@ -116,18 +115,7 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
                   sizes={colSpanClass.includes("col-span-2") ? "(max-width: 1024px) 100vw, 60vw" : "(max-width: 1024px) 50vw, 30vw"}
                   unoptimized
                 />
-                {index === 0 && (
-                  <button
-                    onClick={() => setWishlist((prev) => !prev)}
-                    className="absolute top-md right-md bg-white/60 backdrop-blur-md w-12 h-12 rounded-full flex items-center justify-center hover:bg-white hover:scale-110 active:scale-95 transition-all duration-300 shadow-md border border-white/40 group/heart"
-                  >
-                    <Heart
-                      className={`h-5 w-5 transition-colors ${
-                        wishlist ? "text-brand fill-brand" : "text-on-surface group-hover/heart:text-brand"
-                      }`}
-                    />
-                  </button>
-                )}
+
               </div>
             );
           })}
@@ -150,12 +138,6 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
             </h1>
             <div className="flex items-center gap-md">
               <span className="text-2xl font-bold text-brand">₹{product.price}</span>
-              <div className="flex items-center gap-xs text-rating-yellow">
-                <Star className="h-5 w-5 fill-rating-yellow text-rating-yellow" />
-                <span className="text-label-md font-label-md text-on-surface font-semibold">
-                  {product.rating} ({product.reviewsCount})
-                </span>
-              </div>
             </div>
           </div>
 
@@ -170,15 +152,9 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
                 <span className="text-label-md font-label-md text-on-surface font-bold text-sm">
                   Select Size
                 </span>
-                <button
-                  onClick={() => alert("Standard Vistra size measurements fit true to luxury sizing tables.")}
-                  className="text-xs font-bold text-muted underline hover:text-brand transition-colors bg-transparent border-none cursor-pointer"
-                >
-                  Size Guide
-                </button>
               </div>
               <div className="flex gap-sm select-none">
-                {["S", "M", "L", "XL"].map((sz) => (
+                {availableSizes.map((sz) => (
                   <button
                     key={sz}
                     onClick={() => setSelectedSize(sz)}
@@ -220,84 +196,14 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
               </button>
             )}
 
-            {/* AI Stylist Assistant Widget */}
-            {!isAccessory && (
-              <div className="p-lg rounded-xl flex flex-col gap-sm border-l-4 border-brand bg-gradient-to-br from-white to-primary-light-bg border border-error-container shadow-sm select-none">
-                <div className="flex items-center gap-sm text-brand">
-                  <Sparkles className="h-5 w-5 fill-brand/25 text-brand" />
-                  <span className="text-label-md font-label-md font-bold text-sm">AI Stylist Assistant</span>
-                </div>
-                <p className="text-xs font-medium text-secondary italic leading-relaxed">
-                  &ldquo;{product.aiRecommendation}&rdquo;
-                </p>
-                <button
-                  onClick={() => setIsAiOpen(true)}
-                  className="mt-xs w-full h-11 bg-white border border-outline-variant hover:border-on-surface text-on-surface rounded-lg font-label-md text-label-md hover:shadow-md transition-all flex items-center justify-center gap-sm cursor-pointer font-bold shadow-sm"
-                >
-                  Ask AI Stylist
-                </button>
-              </div>
-            )}
+
           </div>
 
 
         </div>
       </section>
 
-      {/* Complete the Look Cross-Sells Section */}
-      {product.completeTheLook && product.completeTheLook.length > 0 && (
-        <section className="max-w-7xl mx-auto py-xxl bg-surface-container-low rounded-3xl mb-20 px-xl lg:px-xxl select-none border border-border-light/40 shadow-sm">
-          <h2 className="text-2xl font-bold text-on-surface mb-xl text-center tracking-tight">
-            Complete the Look
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter">
-            {product.completeTheLook.map((lookItem, index) => {
-              let itemLink = "/collection";
-              if (lookItem.id) {
-                itemLink = `/product/${lookItem.id}`;
-              } else {
-                const matched = PRODUCTS.find((p) => p.title.toLowerCase() === lookItem.title.toLowerCase());
-                if (matched) {
-                  itemLink = `/product/${matched.id}`;
-                }
-              }
 
-              return (
-                <Link key={index} href={itemLink} className="group flex flex-col cursor-pointer text-current no-underline">
-                  <div className="aspect-[3/4] overflow-hidden rounded-xl bg-white relative mb-md shadow-sm">
-                    <Image
-                      alt={lookItem.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 pointer-events-none"
-                      src={lookItem.image}
-                      fill
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                      unoptimized
-                    />
-                    {!isAdmin && (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleCrossSellAdd(lookItem.title, lookItem.price);
-                        }}
-                        className="absolute bottom-md right-md w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 border-none cursor-pointer z-10"
-                      >
-                        <Plus className="h-5 w-5 text-brand" />
-                      </button>
-                    )}
-                  </div>
-                  <h3 className="text-sm font-semibold text-on-surface tracking-tight">
-                    {lookItem.title}
-                  </h3>
-                  <p className="text-xs font-bold text-secondary mt-1">
-                    ₹{lookItem.price}
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
 
       {/* Dynamic AI Stylist Dialogue Overlay Drawer */}
       {isAiOpen && (

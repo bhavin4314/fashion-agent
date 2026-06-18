@@ -19,6 +19,7 @@ export interface Product {
     price: number;
     image: string;
   }>;
+  sizes?: string[];
 }
 
 export const PRODUCTS: Product[] = [

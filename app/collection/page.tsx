@@ -14,7 +14,8 @@ export default async function CollectionPage() {
   const { data: dbProducts } = await supabase
     .from("products")
     .select("*")
-    .order("id", { ascending: false });
+    .order("id", { ascending: false })
+    .limit(8);
 
   const initialProducts = (dbProducts || []).map(mapDbProduct);
 
@@ -30,11 +31,11 @@ export default async function CollectionPage() {
 
       {/* Footer Section */}
       <footer className="w-full py-xl bg-footer-bg border-t border-border-light mt-auto">
-        <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-md select-none">
+        <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-center items-center gap-md select-none">
           <div className="text-sm text-charcoal">
             © 2026 Vistra AI Fashion Concierge. All rights reserved.
           </div>
-          <div className="flex gap-lg">
+          {/* <div className="flex gap-lg">
             <a
               className="text-sm font-semibold text-charcoal underline hover:no-underline transition-all duration-150"
               href="#"
@@ -47,7 +48,7 @@ export default async function CollectionPage() {
             >
               Terms of Service
             </a>
-          </div>
+          </div> */}
         </div>
       </footer>
     </div>

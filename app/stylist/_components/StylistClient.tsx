@@ -2,399 +2,108 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Sparkles, User, Send, Paperclip, Plus, CheckCircle2 } from "lucide-react";
-import { type Product, PRODUCTS } from "@/lib/products";
+import Link from "next/link";
+import { Sparkles, User, Send, Plus, X } from "lucide-react";
+import { type Product } from "@/lib/products";
+import { useChat, type UIMessage } from "@ai-sdk/react";
+import { toast } from "react-hot-toast";
 
-interface Message {
-  id: string;
-  sender: "ai" | "user";
-  text: string;
-  products?: Product[];
-  sizeSelectorProduct?: Product | null;
+function renderItalics(text: string): React.ReactNode {
+  const italicParts = text.split(/(\*.*?\*|_.*?_)/g);
+  return italicParts.map((italicPart, iIdx) => {
+    if (
+      (italicPart.startsWith("*") && italicPart.endsWith("*")) ||
+      (italicPart.startsWith("_") && italicPart.endsWith("_"))
+    ) {
+      return (
+        <em key={iIdx} className="italic font-medium">
+          {italicPart.slice(1, -1)}
+        </em>
+      );
+    }
+    return italicPart;
+  });
 }
 
-interface ChatSession {
-  id: string;
-  title: string;
-  time: string;
-  messages: Message[];
+function renderMarkdown(text: string): React.ReactNode {
+  if (!text) return "";
+  const boldParts = text.split(/(\*\*.*?\*\*)/g);
+  return boldParts.map((boldPart, bIdx) => {
+    if (boldPart.startsWith("**") && boldPart.endsWith("**")) {
+      const cleanBold = boldPart.slice(2, -2);
+      return (
+        <strong key={bIdx} className="font-extrabold text-charcoal">
+          {renderItalics(cleanBold)}
+        </strong>
+      );
+    }
+    return <React.Fragment key={bIdx}>{renderItalics(boldPart)}</React.Fragment>;
+  });
 }
 
 export function StylistClient() {
   const chatContainerRef = React.useRef<HTMLDivElement>(null);
+  const [input, setInput] = React.useState("");
+  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
 
-  // Default products for the initial Parisian session
-  const defaultParisianProducts = PRODUCTS.filter((p) =>
-    [6, 7, 12, 5].map(String).includes(String(p.id))
-  );
-
-  // Chat sessions database
-  const [sessions, setSessions] = React.useState<ChatSession[]>([
+  // Initial greeting message from the AI Stylist
+  const initialMessages = React.useMemo<UIMessage[]>(() => [
     {
-      id: "chic-parisian",
-      title: "Chic Parisian Evening",
-      time: "Today, 2:45 PM",
-      messages: [
+      id: "init",
+      role: "assistant",
+      parts: [
         {
-          id: "m1",
-          sender: "ai",
-          text: "Bonjour! I've curated a few Parisian-inspired looks for your evening gala. How do these silhouettes feel to you?"
-        },
-        {
-          id: "m2",
-          sender: "user",
-          text: "I love the structured look of the second one. What sizes are available for the blazer?"
-        },
-        {
-          id: "m3",
-          sender: "ai",
-          text: "Excellent choice. The Structured Blazer is available in several sizes. Here are my top styling recommendations to complete that look:",
-          products: defaultParisianProducts,
-          sizeSelectorProduct: PRODUCTS.find((p) => String(p.id) === "6") // Structured Blazer
-        }
-      ]
-    },
-    {
-      id: "sustainable-summer",
-      title: "Sustainable Summer Capsule",
-      time: "Yesterday, 10:15 AM",
-      messages: [
-        {
-          id: "ss-1",
-          sender: "ai",
-          text: "Hello! For your organic summer capsule, I highly recommend breathable linen fabrics and earthy sand tones. Check out this relaxed styling base:"
-        },
-        {
-          id: "ss-2",
-          sender: "user",
-          text: "Do you have linen shirts or suede loaders?"
-        },
-        {
-          id: "ss-3",
-          sender: "ai",
-          text: "Yes, our Relaxed Linen Shirt and Suede Loafers represent the perfect combination of summer slow-fashion and premium comfort:",
-          products: PRODUCTS.filter((p) => [1, 8, 2].map(String).includes(String(p.id)))
-        }
-      ]
-    },
-    {
-      id: "minimalist-office",
-      title: "Minimalist Office Wear",
-      time: "Oct 24, 2023",
-      messages: [
-        {
-          id: "mo-1",
-          sender: "ai",
-          text: "Let's build a timeless office wardrobe. Modern professional codes rely on premium materials and comfortable structures. Here are my key recommendations:"
-        },
-        {
-          id: "mo-2",
-          sender: "user",
-          text: "Show me suits, blazers, and totes"
-        },
-        {
-          id: "mo-3",
-          sender: "ai",
-          text: "I recommend our Italian wool blazer paired with our structured leather tote for a sophisticated workspace profile:",
-          products: PRODUCTS.filter((p) => [6, 7, 12].map(String).includes(String(p.id)))
-        }
-      ]
-    },
-    {
-      id: "weekend-aspen",
-      title: "Weekend Getaway: Aspen",
-      time: "Oct 20, 2023",
-      messages: [
-        {
-          id: "wa-1",
-          sender: "ai",
-          text: "Welcome back! For Aspen's cold-weather escape, we want high-end layering. Cashmere knitwear and heavy double-breasted overcoats are absolute essentials:"
-        },
-        {
-          id: "wa-2",
-          sender: "user",
-          text: "Do you have cashmere sweaters and heavy wool coats?"
-        },
-        {
-          id: "wa-3",
-          sender: "ai",
-          text: "Here is our luxury cashmere sweater, belted coat, and structured overcoat mix to provide pristine warmth:",
-          products: PRODUCTS.filter((p) => [3, 4, 10].map(String).includes(String(p.id)))
+          type: "text",
+          text: "Hello! I am your Vistra AI Fashion Stylist. Tell me what mood, occasion, or fabrics you are looking for today, and I will instantly retrieve and coordinate the perfect wardrobe elements for you!"
         }
       ]
     }
-  ]);
+  ], []);
 
-  const [activeSessionId, setActiveSessionId] = React.useState<string>("chic-parisian");
-  const [chatInput, setChatInput] = React.useState<string>("");
-  const [isThinking, setIsThinking] = React.useState<boolean>(false);
-
-  // Sizing interaction state
-  const [sizePickerState, setSizePickerState] = React.useState<{ [key: string]: string }>({
-    "6": "M" // default sizing for Structured Blazer
+  // Initialize Vercel AI SDK useChat
+  const { messages, sendMessage, status, error } = useChat({
+    messages: initialMessages,
+    onError: (err) => {
+      toast.error(err.message || "Failed to connect to the Vistra AI styling service. Please try again.", {
+        position: "top-center",
+      });
+    },
   });
-  const [isReserved, setIsReserved] = React.useState<{ [key: string]: boolean }>({});
 
-  const activeSession = sessions.find((s) => s.id === activeSessionId) || sessions[0]!;
+  const isLoading = status === "submitted" || status === "streaming";
 
   // Autoscroll chat stream
   React.useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [activeSession.messages, isThinking]);
+  }, [messages, isLoading]);
 
-  const handleSessionChange = (id: string) => {
-    setActiveSessionId(id);
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    sendMessage({ text: input.trim() });
+    setInput("");
   };
 
-  const handleNewSession = () => {
-    const newId = `session-${Date.now()}`;
-    const newSess: ChatSession = {
-      id: newId,
-      title: "New Styling Session",
-      time: "Just now",
-      messages: [
-        {
-          id: "init",
-          sender: "ai",
-          text: "Hello! I am your Vistra AI Fashion Stylist. Tell me what mood, occasion, or fabrics you are looking for today, and I will instantly retrieve and coordinate the perfect wardrobe elements for you!"
-        }
-      ]
-    };
-
-    setSessions((prev) => [newSess, ...prev]);
-    setActiveSessionId(newId);
-  };
-
-  const handleSizeClick = (productId: number | string, size: string) => {
-    setSizePickerState((prev) => ({
-      ...prev,
-      [productId.toString()]: size
-    }));
-  };
-
-  const handleReserveSize = (productId: number | string, title: string) => {
-    const sz = sizePickerState[productId.toString()] || "M";
-    setIsReserved((prev) => ({
-      ...prev,
-      [productId.toString()]: true
-    }));
-    alert(`Success! Size ${sz} of "${title}" has been reserved in your Vistra dressing room!`);
-  };
-
-  // Keyword-matching semantic fashion search recommender
-  const getSemanticResponse = (query: string): { text: string; products?: Product[] } => {
-    const lower = query.toLowerCase();
-
-    // 1. Silk products search query
-    if (lower.includes("silk")) {
-      const matched = PRODUCTS.filter((p) =>
-        p.material.toLowerCase().includes("silk")
-      );
-      return {
-        text: "I've retrieved our premium mulberry silk options. These lightweight, bias-cut garments represent the height of luxury shine and fluid drape:",
-        products: matched
-      };
-    }
-
-    // 2. Linen garments
-    if (lower.includes("linen")) {
-      const matched = PRODUCTS.filter((p) =>
-        p.material.toLowerCase().includes("linen")
-      );
-      return {
-        text: "Here is our organic linen collection. Breathable weaves, relaxed tailoring, and neutral earth shades designed for seaside ease and slow summer living:",
-        products: matched
-      };
-    }
-
-    // 3. Cashmere knitwear
-    if (lower.includes("cashmere") || lower.includes("knit") || lower.includes("sweater")) {
-      const matched = PRODUCTS.filter((p) =>
-        p.material.toLowerCase().includes("cashmere") ||
-        p.category.toLowerCase().includes("knitwear")
-      );
-      return {
-        text: "I have gathered our Grade-A Mongolian cashmere and fine merino wool knits. Exceptionally soft, lightweight, and offering warm structural layering:",
-        products: matched
-      };
-    }
-
-    // 4. Black tones
-    if (lower.includes("black") || lower.includes("dark")) {
-      const matched = PRODUCTS.filter((p) => p.color === "black");
-      return {
-        text: "I've assembled our pristine charcoal and black elements. Impeccable tailoring, midnight tones, and strong silhouettes for a commanding look:",
-        products: matched
-      };
-    }
-
-    // 5. Tan/beige colors
-    if (lower.includes("tan") || lower.includes("beige") || lower.includes("sand") || lower.includes("brown")) {
-      const matched = PRODUCTS.filter((p) => p.color === "tan");
-      return {
-        text: "These are our refined warm-neutral earth tones. Sand beige, rich tan suede, and elegant camel blends for high-end styling warmth:",
-        products: matched
-      };
-    }
-
-    // 6. White/Cream/Ecru
-    if (lower.includes("white") || lower.includes("cream") || lower.includes("ecru") || lower.includes("light")) {
-      const matched = PRODUCTS.filter((p) => p.color === "white");
-      return {
-        text: "I've sourced our crisp cream, ivory, and white collection. Clean, minimal styles crafted from fine cottons, silks, and GOTS-certified linens:",
-        products: matched
-      };
-    }
-
-    // 7. Suits / Trousers / Blazers
-    if (lower.includes("suit") || lower.includes("trouser") || lower.includes("pant") || lower.includes("blazer") || lower.includes("office")) {
-      const matched = PRODUCTS.filter((p) =>
-        p.category.toLowerCase().includes("suit") ||
-        p.title.toLowerCase().includes("trouser") ||
-        p.title.toLowerCase().includes("chinos")
-      );
-      return {
-        text: "Here is our tailored collection. Structured shoulders, sharp creases, and clean draping to deliver unmatched professional elegance:",
-        products: matched
-      };
-    }
-
-    // 8. Gala / Formal / Evening
-    if (lower.includes("gala") || lower.includes("formal") || lower.includes("evening") || lower.includes("dress")) {
-      const matched = PRODUCTS.filter((p) => p.occasion === "Formal");
-      return {
-        text: "I've curated these high-end formal choices for an unforgettable evening. Fine silk midi dresses, belted cashmere coats, and luxurious overcoats:",
-        products: matched
-      };
-    }
-
-    // 9. Casual / Seaside / Coastal
-    if (lower.includes("casual") || lower.includes("coast") || lower.includes("relax")) {
-      const matched = PRODUCTS.filter((p) => p.occasion === "Casual");
-      return {
-        text: "These represent our relaxed, slow-fashion off-duty designs. Soft knits, organic cotton chinos, lightweight linen shirts, and flexible suede loafers:",
-        products: matched
-      };
-    }
-
-    // 10. Fallback advice
-    return {
-      text: `That is an interesting styling path! To build a complete outfit, I've selected a few of Vistra's most versatile, quiet luxury foundations. How would you like to style these?`,
-      products: PRODUCTS.slice(0, 3)
-    };
-  };
-
-  const handleSendChat = (text: string) => {
-    if (!text.trim()) return;
-
-    const userMsg: Message = {
-      id: `user-${Date.now()}`,
-      sender: "user",
-      text: text.trim()
-    };
-
-    // Update session stream with user bubble
-    setSessions((prev) =>
-      prev.map((sess) => {
-        if (sess.id === activeSessionId) {
-          return {
-            ...sess,
-            messages: [...sess.messages, userMsg]
-          };
-        }
-        return sess;
-      })
-    );
-
-    setIsThinking(true);
-
-    // Dynamic search engine simulation response
-    setTimeout(() => {
-      const semanticResult = getSemanticResponse(text);
-      
-      // Determine if we should also add a nested size picker for the matched first product
-      let sizeSelectorProduct: Product | null = null;
-      if (semanticResult.products && semanticResult.products.length > 0) {
-        sizeSelectorProduct = semanticResult.products[0] || null;
-      }
-
-      const aiMsg: Message = {
-        id: `ai-${Date.now()}`,
-        sender: "ai",
-        text: semanticResult.text,
-        products: semanticResult.products,
-        sizeSelectorProduct
-      };
-
-      setIsThinking(false);
-      setSessions((prev) =>
-        prev.map((sess) => {
-          if (sess.id === activeSessionId) {
-            return {
-              ...sess,
-              messages: [...sess.messages, aiMsg]
-            };
-          }
-          return sess;
-        })
-      );
-    }, 1800);
-  };
-
-  const handleProductCardClick = (id: number | string) => {
-    window.location.href = `/product/${id}`;
+  const handleSendChip = (text: string) => {
+    sendMessage({ text });
   };
 
   return (
     <div className="flex flex-1 w-full h-full relative overflow-hidden select-none">
       
-      {/* Left Sidebar: Chat History (320px) */}
-      <aside className="hidden lg:flex lg:w-[320px] bg-surface-container-low border-r border-surface-container flex-col overflow-y-auto hide-scrollbar z-10 shrink-0">
-        <div className="p-lg border-b border-surface-container">
-          <h2 className="text-headline-md font-headline-md text-charcoal select-none">Chat Sessions</h2>
-        </div>
-        <div className="flex flex-col">
-          {sessions.map((sess) => (
-            <button
-              key={sess.id}
-              onClick={() => handleSessionChange(sess.id)}
-              className={`flex flex-col gap-xs p-lg transition-all duration-200 text-left border-r-4 border-l-4 border-l-transparent cursor-pointer ${
-                activeSessionId === sess.id
-                  ? "bg-white border-r-primary font-bold text-neutral-900"
-                  : "hover:bg-neutral-200/50 border-r-transparent text-secondary"
-              }`}
-            >
-              <span className="text-sm font-semibold select-none">{sess.title}</span>
-              <span className="text-[10px] font-bold text-muted tracking-wide uppercase select-none">{sess.time}</span>
-            </button>
-          ))}
-        </div>
-        
-        {/* Create new styling session button */}
-        <div className="mt-auto p-lg select-none">
-          <button
-            onClick={handleNewSession}
-            className="w-full flex items-center justify-center gap-sm py-3 border-2 border-dashed border-outline-variant hover:border-brand rounded-xl text-xs font-bold text-charcoal hover:text-brand bg-white transition-all cursor-pointer hover:shadow-sm active:scale-98"
-          >
-            <Plus className="h-4 w-4" />
-            New Styling Session
-          </button>
-        </div>
-      </aside>
-
-      {/* Right Column: Dynamic Interactive Stylist Chat Board */}
-      <section className="flex-1 flex flex-col bg-background relative h-full min-w-0">
+      {/* Left Column: Dynamic Interactive Stylist Chat Board */}
+      <section className={`flex-1 flex flex-col bg-background relative h-full min-w-0 transition-all duration-300 ${selectedProduct ? "lg:border-r border-surface-container" : ""}`}>
         
         {/* Chat Message Flow Stream */}
         <div
           ref={chatContainerRef}
           className="flex-1 overflow-y-auto px-margin-mobile md:px-xl py-xl flex flex-col gap-lg pb-[200px] hide-scrollbar"
         >
-          {activeSession.messages.map((msg) => (
+          {messages.map((msg) => (
             <div key={msg.id} className="flex flex-col gap-md">
-              {msg.sender === "ai" ? (
+              {msg.role !== "user" ? (
                 /* AI Message: Group avatar on the left, and a single vertical column on the right */
                 <div className="flex gap-md items-start w-full max-w-[85%] lg:max-w-[70%] mr-auto">
                   {/* AI Avatar */}
@@ -402,109 +111,97 @@ export function StylistClient() {
                     <Sparkles className="h-4 w-4 fill-white/10 text-white" />
                   </div>
 
-                  {/* Right column containing text bubble, carousel, and size picker */}
+                  {/* Right column containing text bubble and carousel */}
                   <div className="flex flex-col gap-md w-full flex-1 min-w-0">
-                    {/* Text bubble */}
-                    <div className="bg-white border border-surface-container p-md rounded-2xl rounded-tl-none shadow-sm text-xs leading-relaxed font-semibold tracking-tight text-secondary max-w-[85%] lg:max-w-[70%] select-none">
-                      <p>{msg.text}</p>
-                    </div>
+                    {/* Render message parts in order */}
+                    {(() => {
+                      const hasToolParts = msg.parts.some((p) => (p.type as string).startsWith("tool-"));
+                      const textParts = msg.parts.filter((p): p is Extract<typeof p, { type: "text" }> => p.type === "text");
+                      const lastTextIndex = hasToolParts && textParts.length > 1
+                        ? msg.parts.lastIndexOf(textParts[textParts.length - 1]!)
+                        : -1;
 
-                    {/* Dynamic Product Carousel (If recommended) */}
-                    {msg.products && msg.products.length > 0 && (
-                      <div className="flex gap-md overflow-x-auto hide-scrollbar pb-xs -mx-2 px-2 w-full max-w-full">
-                        {msg.products.map((prod) => (
-                          <div
-                            key={prod.id}
-                            onClick={() => handleProductCardClick(prod.id)}
-                            className="flex-shrink-0 w-[220px] bg-white rounded-xl overflow-hidden border border-surface-container shadow-sm hover:shadow-md cursor-pointer transition-all duration-300 group flex flex-col"
-                          >
-                            <div className="aspect-[4/5] w-full overflow-hidden bg-surface-container relative">
-                              <Image
-                                alt={prod.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out pointer-events-none"
-                                src={prod.image}
-                                fill
-                                sizes="220px"
-                                unoptimized
-                              />
-                              <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span className="bg-white/95 px-lg py-sm rounded-full text-[10px] font-bold tracking-wider shadow-md">
-                                  View Details
-                                </span>
-                              </div>
+                      return msg.parts.map((part, index: number) => {
+                        if (part.type === "text") {
+                          // If tool parts exist and there are multiple text parts, only show the last one
+                          if (lastTextIndex !== -1 && index !== lastTextIndex) {
+                            return null;
+                          }
+                          return (
+                            <div key={index} className="bg-white border border-surface-container p-md rounded-2xl rounded-tl-none shadow-sm text-base leading-relaxed font-semibold tracking-tight text-secondary max-w-[85%] lg:max-w-[70%] select-none">
+                              <p className="whitespace-pre-wrap">{renderMarkdown(part.text)}</p>
                             </div>
-                            <div className="p-md flex flex-col gap-xs select-none">
-                              <span className="text-[10px] text-secondary font-bold uppercase tracking-wider">
-                                {prod.material}
-                              </span>
-                              <h3 className="text-xs font-bold text-on-surface truncate group-hover:text-brand transition-colors">
-                                {prod.title}
-                              </h3>
-                              <p className="text-xs font-extrabold text-brand">₹{prod.price}</p>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleProductCardClick(prod.id);
-                                }}
-                                className="mt-sm w-full py-2 bg-neutral-50 hover:bg-neutral-100 border border-outline-variant text-[10px] font-bold rounded-lg hover:border-neutral-850 transition-colors cursor-pointer"
-                              >
-                                Select Size
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                          );
+                        }
 
-                    {/* Nested Size Picker Dialog Box */}
-                    {msg.sizeSelectorProduct && (
-                      <div className="w-full max-w-[384px] min-w-[280px] sm:min-w-[340px] border border-error-container bg-gradient-to-br from-white to-primary-light-bg p-lg rounded-xl shadow-md ai-gradient-border relative select-none flex-shrink-0">
-                        <div className="flex items-center gap-sm mb-md">
-                          <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
-                          <span className="text-xs font-extrabold text-neutral-900 tracking-tight">
-                            {msg.sizeSelectorProduct.title}
-                          </span>
-                        </div>
-                        <p className="text-xs font-semibold text-secondary leading-relaxed mb-md">
-                          Please select your size for the fitting session.
-                        </p>
+                      if (part.type === "tool-searchInventory") {
+                        // Only render the last searchInventory tool call part in the message to avoid duplicates
+                        const searchParts = msg.parts.filter((p) => p.type === "tool-searchInventory");
+                        if (part !== searchParts[searchParts.length - 1]) {
+                          return null;
+                        }
 
-                        {isReserved[msg.sizeSelectorProduct.id.toString()] ? (
-                          <div className="py-2.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg text-center text-xs font-bold flex items-center justify-center gap-1">
-                            <CheckCircle2 className="h-4 w-4" />
-                            Size {sizePickerState[msg.sizeSelectorProduct.id.toString()] || "M"} successfully reserved!
-                          </div>
-                        ) : (
-                          <div className="flex flex-col gap-md">
-                            <div className="flex gap-sm">
-                              {["S", "M", "L"].map((sz) => (
-                                <button
-                                  key={sz}
-                                  type="button"
-                                  onClick={() => handleSizeClick(msg.sizeSelectorProduct!.id, sz)}
-                                  className={`flex-1 py-2.5 border rounded-lg text-xs font-bold cursor-pointer transition-all ${
-                                    (sizePickerState[msg.sizeSelectorProduct!.id.toString()] || "M") === sz
-                                      ? "bg-primary-fixed text-primary border-primary-fixed-dim"
-                                      : "bg-white text-on-surface border-surface-container hover:bg-neutral-50"
-                                  }`}
+                        const toolPart = part as unknown as {
+                          state: string;
+                          output?: unknown;
+                          toolCallId: string;
+                        };
+                        if (toolPart.state === "output-available") {
+                          const products = toolPart.output as Product[];
+                          if (!products || products.length === 0) {
+                            return null;
+                          }
+
+                          return (
+                            <div key={toolPart.toolCallId} className="flex gap-md overflow-x-auto hide-scrollbar pb-xs -mx-2 px-2 w-full max-w-full">
+                              {products.map((prod) => (
+                                <div
+                                  key={prod.id}
+                                  onClick={() => setSelectedProduct(prod)}
+                                  className="flex-shrink-0 w-[260px] min-w-[260px] bg-white rounded-xl overflow-hidden border border-surface-container shadow-sm hover:shadow-md cursor-pointer transition-all duration-300 group flex flex-col"
                                 >
-                                  {sz}
-                                </button>
+                                  <div className="aspect-[4/5] w-full overflow-hidden bg-surface-container relative">
+                                    <Image
+                                      alt={prod.title}
+                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out pointer-events-none"
+                                      src={prod.image}
+                                      fill
+                                      sizes="260px"
+                                      unoptimized
+                                    />
+                                    <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                      <span className="bg-white/95 px-lg py-sm rounded-full text-[10px] font-bold tracking-wider shadow-md">
+                                        Inspect Item
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="p-md flex flex-col gap-xs select-none overflow-hidden">
+                                    <span className="text-[10px] text-secondary font-bold uppercase tracking-wider truncate">
+                                      {prod.material}
+                                    </span>
+                                    <h3 className="text-sm font-bold text-on-surface line-clamp-2 group-hover:text-brand transition-colors leading-snug">
+                                      {prod.title}
+                                    </h3>
+                                    <p className="text-sm font-extrabold text-brand">₹{prod.price}</p>
+                                  </div>
+                                </div>
                               ))}
                             </div>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleReserveSize(msg.sizeSelectorProduct!.id, msg.sizeSelectorProduct!.title)
-                              }
-                              className="w-full py-3 bg-primary text-white rounded-xl text-xs font-bold hover:brightness-110 active:scale-[0.98] transition-all shadow-sm shadow-primary/20 border-none cursor-pointer text-center"
-                            >
-                              Reserve styling options
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                          );
+                        } else {
+                          // input-streaming or input-available (loading)
+                          return (
+                            <div key={toolPart.toolCallId} className="flex gap-sm items-center text-xs text-muted font-bold tracking-wider uppercase select-none animate-pulse">
+                              <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                              Checking Vistra inventory...
+                            </div>
+                          );
+                        }
+                      }
+
+                      return null;
+                    });
+                    })()}
                   </div>
                 </div>
               ) : (
@@ -513,8 +210,15 @@ export function StylistClient() {
                   <div className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant text-secondary flex items-center justify-center flex-shrink-0 mt-1 shadow-sm shrink-0 select-none">
                     <User className="h-4 w-4 text-charcoal" />
                   </div>
-                  <div className="p-md rounded-2xl shadow-sm text-xs leading-relaxed font-semibold tracking-tight border bg-neutral-900 border-neutral-900 text-white rounded-tr-none select-none">
-                    <p>{msg.text}</p>
+                  <div className="p-md rounded-2xl shadow-sm text-base leading-relaxed font-semibold tracking-tight border bg-neutral-900 border-neutral-900 text-white rounded-tr-none select-none">
+                    <p>
+                      {renderMarkdown(
+                        msg.parts
+                          .filter((p): p is Extract<typeof p, { type: "text" }> => p.type === "text")
+                          .map((p) => p.text)
+                          .join("")
+                      )}
+                    </p>
                   </div>
                 </div>
               )}
@@ -522,7 +226,7 @@ export function StylistClient() {
           ))}
 
           {/* Vistra is styling typing indicator bubble */}
-          {isThinking && (
+          {isLoading && !messages[messages.length - 1]?.parts.some((p) => (p.type as string).startsWith("tool-")) && (
             <div className="flex gap-md items-start max-w-[85%] lg:max-w-[70%] mr-auto">
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1 shadow-sm select-none">
                 <Sparkles className="h-4 w-4 fill-white/10 text-white" />
@@ -537,6 +241,18 @@ export function StylistClient() {
               </div>
             </div>
           )}
+
+          {/* Friendly Connection/Service Error Alert Bubble */}
+          {error && (
+            <div className="flex gap-md items-start max-w-[85%] lg:max-w-[70%] mr-auto">
+              <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-1 shadow-sm select-none">
+                <Sparkles className="h-4 w-4 text-red-600 animate-pulse" />
+              </div>
+              <div className="bg-white border border-red-200 p-md rounded-2xl rounded-tl-none shadow-sm text-xs leading-relaxed font-semibold tracking-tight text-red-700 border-l-4 border-l-red-600 select-none">
+                <p>Sorry, I encountered an issue connecting to the styling service. Please check your connection or try again.</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Bottom Floating Chat input footer block */}
@@ -544,17 +260,16 @@ export function StylistClient() {
           <div className="max-w-4xl mx-auto flex flex-col gap-md">
             
             {/* Horizontal suggested queries pills */}
-            <div className="flex gap-sm overflow-x-auto hide-scrollbar px-2">
+            <div className="flex flex-wrap gap-sm justify-center px-2">
               {[
-                "Find similar styles in silk",
-                "Reserve comfortable summer capsule",
-                "Complete this outfit for a gala",
-                "Recommend suits for office wear"
+                "Find similar styles in silk under 300",
+                "Recommend comfortable summer shirts",
+                "Complete this outfit for a gala under 400"
               ].map((pill, i) => (
                 <button
                   key={i}
-                  onClick={() => handleSendChat(pill)}
-                  className="flex-shrink-0 px-4 py-2 bg-white border border-surface-container hover:border-brand rounded-full text-xs font-semibold text-charcoal hover:text-brand transition-all shadow-sm active:scale-95 cursor-pointer"
+                  onClick={() => handleSendChip(pill)}
+                  className="px-4 py-2 bg-white border border-surface-container hover:border-brand rounded-full text-xs font-semibold text-charcoal hover:text-brand transition-all shadow-sm active:scale-95 cursor-pointer"
                 >
                   {pill}
                 </button>
@@ -563,11 +278,7 @@ export function StylistClient() {
 
             {/* Main Chat Input Control */}
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSendChat(chatInput);
-                setChatInput("");
-              }}
+              onSubmit={handleFormSubmit}
               className="flex items-center gap-md bg-white border border-surface-container p-sm pl-md rounded-full shadow-xl"
             >
               <button
@@ -580,10 +291,10 @@ export function StylistClient() {
               <input
                 id="chat-input"
                 type="text"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask our AI Stylist..."
-                className="flex-1 bg-transparent border-none focus:ring-0 text-xs font-semibold text-charcoal placeholder:text-secondary/40 h-10 pr-2 focus:outline-none"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-base font-semibold text-charcoal placeholder:text-secondary/40 h-10 pr-2 focus:outline-none"
               />
               <button
                 type="submit"
@@ -602,7 +313,78 @@ export function StylistClient() {
         </div>
       </section>
 
-      {/* Embedded Typing animation indicators */}
+      {/* Right Column: Dynamic Side-by-Side Product Detail Inspector */}
+      {selectedProduct && (
+        <aside className="absolute lg:relative inset-y-0 right-0 w-full sm:w-[400px] lg:w-[450px] bg-white border-l border-surface-container flex flex-col h-full overflow-y-auto shrink-0 z-30 shadow-2xl lg:shadow-none animate-slide-in">
+          {/* Header */}
+          <div className="p-lg border-b border-surface-container flex justify-between items-center bg-white sticky top-0 z-10">
+            <h2 className="text-headline-md font-headline-md text-charcoal truncate">Garment Details</h2>
+            <button
+              onClick={() => setSelectedProduct(null)}
+              className="p-2 hover:bg-neutral-100 rounded-full text-secondary hover:text-charcoal cursor-pointer border-none bg-transparent"
+              aria-label="Close panel"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Details Content */}
+          <div className="p-lg flex flex-col gap-lg select-none">
+            {/* Product Image */}
+            <div className="aspect-[3/4] w-full relative overflow-hidden rounded-xl bg-surface-container shadow-inner">
+              <Image
+                alt={selectedProduct.title}
+                src={selectedProduct.image}
+                fill
+                className="w-full h-full object-cover"
+                unoptimized
+              />
+            </div>
+
+            {/* Title, Category & Price */}
+            <div className="flex flex-col gap-xs">
+              <span className="text-[10px] text-secondary font-bold uppercase tracking-wider">
+                {selectedProduct.category} • {selectedProduct.material}
+              </span>
+              <h1 className="text-headline-lg font-headline-lg text-charcoal">
+                {selectedProduct.title}
+              </h1>
+              <p className="text-lg font-extrabold text-brand mt-xs">₹{selectedProduct.price}</p>
+            </div>
+
+            {/* Description */}
+            <div className="flex flex-col gap-sm border-t border-surface-container pt-md">
+              <h3 className="text-xs font-bold uppercase text-charcoal tracking-wide">Description</h3>
+              <p className="text-xs text-secondary leading-relaxed font-semibold">
+                {selectedProduct.description}
+              </p>
+            </div>
+
+            {/* AI Recommendation */}
+            <div className="bg-primary-light-bg border border-outline-variant p-md rounded-xl flex flex-col gap-xs relative">
+              <div className="flex items-center gap-xs text-[10px] font-bold text-primary uppercase tracking-wider">
+                <Sparkles className="h-3 w-3 fill-primary/10" />
+                AI Stylist recommendation
+              </div>
+              <p className="text-xs text-secondary italic font-semibold leading-relaxed">
+                {selectedProduct.aiRecommendation || `Matches beautifully with your selected aesthetics.`}
+              </p>
+            </div>
+
+            {/* Action Button: View Full Details Page */}
+            <div className="mt-md pt-lg border-t border-surface-container">
+              <Link
+                href={`/product/${selectedProduct.id}`}
+                className="w-full block py-4 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold text-center no-underline hover:brightness-110 active:scale-[0.98] transition-all shadow-md uppercase tracking-wider"
+              >
+                View Full Product Page
+              </Link>
+            </div>
+          </div>
+        </aside>
+      )}
+
+      {/* Embedded Typing & Transition animations */}
       <style jsx global>{`
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
@@ -644,6 +426,18 @@ export function StylistClient() {
         }
         .typing-dot:nth-child(3) {
           animation-delay: 0.4s;
+        }
+
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
+        .animate-slide-in {
+          animation: slideIn 0.3s ease-out forwards;
         }
       `}</style>
     </div>

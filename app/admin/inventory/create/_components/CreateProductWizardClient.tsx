@@ -16,8 +16,9 @@ import { Form } from "@/components/forms/Form";
 import { createClient } from "@/utils/supabase/client";
 import { productWizardSchema, type ProductWizardFormValues } from "../schema";
 import { type DbProduct } from "@/lib/db-products";
+import { SEASON_OPTIONS } from "../constants";
 import { Stepper } from "./Stepper";
-import { ConfirmationModal } from "@/components/ui";
+import { ConfirmationModal, AlertModal } from "@/components/ui";
 import { Step1Media } from "./Step1Media";
 import { Step2Garment } from "./Step2Garment";
 import { Step3Metadata } from "./Step3Metadata";
@@ -99,6 +100,7 @@ function WizardContent({ editId, initialProduct }: WizardContentProps) {
   const [isUploading, setIsUploading] = React.useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = React.useState<Record<number, number>>({});
   const [isAbandonModalOpen, setIsAbandonModalOpen] = React.useState<boolean>(false);
+  const [isAiErrorModalOpen, setIsAiErrorModalOpen] = React.useState<boolean>(false);
   
   // Storage keys of uploaded files in Supabase (for Wizard Abandonment Cleanup Engine)
   const [uploadedPaths, setUploadedPaths] = React.useState<string[]>([]);
@@ -304,15 +306,29 @@ function WizardContent({ editId, initialProduct }: WizardContentProps) {
                 setValue("category", parsed.category as "apparel" | "footwear", { shouldValidate: true });
                 setValue("gender", parsed.gender as "Men" | "Women" | "Unisex", { shouldValidate: true });
                 
-                const aiSeason = parsed.season 
+                const rawSeasons = parsed.season 
                   ? (parsed.season.includes(",") 
                      ? parsed.season.split(",").map(s => s.trim()) 
                      : [parsed.season])
                   : ["Summer"];
-                setValue("season", aiSeason, { shouldValidate: true });
+                
+                const aiSeason = rawSeasons
+                  .map(s => {
+                    const matched = SEASON_OPTIONS.find(allowed => allowed.toLowerCase() === s.toLowerCase());
+                    return matched || null;
+                  })
+                  .filter((s): s is typeof SEASON_OPTIONS[number] => s !== null);
+                
+                setValue("season", aiSeason.length > 0 ? aiSeason : ["Summer"], { shouldValidate: true });
                 
                 // Pre-populate step 3 fields
-                setValue("sizes", parsed.sizes || [], { shouldValidate: true });
+                let aiSizes = parsed.sizes || [];
+                if (parsed.category === "footwear") {
+                  aiSizes = aiSizes
+                    .map(sz => sz.replace(/[^0-9.]/g, "").trim())
+                    .filter(sz => sz.length > 0);
+                }
+                setValue("sizes", aiSizes, { shouldValidate: true });
                 setValue("materials", parsed.materials || [], { shouldValidate: true });
                 setValue("aesthetics", parsed.aesthetics || [], { shouldValidate: true });
                 setValue("occasions", parsed.occasions || [], { shouldValidate: true });
@@ -326,7 +342,12 @@ function WizardContent({ editId, initialProduct }: WizardContentProps) {
                   setValue("image_urls", [], { shouldValidate: true });
                   setCurrentStep(1);
                 } else {
-                  toast.error(res.error || "Failed to analyze product media using AI", { position: "top-center" });
+                  console.error("AI Media Analysis failed (unexpected):", res.error);
+                  setIsAiErrorModalOpen(true);
+                  await cleanupUploadedAssets();
+                  setSelectedFiles([]);
+                  setValue("image_urls", [], { shouldValidate: true });
+                  setCurrentStep(1);
                 }
               }
             }
@@ -520,6 +541,19 @@ function WizardContent({ editId, initialProduct }: WizardContentProps) {
         cancelLabel="Cancel"
         icon={
           <span className="material-symbols-outlined text-[24px] text-primary">warning</span>
+        }
+      />
+
+      {/* AI GENERATION ERROR MODAL */}
+      <AlertModal
+        isOpen={isAiErrorModalOpen}
+        onClose={() => setIsAiErrorModalOpen(false)}
+        title="AI Generation Failed"
+        description="We encountered an unexpected error while trying to automatically generate the product details using AI. The uploaded image was deleted to keep your storage clean. Please return to Step 1 and try again."
+        confirmLabel="Got it"
+        variant="primary"
+        icon={
+          <span className="material-symbols-outlined text-[24px] text-red-600" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
         }
       />
 

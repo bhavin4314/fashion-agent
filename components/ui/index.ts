@@ -16,3 +16,4 @@ export { FileUpload } from "./FileUpload";
 export type { FileUploadProps } from "./FileUpload";
 export { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 export { ConfirmationModal } from "./ConfirmationModal";
+export { AlertModal } from "./AlertModal";

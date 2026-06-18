@@ -83,20 +83,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
     );
   }
 
-  // Fetch up to 4 other related items to complete the look
-  const { data: dbRelatedProducts } = await supabase
-    .from("products")
-    .select("id, title, price, image_urls")
-    .neq("id", dbProduct.id)
-    .limit(4);
-
   const product = mapDbProduct(dbProduct);
-  product.completeTheLook = (dbRelatedProducts || []).map((p) => ({
-    id: p.id,
-    title: p.title,
-    price: Number(p.price),
-    image: p.image_urls?.[0] || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=60"
-  }));
 
   return (
     <div className="text-charcoal antialiased min-h-screen flex flex-col bg-white">

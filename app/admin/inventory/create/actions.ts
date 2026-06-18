@@ -10,6 +10,16 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
+const CHAT_MODEL = process.env.AI_CHAT_MODEL as string;
+const EMBEDDING_MODEL = process.env.AI_EMBEDDING_MODEL as string;
+
+if (!CHAT_MODEL) {
+  throw new Error("AI_CHAT_MODEL is not defined in environment variables");
+}
+if (!EMBEDDING_MODEL) {
+  throw new Error("AI_EMBEDDING_MODEL is not defined in environment variables");
+}
+
 // Schema for Gemini attribute extraction
 const aiAnalysisSchema = z.object({
   isRelevantFashionItem: z.boolean().describe("True if the uploaded image represents an item of clothing, apparel, footwear, or a fashion accessory (e.g. watches, bags, jewelry, sunglasses, wallets). False if it is completely irrelevant to fashion (e.g. food, animals, electronics, vehicles, landscapes, etc.)"),
@@ -17,11 +27,11 @@ const aiAnalysisSchema = z.object({
   description: z.string().describe("An elegant, high-end editorial product description of 2-3 sentences"),
   category: z.enum(["apparel", "footwear", "accessories"]).describe("The category of the item: apparel, footwear, or accessories"),
   gender: z.enum(["Men", "Women", "Unisex"]).describe("Target gender"),
-  sizes: z.array(z.string()).describe("Suggested list of available sizes appropriate for the category (leave empty/null for accessories)"),
+  sizes: z.array(z.string()).describe("Suggested list of available sizes appropriate for the category (leave empty/null for accessories). For footwear, sizes must be purely numeric strings (e.g. '8', '9', '10') without any 'US', 'UK', or 'EU' text."),
   materials: z.array(z.string()).describe("Materials used, e.g. Cashmere, Leather, Suede"),
   aesthetics: z.array(z.string()).describe("Aesthetic styles, e.g. Quiet Luxury, Minimalist, Vintage"),
   occasions: z.array(z.string()).describe("Occasions for use, e.g. Evening Lounge, Travel, Casual"),
-  season: z.string().describe("Appropriate season, e.g. Summer, Autumn, Winter, Spring"),
+  season: z.string().describe("Appropriate season. Must be one of or a comma-separated list of: Summer, Winter, Monsoon"),
   fit: z.string().optional().nullable().describe("The fit description, e.g. Relaxed, Slim, Oversized (leave empty/null for footwear or accessories)"),
 });
 
@@ -35,7 +45,7 @@ export async function analyzeProductMediaAction(imageUrl: string) {
     }
 
     const { output } = await generateText({
-      model: google("gemini-3.5-flash"),
+      model: google(CHAT_MODEL),
       output: Output.object({
         schema: aiAnalysisSchema,
       }),
@@ -108,7 +118,7 @@ ${product.fit ? `Fit: ${product.fit}` : ""}
 
     // 2. Compute 1,536-dimension embedding via gemini-embedding-2-preview
     const { embedding } = await embed({
-      model: google.embedding("gemini-embedding-2-preview"),
+      model: google.embedding(EMBEDDING_MODEL),
       value: metadataText,
       providerOptions: {
         google: {
@@ -193,7 +203,7 @@ ${product.fit ? `Fit: ${product.fit}` : ""}
 
     // 2. Compute 1,536-dimension embedding via gemini-embedding-2-preview
     const { embedding } = await embed({
-      model: google.embedding("gemini-embedding-2-preview"),
+      model: google.embedding(EMBEDDING_MODEL),
       value: metadataText,
       providerOptions: {
         google: {

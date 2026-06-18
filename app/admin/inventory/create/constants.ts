@@ -6,7 +6,7 @@ export const CATEGORY_OPTIONS = [
 
 export const GENDER_OPTIONS = ["Men", "Women", "Unisex"] as const;
 
-export const SEASON_OPTIONS = ["Summer", "Autumn", "Winter", "Spring"] as const;
+export const SEASON_OPTIONS = ["Summer", "Winter", "Monsoon"] as const;
 
 export const APPAREL_SIZES_PRESET = ["XS", "S", "M", "L", "XL", "XXL"] as const;
 export const FOOTWEAR_SIZES_PRESET = ["7", "8", "9", "10", "11"] as const;
