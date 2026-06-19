@@ -19,7 +19,7 @@ export default function RootLayout({
       lang="en"
       className="h-full antialiased"
     >
-      <head>
+      <head suppressHydrationWarning>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet" />
@@ -28,7 +28,7 @@ export default function RootLayout({
         <CartProvider>
           {children}
         </CartProvider>
-        <Toaster position="bottom-right" toastOptions={{
+        <Toaster position="top-center" toastOptions={{
           style: {
             fontFamily: "Inter, sans-serif",
             fontSize: "14px",

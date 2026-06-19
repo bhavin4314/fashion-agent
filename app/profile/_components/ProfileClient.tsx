@@ -13,6 +13,8 @@ import { getStatusBadgeClass } from "@/lib/constants";
 import { generateInvoicePdf } from "@/lib/invoice";
 import { TrackingTimeline } from "./TrackingTimeline";
 import { InvoiceModal } from "./InvoiceModal";
+import { getAvatarInitials } from "@/lib/utils";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 interface ProfileItem {
   id: string;
@@ -47,8 +49,20 @@ interface ProfileClientProps {
 }
 
 export function ProfileClient({ profile, orders }: ProfileClientProps) {
-  const [activeTab, setActiveTab] = React.useState<"profile" | "orders">("orders");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const tabParam = searchParams.get("tab");
+  const activeTab = tabParam === "orders" ? "orders" : "profile";
+
   const [isEditing, setIsEditing] = React.useState(false);
+
+  const handleTabChange = (tab: "profile" | "orders") => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", tab);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
   const [userProfile, setUserProfile] = React.useState(profile);
   const [trackingOrderId, setTrackingOrderId] = React.useState<string | null>(null);
   const [invoiceOrder, setInvoiceOrder] = React.useState<Order | null>(null);
@@ -119,7 +133,7 @@ export function ProfileClient({ profile, orders }: ProfileClientProps) {
       <aside className="col-span-12 md:col-span-3 space-y-md">
         <nav className="flex flex-col space-y-sm">
           <button
-            onClick={() => setActiveTab("profile")}
+            onClick={() => handleTabChange("profile")}
             className={`flex items-center gap-sm px-md py-3 font-label-md text-label-md rounded-xl transition-all border-none text-left cursor-pointer w-full ${
               activeTab === "profile"
                 ? "bg-neutral-900 text-white font-bold"
@@ -130,7 +144,7 @@ export function ProfileClient({ profile, orders }: ProfileClientProps) {
             My Profile
           </button>
           <button
-            onClick={() => setActiveTab("orders")}
+            onClick={() => handleTabChange("orders")}
             className={`flex items-center gap-sm px-md py-3 font-label-md text-label-md rounded-xl transition-all border-none text-left cursor-pointer w-full ${
               activeTab === "orders"
                 ? "bg-neutral-900 text-white font-bold"
@@ -146,13 +160,18 @@ export function ProfileClient({ profile, orders }: ProfileClientProps) {
       {/* Main Content Area */}
       <div className="col-span-12 md:col-span-9 space-y-xl">
         {/* Page Header */}
-        <header>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-charcoal tracking-tight">
-            Welcome back, {userProfile.fullName}
-          </h1>
-          <p className="text-xs text-muted font-semibold mt-1">
-            Manage your luxury fashion orders and personal styling details.
-          </p>
+        <header className="flex items-center gap-md">
+          <div className="w-12 h-12 rounded-full border border-brand/20 bg-brand/10 text-brand flex items-center justify-center font-bold text-base tracking-wider shadow-sm shrink-0 select-none">
+            {getAvatarInitials(userProfile.fullName)}
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-charcoal tracking-tight">
+              Welcome back, {userProfile.fullName}
+            </h1>
+            <p className="text-xs text-muted font-semibold mt-1">
+              Manage your luxury fashion orders and personal styling details.
+            </p>
+          </div>
         </header>
 
         {/* Tab 1: Edit Profile */}

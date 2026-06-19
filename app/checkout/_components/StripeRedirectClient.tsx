@@ -7,11 +7,13 @@ import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 export function StripeRedirectClient() {
-  const { cart } = useCart();
+  const { cart, isLoaded } = useCart();
   const router = useRouter();
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    if (!isLoaded) return;
+
     if (cart.length === 0) {
       router.push("/collection");
       return;

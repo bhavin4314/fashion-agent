@@ -17,7 +17,11 @@ const defaultValues: SignUpFormValues = {
   confirmPassword: "",
 };
 
-export function SignUpForm() {
+interface SignUpFormProps {
+  redirectUrl?: string;
+}
+
+export function SignUpForm({ redirectUrl }: SignUpFormProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [status, setStatus] = React.useState<{
     type: "success" | "error";
@@ -43,7 +47,7 @@ export function SignUpForm() {
           type: "success",
           message: "Account created successfully! Redirecting you...",
         });
-        window.location.href = "/collection";
+        window.location.href = redirectUrl || "/collection";
       }
     } catch {
       setStatus({

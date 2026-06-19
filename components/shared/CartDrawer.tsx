@@ -70,12 +70,13 @@ export function CartDrawer() {
               <p className="text-xs text-muted mt-1 max-w-[250px] font-semibold">
                 Explore the luxury collection and add quiet luxury pieces to your bag.
               </p>
-              <button
+              <Link
+                href="/collection"
                 onClick={() => setIsDrawerOpen(false)}
-                className="mt-6 px-6 py-3 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold transition-all uppercase tracking-widest cursor-pointer border-none"
+                className="mt-6 px-6 py-3 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold transition-all uppercase tracking-widest cursor-pointer border-none no-underline"
               >
-                Continue Curation
-              </button>
+                Continue Shopping
+              </Link>
             </div>
           ) : (
             cart.map((item) => (

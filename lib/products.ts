@@ -28,7 +28,7 @@ export const PRODUCTS: Product[] = [
     title: "Relaxed Linen Shirt",
     price: 98,
     material: "100% Organic Linen",
-    category: "New Arrivals",
+    category: "Apparel",
     subcategory: "Tops",
     occasion: "Casual",
     color: "white",

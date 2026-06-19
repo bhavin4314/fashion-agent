@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { Camera, Ruler, Sparkles } from "lucide-react";
 import { Navbar } from "./_components/Navbar";
 import { SearchPill } from "./_components/SearchPill";
+import { createClient } from "@/utils/supabase/server";
+import { mapDbProduct } from "@/lib/db-products";
 
 export const metadata: Metadata = {
   title: "Vistra | AI Fashion Concierge",
   description: "Find your perfect, coordinated outfits curated by world-class AI.",
 };
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: dbProducts } = await supabase
+    .from("products")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(4);
+
+  const featuredProducts = (dbProducts || []).map(mapDbProduct);
+
   return (
     <div className="text-charcoal antialiased min-h-screen flex flex-col bg-white">
       {/* Dynamic Navigation Header */}
@@ -106,6 +118,57 @@ export default function Home() {
                 Autumn Essentials
               </h2>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Collection Section */}
+      <section className="pb-xxl bg-white select-none">
+        <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+          <div className="flex justify-between items-end mb-lg">
+            <h2 className="text-2xl md:text-3xl font-bold text-charcoal">
+              Featured Collection
+            </h2>
+            <Link
+              href="/collection"
+              className="text-sm font-semibold text-charcoal hover:underline flex items-center gap-xs transition-all duration-150"
+            >
+              Explore More <span className="text-xs">→</span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-gutter">
+            {featuredProducts.map((product) => (
+              <Link
+                key={product.id}
+                href={`/product/${product.id}`}
+                className="group cursor-pointer flex flex-col"
+              >
+                <div className="aspect-[3/4] w-full rounded-xl overflow-hidden bg-surface-container-low mb-sm relative select-none">
+                  <Image
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[600ms] ease-out pointer-events-none"
+                    src={product.image}
+                    alt={product.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw"
+                    unoptimized
+                  />
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                    <span className="bg-surface/90 px-lg py-sm rounded-full text-label-sm font-label-sm shadow-lg backdrop-blur-md">
+                      View Details
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-xs pt-1 select-none">
+                  <h3 className="text-body-md font-headline-md text-on-surface tracking-tight font-semibold">
+                    {product.title}
+                  </h3>
+                  <p className="text-body-md font-bold text-on-surface">
+                    ₹{product.price}
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

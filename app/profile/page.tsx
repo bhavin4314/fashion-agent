@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { createClient } from "@/utils/supabase/server";
 import { Navbar } from "@/app/_components/Navbar";
 import { ProfileClient } from "./_components/ProfileClient";
@@ -114,7 +115,9 @@ export default async function ProfilePage() {
 
       {/* Main Profile Canvas */}
       <main className="pt-[120px] pb-xxl max-w-7xl w-full mx-auto px-margin-mobile md:px-margin-desktop flex-grow">
-        <ProfileClient profile={formattedProfile} orders={formattedOrders} />
+        <Suspense fallback={<div className="text-center py-xxl font-semibold text-muted">Loading profile details...</div>}>
+          <ProfileClient profile={formattedProfile} orders={formattedOrders} />
+        </Suspense>
       </main>
 
       {/* Footer Section */}

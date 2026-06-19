@@ -2,11 +2,11 @@
 
 import * as React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { Sparkles, User, Send, Plus, X } from "lucide-react";
+import { Sparkles, User, Send } from "lucide-react";
 import { type Product } from "@/lib/products";
 import { useChat, type UIMessage } from "@ai-sdk/react";
 import { toast } from "react-hot-toast";
+import { ProductDetailInspector } from "./ProductDetailInspector";
 
 function renderItalics(text: string): React.ReactNode {
   const italicParts = text.split(/(\*.*?\*|_.*?_)/g);
@@ -46,6 +46,7 @@ export function StylistClient() {
   const [input, setInput] = React.useState("");
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
 
+
   // Initial greeting message from the AI Stylist
   const initialMessages = React.useMemo<UIMessage[]>(() => [
     {
@@ -81,12 +82,13 @@ export function StylistClient() {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (isLoading || !input.trim()) return;
     sendMessage({ text: input.trim() });
     setInput("");
   };
 
   const handleSendChip = (text: string) => {
+    if (isLoading) return;
     sendMessage({ text });
   };
 
@@ -269,7 +271,8 @@ export function StylistClient() {
                 <button
                   key={i}
                   onClick={() => handleSendChip(pill)}
-                  className="px-4 py-2 bg-white border border-surface-container hover:border-brand rounded-full text-xs font-semibold text-charcoal hover:text-brand transition-all shadow-sm active:scale-95 cursor-pointer"
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-white border border-surface-container hover:border-brand rounded-full text-xs font-semibold text-charcoal hover:text-brand transition-all shadow-sm active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
                 >
                   {pill}
                 </button>
@@ -281,24 +284,19 @@ export function StylistClient() {
               onSubmit={handleFormSubmit}
               className="flex items-center gap-md bg-white border border-surface-container p-sm pl-md rounded-full shadow-xl"
             >
-              <button
-                type="button"
-                onClick={() => alert("Upload media currently verified in administrative side.")}
-                className="text-secondary hover:text-primary transition-colors flex items-center justify-center p-2 border-none bg-transparent cursor-pointer shrink-0"
-              >
-                <Plus className="h-5 w-5" />
-              </button>
               <input
                 id="chat-input"
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask our AI Stylist..."
-                className="flex-1 bg-transparent border-none focus:ring-0 text-base font-semibold text-charcoal placeholder:text-secondary/40 h-10 pr-2 focus:outline-none"
+                placeholder={isLoading ? "Vistra is styling..." : "Ask our AI Stylist..."}
+                disabled={isLoading}
+                className="flex-1 bg-transparent border-none focus:ring-0 text-base font-semibold text-charcoal placeholder:text-secondary/40 h-10 pr-2 focus:outline-none disabled:opacity-50"
               />
               <button
                 type="submit"
-                className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white hover:brightness-110 active:scale-90 transition-all shadow-md shadow-primary/25 border-none cursor-pointer shrink-0"
+                disabled={isLoading || !input.trim()}
+                className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white hover:brightness-110 active:scale-90 transition-all shadow-md shadow-primary/25 border-none cursor-pointer shrink-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
               >
                 <Send className="h-4 w-4 text-white" />
               </button>
@@ -315,73 +313,10 @@ export function StylistClient() {
 
       {/* Right Column: Dynamic Side-by-Side Product Detail Inspector */}
       {selectedProduct && (
-        <aside className="absolute lg:relative inset-y-0 right-0 w-full sm:w-[400px] lg:w-[450px] bg-white border-l border-surface-container flex flex-col h-full overflow-y-auto shrink-0 z-30 shadow-2xl lg:shadow-none animate-slide-in">
-          {/* Header */}
-          <div className="p-lg border-b border-surface-container flex justify-between items-center bg-white sticky top-0 z-10">
-            <h2 className="text-headline-md font-headline-md text-charcoal truncate">Garment Details</h2>
-            <button
-              onClick={() => setSelectedProduct(null)}
-              className="p-2 hover:bg-neutral-100 rounded-full text-secondary hover:text-charcoal cursor-pointer border-none bg-transparent"
-              aria-label="Close panel"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Details Content */}
-          <div className="p-lg flex flex-col gap-lg select-none">
-            {/* Product Image */}
-            <div className="aspect-[3/4] w-full relative overflow-hidden rounded-xl bg-surface-container shadow-inner">
-              <Image
-                alt={selectedProduct.title}
-                src={selectedProduct.image}
-                fill
-                className="w-full h-full object-cover"
-                unoptimized
-              />
-            </div>
-
-            {/* Title, Category & Price */}
-            <div className="flex flex-col gap-xs">
-              <span className="text-[10px] text-secondary font-bold uppercase tracking-wider">
-                {selectedProduct.category} • {selectedProduct.material}
-              </span>
-              <h1 className="text-headline-lg font-headline-lg text-charcoal">
-                {selectedProduct.title}
-              </h1>
-              <p className="text-lg font-extrabold text-brand mt-xs">₹{selectedProduct.price}</p>
-            </div>
-
-            {/* Description */}
-            <div className="flex flex-col gap-sm border-t border-surface-container pt-md">
-              <h3 className="text-xs font-bold uppercase text-charcoal tracking-wide">Description</h3>
-              <p className="text-xs text-secondary leading-relaxed font-semibold">
-                {selectedProduct.description}
-              </p>
-            </div>
-
-            {/* AI Recommendation */}
-            <div className="bg-primary-light-bg border border-outline-variant p-md rounded-xl flex flex-col gap-xs relative">
-              <div className="flex items-center gap-xs text-[10px] font-bold text-primary uppercase tracking-wider">
-                <Sparkles className="h-3 w-3 fill-primary/10" />
-                AI Stylist recommendation
-              </div>
-              <p className="text-xs text-secondary italic font-semibold leading-relaxed">
-                {selectedProduct.aiRecommendation || `Matches beautifully with your selected aesthetics.`}
-              </p>
-            </div>
-
-            {/* Action Button: View Full Details Page */}
-            <div className="mt-md pt-lg border-t border-surface-container">
-              <Link
-                href={`/product/${selectedProduct.id}`}
-                className="w-full block py-4 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold text-center no-underline hover:brightness-110 active:scale-[0.98] transition-all shadow-md uppercase tracking-wider"
-              >
-                View Full Product Page
-              </Link>
-            </div>
-          </div>
-        </aside>
+        <ProductDetailInspector
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
       )}
 
       {/* Embedded Typing & Transition animations */}

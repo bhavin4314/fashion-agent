@@ -19,10 +19,11 @@ export default async function AdminLayout({
   const { data: { user } } = await supabase.auth.getUser();
 
   let adminName = "Vistra Admin";
+  let adminRole = "Admin";
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("full_name")
+      .select("full_name, role")
       .eq("id", user.id)
       .single();
   
@@ -30,6 +31,9 @@ export default async function AdminLayout({
       adminName = profile.full_name;
     } else if (user.email) {
       adminName = user.email.split("@")[0] || "Vistra Admin";
+    }
+    if (profile?.role) {
+      adminRole = profile.role;
     }
   }
 
@@ -69,7 +73,7 @@ export default async function AdminLayout({
             </div>
             <div className="overflow-hidden">
               <p className="text-xs font-bold truncate text-charcoal">{adminName}</p>
-              <span className="text-[9px] text-muted font-bold uppercase tracking-widest block">Concierge Elite</span>
+              <span className="text-[9px] text-muted font-bold uppercase tracking-widest block">{adminRole}</span>
             </div>
           </div>
         </div>

@@ -17,6 +17,7 @@ interface CartContextType {
   cartCount: number;
   cartTotal: number;
   isDrawerOpen: boolean;
+  isLoaded: boolean;
   setIsDrawerOpen: (open: boolean) => void;
   addToCart: (item: Omit<CartItem, "quantity">) => void;
   removeFromCart: (id: string) => void;
@@ -107,6 +108,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         cartCount,
         cartTotal,
         isDrawerOpen,
+        isLoaded: isMounted,
         setIsDrawerOpen,
         addToCart,
         removeFromCart,

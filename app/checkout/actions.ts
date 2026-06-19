@@ -89,19 +89,16 @@ export async function createOrderAction(input: unknown) {
 
     // 3. Update stock quantities and update profile shipping details if empty
     for (const item of items) {
-      // Fetch current stock
-      const { data: product } = await supabase
-        .from("products")
-        .select("stock_quantity")
-        .eq("id", item.productId)
-        .single();
-
-      if (product) {
-        const newStock = Math.max(0, product.stock_quantity - item.quantity);
-        await supabase
-          .from("products")
-          .update({ stock_quantity: newStock })
-          .eq("id", item.productId);
+      // Use RPC call to decrement stock securely (bypasses RLS via SECURITY DEFINER)
+      const { error: decrementError } = await supabase.rpc(
+        "decrement_product_stock",
+        {
+          product_id: item.productId,
+          quantity_to_decrement: item.quantity,
+        }
+      );
+      if (decrementError) {
+        console.error("Failed to decrement product stock:", decrementError);
       }
     }
 

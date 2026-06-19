@@ -40,12 +40,12 @@ export async function updateSession(request: NextRequest) {
   }
 
   const isAdminPath = pathname.startsWith("/admin");
-  const isProductPath = pathname.startsWith("/product");
   const isCustomerPath =
-    pathname.startsWith("/collection") ||
-    pathname.startsWith("/stylist");
+    pathname.startsWith("/stylist") ||
+    pathname.startsWith("/checkout") ||
+    pathname.startsWith("/profile");
   const isAuthPath = pathname.startsWith("/login") || pathname.startsWith("/signup");
-  const isProtectedPath = isAdminPath || isCustomerPath || isProductPath;
+  const isProtectedPath = isAdminPath || isCustomerPath;
 
   // Helper to create redirect response with copied session cookies and disabled cache
   const redirect = (targetUrl: string) => {
@@ -61,8 +61,9 @@ export async function updateSession(request: NextRequest) {
 
   if (isProtectedPath) {
     if (!user) {
-      // User is not logged in, redirect to login page
-      return redirect("/login");
+      // User is not logged in, redirect to login page with preserved path & query parameters
+      const redirectUrl = pathname + url.search;
+      return redirect(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
     }
 
     // Retrieve role from profiles database table
@@ -84,7 +85,12 @@ export async function updateSession(request: NextRequest) {
       return redirect("/admin/inventory");
     }
   } else if (isAuthPath && user) {
-    // Authenticated users trying to access login/signup pages should be redirected to their dashboard
+    // Authenticated users trying to access login/signup pages should be redirected to their dashboard or redirect path
+    const redirectParam = url.searchParams.get("redirect");
+    if (redirectParam) {
+      return redirect(redirectParam);
+    }
+
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")

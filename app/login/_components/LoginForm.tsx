@@ -17,7 +17,11 @@ const defaultValues: LoginFormValues = {
   password: "",
 };
 
-export function LoginForm() {
+interface LoginFormProps {
+  redirectUrl?: string;
+}
+
+export function LoginForm({ redirectUrl }: LoginFormProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const cardRef = React.useRef<HTMLDivElement>(null);
@@ -61,7 +65,7 @@ export function LoginForm() {
         if (role === "admin") {
           window.location.href = "/admin/inventory";
         } else {
-          window.location.href = "/collection";
+          window.location.href = redirectUrl || "/collection";
         }
       }
     } catch {
@@ -139,7 +143,7 @@ export function LoginForm() {
           Don&apos;t have an account?{" "}
           <Link
             className="text-on-surface font-semibold hover:underline decoration-2 underline-offset-4 transition-all duration-150"
-            href="/signup"
+            href={redirectUrl ? `/signup?redirect=${encodeURIComponent(redirectUrl)}` : "/signup"}
           >
             Sign up
           </Link>

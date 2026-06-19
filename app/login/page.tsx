@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { LoginForm } from "./_components/LoginForm";
 
 export const metadata: Metadata = {
@@ -7,7 +8,14 @@ export const metadata: Metadata = {
   description: "Log in or sign up to Vistra to discover your personal style, curated by AI.",
 };
 
-export default function LoginPage() {
+interface PageProps {
+  searchParams: Promise<{ redirect?: string }>;
+}
+
+export default async function LoginPage({ searchParams }: PageProps) {
+  const resolvedSearchParams = await searchParams;
+  const redirectUrl = resolvedSearchParams.redirect;
+
   return (
     <main className="min-h-screen w-full flex flex-col md:flex-row bg-surface text-on-surface font-sans select-none overflow-x-hidden">
       {/* Left Section: Login Panel */}
@@ -15,20 +23,22 @@ export default function LoginPage() {
         <div className="w-full max-w-[440px] flex flex-col items-center">
           {/* Brand Anchor & Identity */}
           <div className="mb-xxl text-center">
-            <div className="flex items-center justify-center gap-xs mb-md select-none pointer-events-none">
-              <Image
-                src="/logo-with-name.png"
-                alt="Vistra Logo"
-                className="h-10 w-auto object-contain"
-                width={150}
-                height={40}
-                priority
-              />
+            <div className="flex items-center justify-center gap-xs mb-md select-none">
+              <Link href="/" className="cursor-pointer">
+                <Image
+                  src="/logo-with-name.png"
+                  alt="Vistra Logo"
+                  className="h-10 w-auto object-contain"
+                  width={150}
+                  height={40}
+                  priority
+                />
+              </Link>
             </div>
           </div>
 
           {/* Login Card Leaf Client Component */}
-          <LoginForm />
+          <LoginForm redirectUrl={redirectUrl} />
 
           {/* Footer Links */}
           <footer className="mt-xxl flex flex-wrap justify-center gap-md">

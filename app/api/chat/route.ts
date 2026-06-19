@@ -293,6 +293,39 @@ CRITICAL INSTRUCTIONS:
             console.log(">>> [searchInventory Tool] Executing search for query:", query, "maxPrice:", maxPrice);
             const results = await runHybridSearch(query, analysis, maxPrice);
             console.log(">>> [searchInventory Tool] Found", results.length, "results.");
+
+            if (results.length > 0) {
+              console.log(">>> [searchInventory Tool] Filtering results with LLM against user query:", userQuery);
+              try {
+                const { output } = await generateText({
+                  model: google(CHAT_MODEL),
+                  output: Output.object({
+                    schema: z.object({
+                      matchingIds: z.array(z.string()).describe("The list of product IDs from the candidates that are a genuine match for the user's specific request."),
+                    }),
+                  }),
+                  system: `You are an AI inventory validation assistant.
+Your job is to compare a user's shopping request with a list of search result candidates from our database.
+Determine which candidates are actual matches for the user's specific request.
+Be conservative: if the user asks for a specific item (e.g., "school bag for children", "linen shirt", "running shoes") and the candidate is a completely different item (e.g., a "leather handbag for ladies", "silk blouse", "leather boots"), do NOT match it.
+Only match if the candidate is the type of product the user is looking for.`,
+                  prompt: `User Request: "${userQuery}"
+Search query used: "${query}"
+
+Candidate Products:
+${results.map((r, i) => `${i + 1}. ID: "${r.id}" | Title: "${r.title}" | Category: "${r.category}" | Description: "${r.description}"`).join("\n")}`,
+                });
+
+                console.log(">>> [searchInventory Tool] LLM Filter returned matching IDs:", output.matchingIds);
+                const filteredResults = results.filter((r) => output.matchingIds.includes(String(r.id)));
+                console.log(">>> [searchInventory Tool] Filtered from", results.length, "to", filteredResults.length);
+                return filteredResults;
+              } catch (filterErr) {
+                console.error(">>> [searchInventory Tool] Error filtering search results with LLM:", filterErr);
+                return results;
+              }
+            }
+
             return results;
           },
         }),

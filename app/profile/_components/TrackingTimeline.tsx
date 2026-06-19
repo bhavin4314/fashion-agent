@@ -29,14 +29,16 @@ export function TrackingTimeline({ status }: TrackingTimelineProps) {
       <div className="hidden md:block relative w-full pt-4 pb-2">
         {/* Horizontal tracking lines */}
         <div className="absolute h-1 left-8 right-8 top-8 bg-stone-200 rounded-full" />
-        <div
-          className={`absolute h-1 left-8 top-8 rounded-full transition-all duration-700 ${
-            isCancelled ? "bg-red-600" : "bg-neutral-900"
-          }`}
-          style={{
-            width: `${activeIndex <= 0 ? 0 : (activeIndex / (steps.length - 1)) * 100}%`,
-          }}
-        />
+        <div className="absolute h-1 left-8 right-8 top-8">
+          <div
+            className={`h-full rounded-full transition-all duration-700 ${
+              isCancelled ? "bg-red-600" : "bg-neutral-900"
+            }`}
+            style={{
+              width: `${activeIndex <= 0 ? 0 : (activeIndex / (steps.length - 1)) * 100}%`,
+            }}
+          />
+        </div>
 
         {/* Stepper Dots & Labels */}
         <div className="flex justify-between items-start w-full relative z-10">
@@ -90,14 +92,16 @@ export function TrackingTimeline({ status }: TrackingTimelineProps) {
       <div className="block md:hidden relative pl-10 py-2 space-y-md">
         {/* Vertical Line */}
         <div className="absolute left-[16px] top-4 bottom-4 w-1 bg-stone-200 rounded-full" />
-        <div
-          className={`absolute left-[16px] top-4 rounded-full transition-all duration-700 ${
-            isCancelled ? "bg-red-600" : "bg-neutral-900"
-          }`}
-          style={{
-            height: `${activeIndex <= 0 ? 0 : (activeIndex / (steps.length - 1)) * 100}%`,
-          }}
-        />
+        <div className="absolute left-[16px] top-4 bottom-4 w-1">
+          <div
+            className={`w-full rounded-full transition-all duration-700 ${
+              isCancelled ? "bg-red-600" : "bg-neutral-900"
+            }`}
+            style={{
+              height: `${activeIndex <= 0 ? 0 : (activeIndex / (steps.length - 1)) * 100}%`,
+            }}
+          />
+        </div>
 
         {/* Stepper Items */}
         {steps.map((step, idx) => {

@@ -8,22 +8,31 @@ export const metadata: Metadata = {
   description: "Create an account on Vistra to discover your personal style, curated by AI.",
 };
 
-export default function SignUpPage() {
+interface PageProps {
+  searchParams: Promise<{ redirect?: string }>;
+}
+
+export default async function SignUpPage({ searchParams }: PageProps) {
+  const resolvedSearchParams = await searchParams;
+  const redirectUrl = resolvedSearchParams.redirect;
+
   return (
     <main className="flex min-h-screen bg-surface text-on-surface font-sans overflow-x-hidden">
       {/* Left Side: Registration Form */}
       <section className="w-full lg:w-1/2 xl:w-[45%] flex flex-col justify-center px-margin-mobile md:px-margin-desktop py-xl md:py-xxl">
         <div className="w-full max-w-[440px] mx-auto flex flex-col h-full justify-between min-h-[600px]">
           {/* Brand Logo Lockup */}
-          <div className="mb-12 flex items-center gap-sm select-none pointer-events-none">
-            <Image
-              alt="Vistra Logo"
-              className="h-10 w-auto object-contain"
-              src="/logo-with-name.png"
-              width={150}
-              height={40}
-              priority
-            />
+          <div className="mb-12 flex items-center gap-sm select-none">
+            <Link href="/" className="cursor-pointer">
+              <Image
+                alt="Vistra Logo"
+                className="h-10 w-auto object-contain"
+                src="/logo-with-name.png"
+                width={150}
+                height={40}
+                priority
+              />
+            </Link>
           </div>
 
           <div>
@@ -38,14 +47,14 @@ export default function SignUpPage() {
             </div>
 
             {/* Registration Form Leaf client component */}
-            <SignUpForm />
+            <SignUpForm redirectUrl={redirectUrl} />
 
             {/* Redirect Footer Link */}
             <p className="mt-xl font-body-md text-body-md text-center text-secondary select-none">
               Already have an account?{" "}
               <Link
                 className="text-on-surface font-bold hover:underline transition-colors duration-150"
-                href="/login"
+                href={redirectUrl ? `/login?redirect=${encodeURIComponent(redirectUrl)}` : "/login"}
               >
                 Log in
               </Link>

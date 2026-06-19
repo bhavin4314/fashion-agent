@@ -55,6 +55,20 @@ export async function updateOrderStatusAction(input: unknown) {
       return { success: false, error: "Unauthorized access. Admins only." };
     }
 
+    // Fetch the order's current status first to check if we are transitioning to cancelled
+    const { data: currentOrder, error: fetchOrderError } = await supabase
+      .from("orders")
+      .select("status")
+      .eq("id", orderId)
+      .single();
+
+    if (fetchOrderError || !currentOrder) {
+      return { success: false, error: "Order not found." };
+    }
+
+    const isTransitioningToCancelled =
+      status === "cancelled" && currentOrder.status !== "cancelled";
+
     // Update order status
     const { error } = await supabase
       .from("orders")
@@ -68,6 +82,31 @@ export async function updateOrderStatusAction(input: unknown) {
     if (error) {
       console.error("Failed to update order status:", error);
       return { success: false, error: "Failed to update order: " + error.message };
+    }
+
+    // If order was successfully cancelled, revert product stock quantities
+    if (isTransitioningToCancelled) {
+      const { data: items, error: itemsError } = await supabase
+        .from("order_items")
+        .select("product_id, quantity")
+        .eq("order_id", orderId);
+
+      if (itemsError) {
+        console.error("Failed to fetch order items for stock revert:", itemsError);
+      } else if (items) {
+        for (const item of items) {
+          const { error: incrementError } = await supabase.rpc(
+            "increment_product_stock",
+            {
+              product_id: item.product_id,
+              quantity_to_increment: item.quantity,
+            }
+          );
+          if (incrementError) {
+            console.error("Failed to revert stock for product:", item.product_id, incrementError);
+          }
+        }
+      }
     }
 
     return { success: true };

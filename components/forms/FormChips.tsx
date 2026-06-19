@@ -36,13 +36,16 @@ export function FormChips({
   className,
   onChange: customOnChange,
 }: FormChipsProps) {
-  const { control, formState: { errors } } = useFormContext();
+  const { control, watch, formState: { errors } } = useFormContext();
   const error = errors[name];
 
   const [customInputValue, setCustomInputValue] = React.useState("");
+  const [addedCustomOptions, setAddedCustomOptions] = React.useState<string[]>([]);
+
+  const fieldValue = watch(name);
 
   // Normalize options to { label: string, value: string }
-  const normalizedOptions: ChipOption[] = React.useMemo(() => {
+  const normalizedOptions = React.useMemo(() => {
     return options.map((opt) => {
       if (typeof opt === "string") {
         return { label: opt, value: opt };
@@ -50,6 +53,33 @@ export function FormChips({
       return opt;
     });
   }, [options]);
+
+  // Sync custom options from field value as they get added or hydrated
+  React.useEffect(() => {
+    if (fieldValue !== undefined && fieldValue !== null) {
+      if (multiple && Array.isArray(fieldValue)) {
+        const customVals = fieldValue.filter(
+          (val) => !normalizedOptions.some((opt) => opt.value === val)
+        );
+        if (customVals.length > 0) {
+          setAddedCustomOptions((prev) => {
+            const merged = [...prev];
+            customVals.forEach((val) => {
+              if (!merged.includes(val)) {
+                merged.push(val);
+              }
+            });
+            return merged;
+          });
+        }
+      } else if (!multiple && typeof fieldValue === "string" && fieldValue !== "") {
+        const isPreset = normalizedOptions.some((opt) => opt.value === fieldValue);
+        if (!isPreset) {
+          setAddedCustomOptions((prev) => (prev.includes(fieldValue) ? prev : [fieldValue]));
+        }
+      }
+    }
+  }, [fieldValue, multiple, normalizedOptions]);
 
   return (
     <Controller
@@ -120,10 +150,7 @@ export function FormChips({
           }
         };
 
-        // Render any non-preset custom options for multi-select
-        const activeCustomOptions = multiple && Array.isArray(value)
-          ? value.filter((val) => !normalizedOptions.some((opt) => opt.value === val))
-          : [];
+
 
         return (
           <div className={cn("flex flex-col gap-1.5 w-full", className)}>
@@ -158,7 +185,7 @@ export function FormChips({
                 })}
               </div>
             ) : (
-              <div className="space-y-sm">
+              <div className="space-y-md">
                 <div className="flex flex-wrap gap-sm">
                   {normalizedOptions.map((opt) => {
                     const active = isSelected(opt.value);
@@ -178,19 +205,39 @@ export function FormChips({
                       </button>
                     );
                   })}
-
-                  {/* Render active custom items in multi-select */}
-                  {activeCustomOptions.map((val) => (
-                    <button
-                      key={val}
-                      type="button"
-                      onClick={() => handleToggle(val)}
-                      className="px-lg py-2.5 rounded-xl transition-all font-semibold text-xs border border-primary bg-primary text-white shadow-sm scale-[1.02]"
-                    >
-                      {val}
-                    </button>
-                  ))}
                 </div>
+
+                {addedCustomOptions.length > 0 && (
+                  <div className="mt-md pt-md border-t border-neutral-100 w-full space-y-sm">
+                    <div className="flex flex-wrap items-center gap-xs text-[10px] text-neutral-500 font-extrabold uppercase tracking-wider select-none">
+                      <span className="material-symbols-outlined text-[14px] text-primary">auto_awesome</span>
+                      <span>AI Generated & Custom Tags</span>
+                      <span className="text-[10px] text-neutral-400 font-medium normal-case normal-case-none tracking-normal pl-xs">
+                        (unchecking and saving will remove these permanently)
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-sm">
+                      {addedCustomOptions.map((val) => {
+                        const active = isSelected(val);
+                        return (
+                          <button
+                            key={val}
+                            type="button"
+                            onClick={() => handleToggle(val)}
+                            className={cn(
+                              "px-lg py-2.5 rounded-xl transition-all font-semibold text-xs border cursor-pointer",
+                              active
+                                ? "bg-primary text-white border-transparent shadow-sm scale-[1.02]"
+                                : "bg-white border-secondary-container text-secondary hover:bg-neutral-50"
+                            )}
+                          >
+                            {val}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 {allowCustom && (
                   <div className="mt-md">

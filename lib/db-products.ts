@@ -65,12 +65,12 @@ export function mapDbProduct(db: DbProduct): Product {
     price: Number(db.price),
     material: db.materials?.join(", ") || "Premium Blend",
     category: db.category === "apparel"
-      ? "New Arrivals"
+      ? "Apparel"
       : db.category === "footwear"
       ? "Footwear"
       : db.category === "accessories"
       ? "Accessories"
-      : db.category || "New Arrivals",
+      : db.category || "Apparel",
     subcategory: db.fit || undefined,
     occasion,
     color,

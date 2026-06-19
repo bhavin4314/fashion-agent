@@ -9,6 +9,8 @@ import { createClient } from "@/utils/supabase/client";
 import { signOutAction } from "@/app/login/actions";
 import { useCart } from "@/hooks/use-cart";
 import { CartDrawer } from "@/components/shared/CartDrawer";
+import { getAvatarInitials } from "@/lib/utils";
+import { Dropdown, DropdownTrigger, DropdownContent, DropdownItem } from "@/components/ui";
 
 interface NavbarProps {
   activeTab?: "explore" | "stylist" | "admin";
@@ -18,8 +20,8 @@ export function Navbar({ activeTab }: NavbarProps) {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [user, setUser] = React.useState<SupabaseUser | null>(null);
   const [role, setRole] = React.useState<string | null>(null);
+  const [name, setName] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [avatarError, setAvatarError] = React.useState(false);
 
   const { cartCount, setIsDrawerOpen } = useCart();
 
@@ -42,13 +44,15 @@ export function Navbar({ activeTab }: NavbarProps) {
           setUser(user);
           const { data: profile } = await supabase
             .from("profiles")
-            .select("role")
+            .select("role, full_name")
             .eq("id", user.id)
             .single();
           setRole(profile?.role || "customer");
+          setName(profile?.full_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "User");
         } else {
           setUser(null);
           setRole(null);
+          setName(null);
         }
       } catch (error) {
         console.error("Error loading user session in Navbar:", error);
@@ -168,31 +172,27 @@ export function Navbar({ activeTab }: NavbarProps) {
               )}
               {user ? (
                 <>
-                  <button
-                    onClick={handleLogout}
-                    className="text-sm font-semibold text-muted hover:text-charcoal transition-colors duration-150 flex items-center gap-1 border-none bg-transparent cursor-pointer"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Log out
-                  </button>
-                  <Link
-                    href={role === "admin" ? "/admin/inventory" : "/profile"}
-                    className="w-10 h-10 rounded-full overflow-hidden border border-border-light bg-secondary-container flex items-center justify-center shrink-0 select-none cursor-pointer"
-                  >
-                    {avatarError ? (
-                      <User className="h-5 w-5 text-on-secondary-container" />
-                    ) : (
-                      <Image
-                        alt="User profile"
-                        className="w-full h-full object-cover"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmuqdX4FM3xMfoKGOV9pqobOx9lysFIZNKePzrA9CsBBeBJUWSKs2zuLy5PzOPadgT0Lnq4BupJyeXHG5FpnG6bDrwsREE4o6E-ZVHsLzAclxx0wonMChWn8EZT5N-4zfVAN2NvYSS4yeHOoz_UdixCL5fBkUQTIYtf8iZXqy9ghWrpZgNB7pgOqypMK6DZXjXc39R0DLl5d5hdH_CtKknIpOFNJHxjip0zhWPmg4KSmrgNDLm6LbOC5hXT-YvtkpXVb7a521otyiND"
-                        width={40}
-                        height={40}
-                        unoptimized
-                        onError={() => setAvatarError(true)}
-                      />
-                    )}
-                  </Link>
+                  <Dropdown>
+                    <DropdownTrigger asChild>
+                      <button
+                        className="w-10 h-10 rounded-full border border-brand/20 bg-brand/10 text-brand hover:bg-brand hover:text-white hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center shrink-0 select-none cursor-pointer font-bold text-sm tracking-wider shadow-sm focus:outline-none"
+                      >
+                        {getAvatarInitials(name || "User")}
+                      </button>
+                    </DropdownTrigger>
+                    <DropdownContent align="end" className="w-40 mt-1">
+                      <DropdownItem asChild>
+                        <Link href={role === "admin" ? "/admin/inventory" : "/profile"} className="flex items-center gap-2">
+                          <User className="h-4 w-4" />
+                          Profile
+                        </Link>
+                      </DropdownItem>
+                      <DropdownItem onClick={handleLogout} className="text-red-600 hover:bg-red-50 flex items-center gap-2">
+                        <LogOut className="h-4 w-4" />
+                        Log out
+                      </DropdownItem>
+                    </DropdownContent>
+                  </Dropdown>
                 </>
               ) : (
                 <Link
