@@ -8,15 +8,15 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-const CHAT_MODEL = process.env.AI_CHAT_MODEL as string;
-const EMBEDDING_MODEL = process.env.AI_EMBEDDING_MODEL as string;
+const CHAT_MODEL = process.env.NEXT_PUBLIC_AI_CHAT_MODEL as string;
+const EMBEDDING_MODEL = process.env.NEXT_PUBLIC_AI_EMBEDDING_MODEL as string;
 const MIN_SIMILARITY_THRESHOLD = 0.4;
 
 if (!CHAT_MODEL) {
-  throw new Error("AI_CHAT_MODEL is not defined in environment variables");
+  throw new Error("NEXT_PUBLIC_AI_CHAT_MODEL is not defined in environment variables");
 }
 if (!EMBEDDING_MODEL) {
-  throw new Error("AI_EMBEDDING_MODEL is not defined in environment variables");
+  throw new Error("NEXT_PUBLIC_AI_EMBEDDING_MODEL is not defined in environment variables");
 }
 
 interface QueryAnalysis {
