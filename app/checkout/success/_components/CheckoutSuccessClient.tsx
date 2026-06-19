@@ -236,10 +236,9 @@ export function CheckoutSuccessClient() {
           </div>
         </div>
 
-        {/* Page Actions */}
         <div className="flex flex-col sm:flex-row gap-3 mt-8">
           <button
-            onClick={() => router.push("/profile")}
+            onClick={() => router.push("/profile?tab=orders")}
             className="flex-1 h-14 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md cursor-pointer border-none uppercase tracking-widest"
           >
             Track Styling Order

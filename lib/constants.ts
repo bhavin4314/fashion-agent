@@ -9,19 +9,6 @@ export const ORDER_STATUS_OPTIONS = [
 
 export type OrderStatus = typeof ORDER_STATUS_OPTIONS[number]["value"];
 
-export const ORDER_STATUS_DESCRIPTIONS: Record<OrderStatus, string> = {
-  ordered: "Your purchase request has been successfully placed.",
-  confirmed: "The seller has acknowledged the order and verified stock availability.",
-  shipped: "The item has been packed and handed over to a courier partner (like Ekart).",
-  out_for_delivery: "The package has reached your local delivery hub and is in transit to your address.",
-  delivered: "The order has successfully reached you.",
-  cancelled: "The order was called off either by you, the seller, or Flipkart.",
-};
-
-export function getStatusDescription(status: string): string {
-  const normalized = status.toLowerCase() as OrderStatus;
-  return ORDER_STATUS_DESCRIPTIONS[normalized] || "Status details are unavailable.";
-}
 
 export function getStatusBadgeClass(status: string): string {
   switch (status.toLowerCase()) {

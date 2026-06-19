@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const step1Schema = z.object({
+const step1Schema = z.object({
   image_urls: z
     .array(z.string())
     .min(1, "Please upload at least one product image")
     .max(4, "You can upload a maximum of 4 images"),
 });
 
-export const step2Schema = z.object({
+const step2Schema = z.object({
   title: z.string().min(2, "Product title must be at least 2 characters"),
   description: z.string().min(10, "Product description must be at least 10 characters"),
   price: z.preprocess(
@@ -22,7 +22,7 @@ export const step2Schema = z.object({
   gender: z.enum(["Men", "Women", "Unisex"]),
 });
 
-export const step3Schema = z.object({
+const step3Schema = z.object({
   sizes: z.array(z.string()),
   materials: z.array(z.string()).min(1, "Please add at least one material"),
   aesthetics: z.array(z.string()).min(1, "Please select at least one aesthetic"),
