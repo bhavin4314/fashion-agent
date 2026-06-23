@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Navbar } from "@/app/_components/Navbar";
 import { StylistClient } from "./_components/StylistClient";
 
@@ -15,7 +16,9 @@ export default function StylistPage() {
 
       {/* Main interactive split-screen chat and search board */}
       <main className="h-screen w-full flex pt-[80px] overflow-hidden">
-        <StylistClient />
+        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-secondary font-semibold">Loading Stylist...</div>}>
+          <StylistClient />
+        </Suspense>
       </main>
     </div>
   );

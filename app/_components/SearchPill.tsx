@@ -1,16 +1,34 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 export function SearchPill() {
   const [query, setQuery] = React.useState("");
+  const router = useRouter();
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-    console.log("Searching for style:", query);
-    alert(`Style query submitted: "${query}" (AI stylist coordination coming soon!)`);
+
+    const supabase = createClient();
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // If customer is logged in, redirect directly to stylist page with the query
+        router.push(`/stylist?q=${encodeURIComponent(query.trim())}`);
+      } else {
+        // For non-logged user, redirect to login page with redirect URL parameter
+        const targetUrl = `/stylist?q=${encodeURIComponent(query.trim())}`;
+        router.push(`/login?redirect=${encodeURIComponent(targetUrl)}`);
+      }
+    } catch (error) {
+      console.error("Error checking auth status in SearchPill:", error);
+      // Fallback redirect to stylist page
+      router.push(`/stylist?q=${encodeURIComponent(query.trim())}`);
+    }
   };
 
   return (

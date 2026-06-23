@@ -3,6 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { Sparkles, User, Send } from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { type Product } from "@/lib/products";
 import { useChat, type UIMessage } from "@ai-sdk/react";
 import { toast } from "react-hot-toast";
@@ -46,6 +47,9 @@ export function StylistClient() {
   const [input, setInput] = React.useState("");
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const hasSentQuery = React.useRef(false);
 
   // Initial greeting message from the AI Stylist
   const initialMessages = React.useMemo<UIMessage[]>(() => [
@@ -70,6 +74,20 @@ export function StylistClient() {
       });
     },
   });
+
+  React.useEffect(() => {
+    const q = searchParams.get("q");
+    if (q && !hasSentQuery.current) {
+      hasSentQuery.current = true;
+      sendMessage({ text: q });
+
+      // Clear the q parameter from the URL to prevent repeating search on page refresh
+      const params = new URLSearchParams(window.location.search);
+      params.delete("q");
+      const newRelativePathQuery = window.location.pathname + (params.toString() ? `?${params.toString()}` : "");
+      router.replace(newRelativePathQuery);
+    }
+  }, [searchParams, router, sendMessage]);
 
   const isLoading = status === "submitted" || status === "streaming";
 

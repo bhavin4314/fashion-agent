@@ -273,7 +273,7 @@ export function CollectionClient({ initialProducts }: CollectionClientProps) {
               <span>Loading more exquisite items...</span>
             </div>
           )}
-          {!hasMore && products.length > 0 && (
+          {!isLoading && !hasMore && products.length > 0 && (
             <span className="text-[10px] text-muted font-bold uppercase tracking-widest">
               You have viewed all items in this collection.
             </span>

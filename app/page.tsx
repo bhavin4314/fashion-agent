@@ -14,6 +14,18 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  let isAdmin = false;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    isAdmin = profile?.role === "admin";
+  }
+
   const { data: dbProducts } = await supabase
     .from("products")
     .select("*")
@@ -43,7 +55,7 @@ export default async function Home() {
         
         {/* Centered Search Pill leaf controller */}
         <div className="relative z-10 w-full max-w-4xl px-margin-mobile md:px-0">
-          <SearchPill />
+          {!isAdmin && <SearchPill />}
         </div>
       </header>
 
