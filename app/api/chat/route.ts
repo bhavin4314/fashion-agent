@@ -10,7 +10,7 @@ const google = createGoogleGenerativeAI({
 
 const CHAT_MODEL = process.env.NEXT_PUBLIC_AI_CHAT_MODEL as string;
 const EMBEDDING_MODEL = process.env.NEXT_PUBLIC_AI_EMBEDDING_MODEL as string;
-const MIN_SIMILARITY_THRESHOLD = 0.4;
+const MIN_SIMILARITY_THRESHOLD = 0.5;
 
 if (!CHAT_MODEL) {
   throw new Error("NEXT_PUBLIC_AI_CHAT_MODEL is not defined in environment variables");
@@ -82,51 +82,13 @@ interface DBProductRecord {
   similarity: number;
 }
 
-/**
- * Determines if a product matches the requested product type using common synonyms.
- */
-function isProductTypeAlignment(title: string, description: string, productType: string): boolean {
-  const text = `${title} ${description}`.toLowerCase();
-  const type = productType.toLowerCase();
 
-  const synonymMap: Record<string, string[]> = {
-    purse: ["purse", "bag", "handbag", "tote", "clutch", "satchel"],
-    bag: ["bag", "handbag", "backpack", "tote", "purse", "clutch", "satchel"],
-    handbag: ["handbag", "bag", "tote", "purse", "clutch", "satchel"],
-    tote: ["tote", "bag", "handbag", "purse"],
-    shoe: ["shoe", "sneaker", "boot", "loafer", "sandal", "footwear", "slipper", "trainer", "trainers"],
-    sneaker: ["sneaker", "shoe", "trainer", "trainers", "footwear"],
-    boot: ["boot", "shoe", "footwear"],
-    loafer: ["loafer", "shoe", "footwear"],
-    sandal: ["sandal", "shoe", "footwear"],
-    shirt: ["shirt", "t-shirt", "tee", "polo", "top", "blouse"],
-    watch: ["watch", "timepiece", "chronograph"],
-    timepiece: ["timepiece", "watch"],
-    sunglasses: ["sunglass", "glass", "eyewear", "shade", "spectacles", "sunglasses"],
-    glasses: ["glass", "eyewear", "shade", "spectacles", "sunglasses", "glasses"],
-    eyewear: ["glass", "eyewear", "shade", "spectacles", "sunglasses", "glasses"],
-    dress: ["dress", "gown", "frock"],
-    gown: ["dress", "gown"],
-    suit: ["suit", "blazer", "tuxedo", "jacket"],
-    blazer: ["blazer", "suit", "jacket"],
-    jacket: ["jacket", "blazer", "coat", "outerwear"],
-    pant: ["pant", "trouser", "jean", "short", "denim", "pants", "trousers", "jeans", "shorts"],
-    pants: ["pant", "trouser", "jean", "short", "denim", "pants", "trousers", "jeans", "shorts"],
-    trouser: ["pant", "trouser", "jean", "short", "denim", "pants", "trousers", "jeans", "shorts"],
-    trousers: ["pant", "trouser", "jean", "short", "denim", "pants", "trousers", "jeans", "shorts"],
-    jean: ["pant", "trouser", "jean", "short", "denim", "pants", "trousers", "jeans", "shorts"],
-    jeans: ["pant", "trouser", "jean", "short", "denim", "pants", "trousers", "jeans", "shorts"],
-  };
-
-  const synonyms = synonymMap[type] || [type];
-  return synonyms.some((syn) => text.includes(syn));
-}
 
 /**
  * Runs hybrid search using the Supabase RPC function.
  * If the function is not found or fails, it falls back to a standard database text query.
  */
-async function runHybridSearch(query: string, analysis: QueryAnalysis, maxPrice?: number) {
+async function runHybridSearch(query: string, maxPrice?: number) {
   console.log(">>> [runHybridSearch] Started with query:", query, "maxPrice:", maxPrice);
   try {
     const supabase = await createClient();
@@ -159,25 +121,13 @@ async function runHybridSearch(query: string, analysis: QueryAnalysis, maxPrice?
     }
 
     if (dbProducts) {
-      console.log(">>> [runHybridSearch] RPC returned:", dbProducts.length, "items.");
+      console.log(">>> [runHybridSearch] RPC returned:", dbProducts.length, "raw candidates.", dbProducts);
       
       // Filter out products with low similarity scores to exclude completely off-topic items
-      let filtered = (dbProducts as DBProductRecord[]).filter((p) => p.similarity >= MIN_SIMILARITY_THRESHOLD);
+      const filtered = (dbProducts as DBProductRecord[]).filter((p) => p.similarity >= MIN_SIMILARITY_THRESHOLD);
       
-      // Filter by expected categories based on AI classification to prevent showing irrelevant types of products
-      if (analysis.categories && analysis.categories.length > 0) {
-        filtered = filtered.filter((p) => analysis.categories.includes(p.category as QueryAnalysis["categories"][number]));
-      }
-      
-      // Filter by query product type alignment via deterministic code-level helper
-      if (analysis.productTypes && analysis.productTypes.length > 0 && filtered.length > 0) {
-        filtered = filtered.filter((p) => 
-          analysis.productTypes.some((type) => isProductTypeAlignment(p.title, p.description || "", type))
-        );
-      }
-
       console.log(
-        ">>>> [runHybridSearch] Filtered by category & product type alignment:",
+        ">>>> [runHybridSearch] Filtered by similarity threshold:",
         filtered.length, "items. Excluded:", dbProducts.length - filtered.length
       );
       
@@ -278,9 +228,11 @@ CRITICAL INSTRUCTIONS:
 - Do NOT output, mention, or print any product IDs, database IDs, UUIDs, or SKUs.
 - ALWAYS keep your response contextually relevant to the SPECIFIC product category the user asked about. If they asked for sunglasses, talk about sunglasses — never give a generic apparel or clothing response.
 - Reference the exact product type, style, and category the user mentioned in your reply.
+- When the user asks for "other" products, different brands, or alternative styles (e.g., "is there other shoes" after looking at "Puma shoes"), call the searchInventory tool with a broader search term (e.g. "shoes" or "sneakers" instead of "Puma shoes") so you can retrieve alternative options.
+- If the searchInventory tool returns any products (non-empty list), you must present them (e.g. acknowledging the alternative styles) and do NOT output the unavailability apology under any circumstances.
 - If the searchInventory tool returns no products (an empty list), respond with a humble, user-friendly apology stating that the requested product is not available in our inventory at the moment. Do NOT use category-specific wording for the unavailability (e.g., do NOT say "I do not have any purses available"), but rather use a general, polite phrasing like "I am sorry, but the requested product is not available in our inventory at the moment. Please let me know if I can assist you with other styles." Do NOT suggest other products, and do NOT tell the user to click on other featured/above items.
-- Do NOT talk about sizes or ask the user to select or reserve sizes in the chat.
-- Do NOT suggest sizing options.
+- Proactively, do NOT talk about sizes or ask the user to select or reserve sizes in the chat, and do NOT suggest sizing options.
+- HOWEVER, if the user explicitly asks about sizes, price, materials, or details for the products, you must answer their questions accurately using the search results or context (e.g., list the available sizes or the exact price).
 - If products are found, instruct the user that they can click on any product card in the recommended carousel to view details and sizes on the product page.`,
       tools: {
         searchInventory: tool({
@@ -291,7 +243,7 @@ CRITICAL INSTRUCTIONS:
           }),
           execute: async ({ query, maxPrice }) => {
             console.log(">>> [searchInventory Tool] Executing search for query:", query, "maxPrice:", maxPrice);
-            const results = await runHybridSearch(query, analysis, maxPrice);
+            const results = await runHybridSearch(query, maxPrice);
             console.log(">>> [searchInventory Tool] Found", results.length, "results.");
 
             if (results.length > 0) {
@@ -301,14 +253,17 @@ CRITICAL INSTRUCTIONS:
                   model: google(CHAT_MODEL),
                   output: Output.object({
                     schema: z.object({
-                      matchingIds: z.array(z.string()).describe("The list of product IDs from the candidates that are a genuine match for the user's specific request."),
+                      matchingIds: z.array(z.string()).describe("The list of product IDs from the candidates that are a genuine match for the user's specific request or follow-up question."),
                     }),
                   }),
                   system: `You are an AI inventory validation assistant.
-Your job is to compare a user's shopping request with a list of search result candidates from our database.
-Determine which candidates are actual matches for the user's specific request.
-Be conservative: if the user asks for a specific item (e.g., "school bag for children", "linen shirt", "running shoes") and the candidate is a completely different item (e.g., a "leather handbag for ladies", "silk blouse", "leather boots"), do NOT match it.
-Only match if the candidate is the type of product the user is looking for.`,
+Your job is to compare a user's shopping request or follow-up question with a list of search result candidates from our database.
+Determine which candidates are actual matches for the user's request.
+
+Guidelines:
+1. If the user is searching for a specific item (e.g., "shoes", "shirt", "jacket"), only match candidates that are of that type. Be conservative: do not match a shirt when they asked for shoes.
+2. If the user's request is a follow-up question (e.g. asking about sizes, price, colors, materials, or other details) for products currently being discussed (implied by the search query, e.g. "shoes" or "sneakers"), match the candidates that fit that search query type.
+3. Only match candidates that are relevant to what the user is looking for or asking about.`,
                   prompt: `User Request: "${userQuery}"
 Search query used: "${query}"
 
