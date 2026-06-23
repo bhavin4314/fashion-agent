@@ -7,8 +7,26 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDebounce } from "@/hooks/use-debounce";
 import { updateOrderStatusAction, getAdminOrderDetailsAction } from "../actions";
 import toast from "react-hot-toast";
-import { Select, Pagination, SearchInput } from "@/components/ui";
+import { Select, Pagination, SearchInput, Chip } from "@/components/ui";
 import { ORDER_STATUS_OPTIONS, getStatusBadgeClass, type OrderStatus } from "@/lib/constants";
+import { formatOrderId } from "@/lib/utils";
+
+function getOrderChipColor(status: string): "success" | "warning" | "info" | "purple" | "error" | "secondary" {
+  switch (status.toLowerCase()) {
+    case "delivered":
+      return "success";
+    case "shipped":
+      return "warning";
+    case "confirmed":
+      return "info";
+    case "out_for_delivery":
+      return "purple";
+    case "cancelled":
+      return "error";
+    default:
+      return "secondary";
+  }
+}
 
 interface OrderSummary {
   id: string;
@@ -236,71 +254,69 @@ export function AdminOrdersClient({
           </div>
           {/* Table Container Card */}
           <div className="bg-white border border-secondary-container rounded-2xl overflow-hidden shadow-sm select-none">
-            <table className="w-full text-left border-collapse select-none">
-              <thead>
-                <tr className="border-b border-secondary-container bg-surface-container-low select-none">
-                  <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Order ID</th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Customer</th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Date</th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Total</th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Payment Status</th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Order Status</th>
-                  <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-surface-container">
-                {orders.map((o) => (
-                  <tr
-                    key={o.id}
-                    onClick={() => handleOpenDrawer(o.id)}
-                    className="hover:bg-surface-container-low/50 transition-colors duration-150 group cursor-pointer"
-                  >
-                    <td className="px-xl py-lg text-xs font-bold text-charcoal">VST-{o.id.slice(0, 8).toUpperCase()}</td>
-                    <td className="px-lg py-lg">
-                      <div className="flex flex-col">
-                        <span className="font-bold text-charcoal">{o.customerName}</span>
-                        <span className="text-[10px] text-secondary font-medium mt-0.5">{o.customerEmail}</span>
-                      </div>
-                    </td>
-                    <td className="px-lg py-lg text-xs font-semibold text-secondary">
-                      {new Date(o.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="px-lg py-lg text-xs font-bold text-charcoal">₹{o.totalAmount.toLocaleString("en-US")}</td>
-                    <td className="px-lg py-lg">
-                      <span className="px-sm py-1 bg-surface-container rounded-lg text-[10px] font-bold uppercase tracking-wider text-success-green select-none">
-                        {o.paymentStatus}
-                      </span>
-                    </td>
-                    <td className="px-lg py-lg">
-                      <span className={`inline-flex items-center px-sm py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${getStatusBadgeClass(o.status)}`}>
-                        {o.status}
-                      </span>
-                    </td>
-                    <td className="px-xl py-lg text-right" onClick={(e) => e.stopPropagation()}>
-                      <button
-                        onClick={() => handleOpenDrawer(o.id)}
-                        className="p-1.5 hover:bg-surface-container hover:text-primary text-on-surface-variant rounded-lg transition-colors border-none bg-transparent cursor-pointer shrink-0"
-                        title="View Details"
-                      >
-                        <MoreVertical className="h-4 w-4" />
-                      </button>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse select-none min-w-[800px]">
+                <thead>
+                  <tr className="border-b border-secondary-container bg-surface-container-low select-none">
+                    <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Order ID</th>
+                    <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Customer</th>
+                    <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Date</th>
+                    <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Total</th>
+                    <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Payment Status</th>
+                    <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">Order Status</th>
+                    <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">Actions</th>
                   </tr>
-                ))}
+                </thead>
+                <tbody className="divide-y divide-surface-container">
+                  {orders.map((o) => (
+                    <tr
+                      key={o.id}
+                      onClick={() => handleOpenDrawer(o.id)}
+                      className="hover:bg-surface-container-low/50 transition-colors duration-150 group cursor-pointer"
+                    >
+                      <td className="px-xl py-lg text-xs font-bold text-charcoal">{formatOrderId(o.id)}</td>
+                      <td className="px-lg py-lg">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-charcoal">{o.customerName}</span>
+                          <span className="text-[10px] text-secondary font-medium mt-0.5">{o.customerEmail}</span>
+                        </div>
+                      </td>
+                      <td className="px-lg py-lg text-xs font-semibold text-secondary">
+                        {new Date(o.createdAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </td>
+                      <td className="px-lg py-lg text-xs font-bold text-charcoal">₹{o.totalAmount.toLocaleString("en-US")}</td>
+                      <td className="px-lg py-lg">
+                        <Chip label={o.paymentStatus} color="success" />
+                      </td>
+                      <td className="px-lg py-lg">
+                        <Chip label={o.status} color={getOrderChipColor(o.status)} />
+                      </td>
+                      <td className="px-xl py-lg text-right" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={() => handleOpenDrawer(o.id)}
+                          className="p-1.5 hover:bg-surface-container hover:text-primary text-on-surface-variant rounded-lg transition-colors border-none bg-transparent cursor-pointer shrink-0"
+                          title="View Details"
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
 
-                {orders.length === 0 && (
-                  <tr>
-                    <td colSpan={7} className="text-center py-xxl font-semibold text-secondary text-xs select-none">
-                      No active orders found matching your search.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  {orders.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="text-center py-xxl font-semibold text-secondary text-xs select-none">
+                        No active orders found matching your search.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
 
             {/* Pagination Controls */}
             <Pagination
@@ -332,7 +348,7 @@ export function AdminOrdersClient({
                 </h3>
                 {drawerOrder && (
                   <span className="text-[10px] text-secondary font-bold mt-0.5">
-                    VST-{drawerOrder.id.slice(0, 8).toUpperCase()} · {drawerOrder.customerName}
+                    {formatOrderId(drawerOrder.id)} · {drawerOrder.customerName}
                   </span>
                 )}
               </div>

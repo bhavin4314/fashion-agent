@@ -4,6 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle, Loader2, ArrowRight } from "lucide-react";
+import { formatOrderId } from "@/lib/utils";
 import { useCart } from "@/hooks/use-cart";
 import { verifyStripeSessionAndCreateOrder, getOrderDetailsAction } from "../actions";
 
@@ -130,7 +131,7 @@ export function CheckoutSuccessClient() {
           <p className="text-xs text-muted font-semibold mt-2 leading-relaxed">
             Thank you for choosing Vistra. Your order{" "}
             <span className="font-black text-charcoal">
-              #{order.id.slice(0, 8).toUpperCase()}
+              {formatOrderId(order.id)}
             </span>{" "}
             has been successfully placed and is being curated by our design team.
           </p>
@@ -145,7 +146,7 @@ export function CheckoutSuccessClient() {
                 Order ID
               </p>
               <p className="font-black text-sm text-charcoal">
-                VST-{order.id.slice(0, 8).toUpperCase()}
+                {formatOrderId(order.id)}
               </p>
             </div>
             <div>

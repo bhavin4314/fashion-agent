@@ -7,7 +7,7 @@ import { Bell, HelpCircle, Edit, Trash2 } from "lucide-react";
 
 import { type InventoryItem } from "@/lib/db-products";
 import { archiveProductAction } from "../actions";
-import { DeleteConfirmationModal, Select, Pagination, SearchInput } from "@/components/ui";
+import { DeleteConfirmationModal, Select, Pagination, SearchInput, Chip } from "@/components/ui";
 import { toast } from "react-hot-toast";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -215,114 +215,115 @@ export function InventoryClient({
 
           {/* Table Container Card */}
           <div className="bg-white border border-secondary-container rounded-2xl overflow-hidden shadow-sm select-none">
-            <table className="w-full text-left border-collapse select-none">
-              <thead>
-                <tr className="border-b border-secondary-container bg-surface-container-low select-none">
-                  <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant w-1/3">
-                    Product Detail
-                  </th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                    Category
-                  </th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">
-                    Retail Price
-                  </th>
-                  <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                    Stock Level
-                  </th>
-                  <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-surface-container">
-                {items.map((item) => (
-                  <tr key={item.id} className="hover:bg-surface-container-low/50 transition-colors duration-150 group">
-                    <td className="px-xl py-lg">
-                      <div className="flex items-center gap-md">
-                        <Link
-                          href={`/product/${item.id}`}
-                          className="w-14 h-14 rounded-lg overflow-hidden bg-stone-100 shadow-sm border border-secondary-container/50 shrink-0 select-none hover:opacity-80 transition-opacity block"
-                          title="View Detail Page"
-                        >
-                          <Image
-                            alt={item.title}
-                            className="w-full h-full object-cover pointer-events-none"
-                            src={item.image}
-                            width={56}
-                            height={56}
-                            unoptimized
-                          />
-                        </Link>
-                        <div className="min-w-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse select-none min-w-[800px]">
+                <thead>
+                  <tr className="border-b border-secondary-container bg-surface-container-low select-none">
+                    <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant w-1/3">
+                      Product Detail
+                    </th>
+                    <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+                      Category
+                    </th>
+                    <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">
+                      Retail Price
+                    </th>
+                    <th className="px-lg py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+                      Stock Level
+                    </th>
+                    <th className="px-xl py-lg text-xs font-bold uppercase tracking-wider text-on-surface-variant text-right">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-surface-container">
+                  {items.map((item) => (
+                    <tr key={item.id} className="hover:bg-surface-container-low/50 transition-colors duration-150 group">
+                      <td className="px-xl py-lg">
+                        <div className="flex items-center gap-md">
                           <Link
                             href={`/product/${item.id}`}
-                            className="text-sm font-bold text-charcoal truncate hover:text-primary hover:underline transition-colors block"
+                            className="w-14 h-14 rounded-lg overflow-hidden bg-stone-100 shadow-sm border border-secondary-container/50 shrink-0 select-none hover:opacity-80 transition-opacity block"
                             title="View Detail Page"
                           >
-                            {item.title}
+                            <Image
+                              alt={item.title}
+                              className="w-full h-full object-cover pointer-events-none"
+                              src={item.image}
+                              width={56}
+                              height={56}
+                              unoptimized
+                            />
                           </Link>
+                          <div className="min-w-0">
+                            <Link
+                              href={`/product/${item.id}`}
+                              className="text-sm font-bold text-charcoal truncate hover:text-primary hover:underline transition-colors block"
+                              title="View Detail Page"
+                            >
+                              {item.title}
+                            </Link>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-lg py-lg">
-                      <span className="px-sm py-1 bg-surface-container rounded-lg text-[10px] font-bold uppercase tracking-wider text-on-surface-variant select-none">
-                        {item.category}
-                      </span>
-                    </td>
-                    <td className="px-lg py-lg text-right">
-                      <span className="text-xs font-bold text-charcoal">₹{item.price.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
-                    </td>
-                    <td className="px-lg py-lg">
-                      <div className="flex items-center gap-sm select-none">
+                      </td>
+                      <td className="px-lg py-lg">
+                        <Chip label={item.category} />
+                      </td>
+                      <td className="px-lg py-lg text-right">
+                        <span className="text-xs font-bold text-charcoal">₹{item.price.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
+                      </td>
+                      <td className="px-lg py-lg">
                         {item.status === "In Stock" ? (
-                          <div className="flex items-center gap-xs select-none">
-                            <span className="w-2 h-2 rounded-full bg-success-green"></span>
-                            <span className="text-xs font-bold text-success-green">In Stock</span>
-                          </div>
+                          <Chip
+                            label={`In Stock (${item.quantity})`}
+                            icon={<span className="w-2 h-2 rounded-full bg-success-green" />}
+                            color="success"
+                          />
                         ) : item.status === "Low Stock" ? (
-                          <div className="flex items-center gap-xs select-none">
-                            <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                            <span className="text-xs font-bold text-primary">Low Stock</span>
-                          </div>
+                          <Chip
+                            label={`Low Stock (${item.quantity})`}
+                            icon={<span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
+                            color="primary"
+                          />
                         ) : (
-                          <div className="flex items-center gap-xs select-none">
-                            <span className="w-2.5 h-2.5 flex items-center justify-center text-secondary font-black">✕</span>
-                            <span className="text-xs font-bold text-on-surface-variant">Out of Stock</span>
-                          </div>
+                          <Chip
+                            label={`Out of Stock (${item.quantity})`}
+                            icon={<span className="w-2.5 h-2.5 flex items-center justify-center text-on-surface-variant font-black">✕</span>}
+                            color="default"
+                          />
                         )}
-                      </div>
-                    </td>
-                    <td className="px-xl py-lg text-right">
-                      <div className="flex items-center justify-end gap-sm select-none">
-                        <Link
-                          href={`/admin/inventory/create?edit=${item.id}`}
-                          className="p-1.5 hover:bg-surface-container hover:text-primary text-on-surface-variant rounded-lg transition-colors border-none bg-transparent cursor-pointer shrink-0"
-                          title="Edit Product"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Link>
-                        <button
-                          onClick={() => handleDeleteClick(item.id, item.title)}
-                          className="p-1.5 hover:bg-surface-container hover:text-primary text-on-surface-variant rounded-lg transition-colors border-none bg-transparent cursor-pointer shrink-0"
-                          title="Delete Product"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-xl py-lg text-right">
+                        <div className="flex items-center justify-end gap-sm select-none">
+                          <Link
+                            href={`/admin/inventory/create?edit=${item.id}`}
+                            className="p-1.5 hover:bg-surface-container hover:text-primary text-on-surface-variant rounded-lg transition-colors border-none bg-transparent cursor-pointer shrink-0"
+                            title="Edit Product"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteClick(item.id, item.title)}
+                            className="p-1.5 hover:bg-surface-container hover:text-primary text-on-surface-variant rounded-lg transition-colors border-none bg-transparent cursor-pointer shrink-0"
+                            title="Delete Product"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
 
-                {items.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="text-center py-xxl font-semibold text-secondary text-xs select-none">
-                      No products matching active queries were found in stock inventory.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  {items.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="text-center py-xxl font-semibold text-secondary text-xs select-none">
+                        No products matching active queries were found in stock inventory.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
 
             {/* Pagination Controls */}
             <Pagination

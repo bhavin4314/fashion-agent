@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Modal } from "@/components/ui";
 import { generateInvoicePdf, type InvoiceOrder, type InvoiceProfile } from "@/lib/invoice";
+import { formatOrderId } from "@/lib/utils";
 
 interface InvoiceModalProps {
   isOpen: boolean;
@@ -21,14 +22,14 @@ export function InvoiceModal({
 }: InvoiceModalProps) {
   const handleDownload = () => {
     const doc = generateInvoicePdf(order, profile);
-    doc.save(`invoice-VST-${order.id.slice(0, 8).toUpperCase()}.pdf`);
+    doc.save(`invoice-${formatOrderId(order.id)}.pdf`);
   };
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Invoice VST-${order.id.slice(0, 8).toUpperCase()}`}
+      title={`Invoice ${formatOrderId(order.id)}`}
       className="max-w-[600px] w-full flex flex-col p-4 pt-3 pb-3"
     >
       <div className="flex flex-col gap-2.5 flex-1 min-h-0 items-center">

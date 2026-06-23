@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import { formatOrderId } from "./utils";
 
 export interface InvoiceOrderItem {
   title: string;
@@ -52,7 +53,7 @@ export function generateInvoicePdf(order: InvoiceOrder, profile: InvoiceProfile)
   
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10.5);
-  doc.text(`Invoice No: VST-${order.id.slice(0, 8).toUpperCase()}`, 150, 26);
+  doc.text(`Invoice No: ${formatOrderId(order.id)}`, 150, 26);
   doc.text(
     `Date: ${new Date(order.createdAt).toLocaleDateString("en-US", {
       month: "short",

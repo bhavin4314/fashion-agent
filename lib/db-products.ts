@@ -26,6 +26,7 @@ export interface InventoryItem {
   price: number;
   status: "In Stock" | "Low Stock" | "Out of Stock";
   image: string;
+  quantity: number;
 }
 
 /**
@@ -110,5 +111,6 @@ export function mapDbToInventoryItem(db: DbProduct): InventoryItem {
     price: Number(db.price),
     status,
     image: db.image_urls?.[0] || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=60",
+    quantity: db.stock_quantity ?? 0,
   };
 }

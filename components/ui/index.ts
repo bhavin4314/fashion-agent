@@ -10,3 +10,5 @@ export type { PaginationProps } from "./Pagination";
 export { SearchInput } from "./SearchInput";
 export type { SearchInputProps } from "./SearchInput";
 export { Dropdown, DropdownTrigger, DropdownContent, DropdownItem } from "./Dropdown";
+export { Chip } from "./Chip";
+export type { ChipProps } from "./Chip";

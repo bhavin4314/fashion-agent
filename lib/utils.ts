@@ -20,3 +20,8 @@ export function getAvatarInitials(name: string): string {
   return "";
 }
 
+export function formatOrderId(id: string): string {
+  if (!id) return "";
+  return `VST-${id.slice(0, 8).toUpperCase()}`;
+}
+

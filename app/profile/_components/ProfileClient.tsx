@@ -13,7 +13,7 @@ import { getStatusBadgeClass } from "@/lib/constants";
 import { generateInvoicePdf } from "@/lib/invoice";
 import { TrackingTimeline } from "./TrackingTimeline";
 import { InvoiceModal } from "./InvoiceModal";
-import { getAvatarInitials } from "@/lib/utils";
+import { getAvatarInitials, formatOrderId } from "@/lib/utils";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 interface ProfileItem {
@@ -307,7 +307,7 @@ export function ProfileClient({ profile, orders }: ProfileClientProps) {
                         <div>
                           <p className="text-secondary font-semibold">Order ID</p>
                           <p className="font-bold text-charcoal mt-1">
-                            VST-{order.id.slice(0, 8).toUpperCase()}
+                            {formatOrderId(order.id)}
                           </p>
                         </div>
                         <div>
