@@ -3,8 +3,9 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
+import { X, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
+import { QuantityInput } from "@/components/ui";
 
 export function CartDrawer() {
   const {
@@ -113,23 +114,22 @@ export function CartDrawer() {
 
                   {/* Quantity & Delete Actions */}
                   <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center border border-border-light rounded-lg bg-stone-50 overflow-hidden">
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="p-1 px-2 hover:bg-neutral-200 transition-colors border-none bg-transparent cursor-pointer flex items-center"
-                      >
-                        <Minus className="h-3 w-3 text-secondary" />
-                      </button>
-                      <span className="text-xs font-bold px-2 select-none text-charcoal">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-1 px-2 hover:bg-neutral-200 transition-colors border-none bg-transparent cursor-pointer flex items-center"
-                      >
-                        <Plus className="h-3 w-3 text-secondary" />
-                      </button>
-                    </div>
+                    {(() => {
+                      const otherSizesQty = cart
+                        .filter((cartItem) => cartItem.productId === item.productId && cartItem.id !== item.id)
+                        .reduce((sum, cartItem) => sum + cartItem.quantity, 0);
+                      const maxAllowed = item.stock_quantity !== undefined ? Math.max(0, item.stock_quantity - otherSizesQty) : undefined;
+                      return (
+                        <QuantityInput
+                          value={item.quantity}
+                          onChange={(qty) => updateQuantity(item.id, qty)}
+                          size="sm"
+                          stockQuantity={maxAllowed}
+                          showDeleteAtOne
+                          onDelete={() => removeFromCart(item.id)}
+                        />
+                      );
+                    })()}
 
                     <button
                       onClick={() => removeFromCart(item.id)}

@@ -22,7 +22,7 @@ export async function fetchFilteredProductsAction(params: FetchProductsParams) {
     const { data: dbProducts, error } = await supabase
       .from("products")
       .select("*")
-      .order("id", { ascending: false });
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error("Supabase fetch error:", error);
@@ -63,10 +63,9 @@ export async function fetchFilteredProductsAction(params: FetchProductsParams) {
       list.sort((a, b) => b.price - a.price);
     } else if (sortBy === "Newest") {
       list.sort((a, b) => {
-        if (typeof a.id === "number" && typeof b.id === "number") {
-          return b.id - a.id;
-        }
-        return String(b.id).localeCompare(String(a.id));
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
       });
     }
 

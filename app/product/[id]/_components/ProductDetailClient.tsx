@@ -8,6 +8,7 @@ import { Star, ShoppingBag, Sparkles, Heart, ArrowLeft, Edit } from "lucide-reac
 import { type Product } from "@/lib/products";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/hooks/use-cart";
+import { QuantityInput } from "@/components/ui";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -21,8 +22,21 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
   // Client state
   const [selectedSize, setSelectedSize] = React.useState<string>(availableSizes[0] || "M");
   const [wishlist, setWishlist] = React.useState<boolean>(false);
+  const [quantity, setQuantity] = React.useState<number>(1);
   const router = useRouter();
-  const { addToCart, clearCart, setIsDrawerOpen } = useCart();
+  const { cart, addToCart, clearCart, setIsDrawerOpen } = useCart();
+
+  const itemId = isAccessory ? String(product.id) : `${String(product.id)}-${selectedSize}`;
+  const quantityInCart = cart
+    .filter((item) => item.productId === String(product.id))
+    .reduce((sum, item) => sum + item.quantity, 0);
+  const remainingStock = product.stock_quantity !== undefined ? Math.max(0, product.stock_quantity - quantityInCart) : undefined;
+
+  React.useEffect(() => {
+    if (remainingStock !== undefined && remainingStock > 0 && quantity > remainingStock) {
+      setQuantity(remainingStock);
+    }
+  }, [remainingStock, quantity]);
   
 
 
@@ -47,7 +61,9 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
       price: product.price,
       size: isAccessory ? null : selectedSize,
       image: product.galleryImages[0] || "https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg",
-    });
+      stock_quantity: product.stock_quantity,
+    }, quantity);
+    setQuantity(1);
   };
 
   const handleBuyNow = () => {
@@ -60,8 +76,10 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
       price: product.price,
       size: isAccessory ? null : selectedSize,
       image: product.galleryImages[0] || "https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg",
-    });
+      stock_quantity: product.stock_quantity,
+    }, quantity);
     setIsDrawerOpen(false);
+    setQuantity(1);
     router.push("/checkout");
   };
 
@@ -191,6 +209,16 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
               </div>
             </div>
           )}
+          {/* Quantity Selector */}
+          {!isAdmin && (
+            <QuantityInput
+              value={quantity}
+              onChange={setQuantity}
+              size="lg"
+              label="Quantity"
+              stockQuantity={remainingStock}
+            />
+          )}
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-md">
@@ -206,20 +234,31 @@ export function ProductDetailClient({ product, userRole }: ProductDetailClientPr
 
             {!isAdmin && (
               <>
-                <button
-                  onClick={handleAddToBag}
-                  className="w-full h-14 bg-primary hover:bg-primary-dark text-white rounded-xl font-label-md text-label-md flex items-center justify-center gap-sm active:scale-95 transition-all duration-200 shadow-md border-none cursor-pointer font-semibold"
-                >
-                  <ShoppingBag className="h-5 w-5 text-white" />
-                  Add to Bag
-                </button>
-                <button
-                  onClick={handleBuyNow}
-                  className="w-full h-14 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl font-label-md text-label-md flex items-center justify-center gap-sm active:scale-95 transition-all duration-200 shadow-md border-none cursor-pointer font-semibold"
-                >
-                  <ShoppingBag className="h-5 w-5 text-white" />
-                  Buy Now
-                </button>
+                {remainingStock !== undefined && remainingStock <= 0 ? (
+                  <button
+                    disabled
+                    className="w-full h-14 bg-neutral-200 text-neutral-450 rounded-xl font-label-md text-label-md flex items-center justify-center gap-sm border-none cursor-not-allowed font-semibold opacity-60"
+                  >
+                    {product.stock_quantity !== undefined && product.stock_quantity <= 0 ? "Out of Stock" : "All Stock Added to Bag"}
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleAddToBag}
+                      className="w-full h-14 bg-primary hover:bg-primary-dark text-white rounded-xl font-label-md text-label-md flex items-center justify-center gap-sm active:scale-95 transition-all duration-200 shadow-md border-none cursor-pointer font-semibold"
+                    >
+                      <ShoppingBag className="h-5 w-5 text-white" />
+                      Add to Bag
+                    </button>
+                    <button
+                      onClick={handleBuyNow}
+                      className="w-full h-14 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl font-label-md text-label-md flex items-center justify-center gap-sm active:scale-95 transition-all duration-200 shadow-md border-none cursor-pointer font-semibold"
+                    >
+                      <ShoppingBag className="h-5 w-5 text-white" />
+                      Buy Now
+                    </button>
+                  </>
+                )}
               </>
             )}
 

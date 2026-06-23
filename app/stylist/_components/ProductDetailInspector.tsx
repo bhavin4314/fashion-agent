@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Sparkles, X, ShoppingBag } from "lucide-react";
 import { type Product } from "@/lib/products";
 import { useCart } from "@/hooks/use-cart";
+import { QuantityInput } from "@/components/ui";
 
 interface ProductDetailInspectorProps {
   product: Product;
@@ -15,16 +16,30 @@ interface ProductDetailInspectorProps {
 
 export function ProductDetailInspector({ product, onClose }: ProductDetailInspectorProps) {
   const [selectedSize, setSelectedSize] = React.useState<string>("M");
-  const { addToCart, clearCart, setIsDrawerOpen } = useCart();
+  const [quantity, setQuantity] = React.useState<number>(1);
+  const { cart, addToCart, clearCart, setIsDrawerOpen } = useCart();
   const router = useRouter();
 
   const isAccessory = product.category === "Accessories" || product.category?.toLowerCase() === "accessories";
   const availableSizes = product.sizes && product.sizes.length > 0 ? product.sizes : ["S", "M", "L", "XL"];
 
-  // Reset selected size when product changes
+  const itemId = isAccessory ? String(product.id) : `${String(product.id)}-${selectedSize}`;
+  const quantityInCart = cart
+    .filter((item) => item.productId === String(product.id))
+    .reduce((sum, item) => sum + item.quantity, 0);
+  const remainingStock = product.stock_quantity !== undefined ? Math.max(0, product.stock_quantity - quantityInCart) : undefined;
+
+  React.useEffect(() => {
+    if (remainingStock !== undefined && remainingStock > 0 && quantity > remainingStock) {
+      setQuantity(remainingStock);
+    }
+  }, [remainingStock, quantity]);
+
+  // Reset selected size and quantity when product changes
   React.useEffect(() => {
     const sizes = product.sizes && product.sizes.length > 0 ? product.sizes : ["S", "M", "L", "XL"];
     setSelectedSize(sizes[0] || "M");
+    setQuantity(1);
   }, [product]);
 
   const handleAddToBag = () => {
@@ -38,7 +53,9 @@ export function ProductDetailInspector({ product, onClose }: ProductDetailInspec
       price: product.price,
       size: isAccessory ? null : selectedSize,
       image: img,
-    });
+      stock_quantity: product.stock_quantity,
+    }, quantity);
+    setQuantity(1);
   };
 
   const handleBuyNow = () => {
@@ -53,8 +70,10 @@ export function ProductDetailInspector({ product, onClose }: ProductDetailInspec
       price: product.price,
       size: isAccessory ? null : selectedSize,
       image: img,
-    });
+      stock_quantity: product.stock_quantity,
+    }, quantity);
     setIsDrawerOpen(false);
+    setQuantity(1);
     router.push("/checkout");
   };
 
@@ -139,22 +158,43 @@ export function ProductDetailInspector({ product, onClose }: ProductDetailInspec
           </div>
         )}
 
+        {/* Quantity Selector */}
+        <QuantityInput
+          value={quantity}
+          onChange={setQuantity}
+          size="md"
+          label="Select Quantity"
+          uppercaseLabel
+          stockQuantity={remainingStock}
+        />
+
         {/* Action Buttons */}
         <div className="mt-md pt-lg border-t border-surface-container flex flex-col gap-sm">
           <div className="flex gap-sm">
-            <button
-              onClick={handleAddToBag}
-              className="flex-1 py-4 bg-primary hover:bg-primary/95 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-sm active:scale-[0.98] transition-all shadow-md uppercase tracking-wider border-none cursor-pointer"
-            >
-              <ShoppingBag className="h-4 w-4 text-white" />
-              Add to Bag
-            </button>
-            <button
-              onClick={handleBuyNow}
-              className="flex-1 py-4 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-sm active:scale-[0.98] transition-all shadow-md uppercase tracking-wider border-none cursor-pointer"
-            >
-              Buy Now
-            </button>
+            {remainingStock !== undefined && remainingStock <= 0 ? (
+              <button
+                disabled
+                className="flex-1 py-4 bg-neutral-200 text-neutral-450 rounded-xl text-xs font-bold flex items-center justify-center gap-sm cursor-not-allowed uppercase tracking-wider border-none opacity-60"
+              >
+                {product.stock_quantity !== undefined && product.stock_quantity <= 0 ? "Out of Stock" : "All Stock Added to Bag"}
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={handleAddToBag}
+                  className="flex-1 py-4 bg-primary hover:bg-primary/95 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-sm active:scale-[0.98] transition-all shadow-md uppercase tracking-wider border-none cursor-pointer"
+                >
+                  <ShoppingBag className="h-4 w-4 text-white" />
+                  Add to Bag
+                </button>
+                <button
+                  onClick={handleBuyNow}
+                  className="flex-1 py-4 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-sm active:scale-[0.98] transition-all shadow-md uppercase tracking-wider border-none cursor-pointer"
+                >
+                  Buy Now
+                </button>
+              </>
+            )}
           </div>
           <Link
             href={`/product/${product.id}`}

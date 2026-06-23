@@ -20,5 +20,7 @@ export interface Product {
     image: string;
   }>;
   sizes?: string[];
+  created_at?: string;
+  stock_quantity?: number;
 }
 

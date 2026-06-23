@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import toast from "react-hot-toast";
 
 export interface CartItem {
   id: string; // Composite ID: productId + size
@@ -10,6 +11,7 @@ export interface CartItem {
   size: string | null;
   quantity: number;
   image: string;
+  stock_quantity?: number;
 }
 
 interface CartContextType {
@@ -19,7 +21,7 @@ interface CartContextType {
   isDrawerOpen: boolean;
   isLoaded: boolean;
   setIsDrawerOpen: (open: boolean) => void;
-  addToCart: (item: Omit<CartItem, "quantity">) => void;
+  addToCart: (item: Omit<CartItem, "quantity">, quantityToAdd?: number) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -60,17 +62,49 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cart, isMounted]);
 
-  const addToCart = React.useCallback((newItem: Omit<CartItem, "quantity">) => {
+  const addToCart = React.useCallback((newItem: Omit<CartItem, "quantity">, quantityToAdd: number = 1) => {
     setCart((prev) => {
+      const stock = newItem.stock_quantity ?? Infinity;
+      const otherSizesQty = prev
+        .filter((item) => item.productId === newItem.productId && item.id !== newItem.id)
+        .reduce((sum, item) => sum + item.quantity, 0);
+      const maxAllowed = Math.max(0, stock - otherSizesQty);
+
       const existing = prev.find((item) => item.id === newItem.id);
       if (existing) {
+        const totalNewQty = existing.quantity + quantityToAdd;
+        if (totalNewQty > maxAllowed) {
+          toast.dismiss();
+          if (maxAllowed <= 0) {
+            toast.error(`All available ${stock} units of this item are already in your bag.`);
+          } else {
+            toast.error(`Only ${stock} units of this item are available in total. You can only add ${maxAllowed - existing.quantity} more.`);
+          }
+          return prev.map((item) =>
+            item.id === newItem.id
+              ? { ...item, quantity: maxAllowed }
+              : item
+          );
+        }
         return prev.map((item) =>
           item.id === newItem.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: totalNewQty }
             : item
         );
       }
-      return [...prev, { ...newItem, quantity: 1 }];
+      if (quantityToAdd > maxAllowed) {
+        toast.dismiss();
+        if (maxAllowed <= 0) {
+          toast.error(`All available ${stock} units of this item are already in your bag.`);
+        } else {
+          toast.error(`Only ${stock} units of this item are available in total. Adding ${maxAllowed} to bag.`);
+        }
+        if (maxAllowed <= 0) {
+          return prev;
+        }
+        return [...prev, { ...newItem, quantity: maxAllowed }];
+      }
+      return [...prev, { ...newItem, quantity: quantityToAdd }];
     });
     setIsDrawerOpen(true);
   }, []);
@@ -84,9 +118,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       removeFromCart(id);
       return;
     }
-    setCart((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity } : item))
-    );
+    setCart((prev) => {
+      const itemToUpdate = prev.find((item) => item.id === id);
+      if (!itemToUpdate) return prev;
+
+      const stock = itemToUpdate.stock_quantity ?? Infinity;
+      const otherSizesQty = prev
+        .filter((item) => item.productId === itemToUpdate.productId && item.id !== id)
+        .reduce((sum, item) => sum + item.quantity, 0);
+      const maxAllowed = Math.max(0, stock - otherSizesQty);
+
+      if (quantity > maxAllowed) {
+        toast.dismiss();
+        toast.error(`Only ${stock} units of this item are available in total.`);
+        return prev.map((item) => (item.id === id ? { ...item, quantity: maxAllowed } : item));
+      }
+      return prev.map((item) => (item.id === id ? { ...item, quantity } : item));
+    });
   }, [removeFromCart]);
 
   const clearCart = React.useCallback(() => {

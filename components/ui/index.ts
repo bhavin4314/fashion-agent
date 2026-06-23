@@ -12,3 +12,5 @@ export type { SearchInputProps } from "./SearchInput";
 export { Dropdown, DropdownTrigger, DropdownContent, DropdownItem } from "./Dropdown";
 export { Chip } from "./Chip";
 export type { ChipProps } from "./Chip";
+export { QuantityInput } from "./QuantityInput";
+export type { QuantityInputProps } from "./QuantityInput";

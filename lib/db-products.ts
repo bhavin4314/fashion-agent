@@ -16,6 +16,7 @@ export interface DbProduct {
   season?: string[];
   fit?: string | null;
   sku?: string;
+  created_at?: string;
 }
 
 export interface InventoryItem {
@@ -82,7 +83,9 @@ export function mapDbProduct(db: DbProduct): Product {
     description: db.description || "",
     aiRecommendation: `This item highlights your ${db.aesthetics?.join(" or ") || "refined"} aesthetic.`,
     completeTheLook: [],
-    sizes: db.sizes || []
+    sizes: db.sizes || [],
+    created_at: db.created_at,
+    stock_quantity: db.stock_quantity ?? 0
   };
 }
 

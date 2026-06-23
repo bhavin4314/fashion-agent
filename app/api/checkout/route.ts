@@ -23,17 +23,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Empty cart items" }, { status: 400 });
     }
 
-    // Check if Stripe keys are configured
-    if (!stripeSecretKey) {
-      // Return custom status so frontend fallback sandbox is activated
-      return NextResponse.json({ stripe_keys_missing: true });
-    }
-
-    // Fetch products securely from DB to verify prices
+    // Fetch products securely from DB to verify prices and stock quantities
     const productIds = items.map((item) => item.productId);
     const { data: dbProducts, error: dbError } = await supabase
       .from("products")
-      .select("id, title, price, image_urls, description")
+      .select("id, title, price, image_urls, description, stock_quantity")
       .in("id", productIds);
 
     if (dbError || !dbProducts) {
@@ -41,6 +35,32 @@ export async function POST(request: Request) {
         { error: "Failed to verify product inventory" },
         { status: 500 }
       );
+    }
+
+    // Verify stock availability before checkout
+    for (const item of items) {
+      const dbProduct = dbProducts.find((p) => p.id === item.productId);
+      if (!dbProduct) {
+        return NextResponse.json(
+          { error: `Product not found in inventory: ${item.productId}` },
+          { status: 404 }
+        );
+      }
+      const stock = dbProduct.stock_quantity ?? 0;
+      if (item.quantity > stock) {
+        return NextResponse.json(
+          {
+            error: `Insufficient stock for "${dbProduct.title}". Only ${stock} units are currently available.`,
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Check if Stripe keys are configured
+    if (!stripeSecretKey) {
+      // Return custom status so frontend fallback sandbox is activated
+      return NextResponse.json({ stripe_keys_missing: true });
     }
 
     const stripe = new Stripe(stripeSecretKey);

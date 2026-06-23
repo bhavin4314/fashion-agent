@@ -59,7 +59,7 @@ export default async function InventoryPage({ searchParams }: PageProps) {
     query = query.order("price", { ascending: false });
   } else {
     // Default or "Newest"
-    query = query.order("id", { ascending: false });
+    query = query.order("created_at", { ascending: false });
   }
 
   // 5. Pagination range

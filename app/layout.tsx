@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import { Agentation } from "agentation";
 import { CartProvider } from "@/hooks/use-cart";
+import { NavigationLoader } from "@/components/shared/NavigationLoader";
+import { Suspense } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -26,6 +28,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <CartProvider>
+          <Suspense fallback={null}>
+            <NavigationLoader />
+          </Suspense>
           {children}
         </CartProvider>
         <Toaster position="top-center" toastOptions={{

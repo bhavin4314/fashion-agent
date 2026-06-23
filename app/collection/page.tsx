@@ -14,7 +14,7 @@ export default async function CollectionPage() {
   const { data: dbProducts } = await supabase
     .from("products")
     .select("*")
-    .order("id", { ascending: false })
+    .order("created_at", { ascending: false })
     .limit(8);
 
   const initialProducts = (dbProducts || []).map(mapDbProduct);

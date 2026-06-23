@@ -63,10 +63,10 @@ export function StripeRedirectClient() {
 
   if (error) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-white p-margin-desktop py-xxl">
-        <div className="text-center p-lg md:p-xl bg-white rounded-xl border border-border-light w-full max-w-md shadow-sm flex flex-col items-center justify-center">
+      <div className="flex-1 flex items-center justify-center bg-white px-margin-mobile md:px-margin-desktop py-xxl">
+        <div className="text-center p-lg md:p-xl bg-white rounded-xl border border-border-light w-full max-w-2xl shadow-sm flex flex-col items-center justify-center">
           <p className="text-sm font-bold text-red-600 uppercase tracking-widest">Checkout Error</p>
-          <p className="text-xs text-secondary font-semibold mt-3 max-w-[280px] leading-relaxed">{error}</p>
+          <p className="text-xs text-secondary font-semibold mt-3 w-full break-words leading-relaxed">{error}</p>
           <button
             onClick={() => router.push("/collection")}
             className="mt-6 px-6 py-3 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold transition-all uppercase tracking-widest cursor-pointer border-none"
@@ -79,7 +79,7 @@ export function StripeRedirectClient() {
   }
 
   return (
-    <div className="flex-1 flex items-center justify-center bg-white p-margin-desktop py-xxl select-none">
+    <div className="flex-1 flex items-center justify-center bg-white px-margin-mobile md:px-margin-desktop py-xxl select-none">
       <div className="text-center flex flex-col items-center gap-md w-full">
         <Loader2 className="h-10 w-10 text-brand animate-spin" />
         <h3 className="text-sm font-extrabold text-charcoal uppercase tracking-widest">

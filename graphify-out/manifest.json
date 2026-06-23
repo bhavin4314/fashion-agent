@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/inventory/create/_components/Step1Media.tsx": {
-    "mtime": 1781674266.6860642,
-    "ast_hash": "4346df0f4b0b6944ef104423201aade5",
+    "mtime": 1782212158.1315467,
+    "ast_hash": "e5a3ab3d8294dbdf099621bfae8ed71e",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/inventory/create/_components/Step2Garment.tsx": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/inventory/page.tsx": {
-    "mtime": 1781601910.6356826,
-    "ast_hash": "dc7da1df22e34b18a039c54a98281d3c",
+    "mtime": 1782210780.0527928,
+    "ast_hash": "87ee0328af048a64772a0e6a70f8f7e0",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/admin/layout.tsx": {
@@ -105,18 +105,18 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/collection/actions.ts": {
-    "mtime": 1781610315.947057,
-    "ast_hash": "134cde99c00b6651e78ab93ba83c80fe",
+    "mtime": 1782210761.006961,
+    "ast_hash": "12f45bf9bcd5d08613aaf57f23976c55",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/collection/page.tsx": {
-    "mtime": 1781612217.3746452,
-    "ast_hash": "845543161493ba1fbdb57d7f3cef6aa8",
+    "mtime": 1782210772.9384818,
+    "ast_hash": "1beabe7ff558fcc250bd6bb3c4dc58c2",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/layout.tsx": {
-    "mtime": 1781852041.1787465,
-    "ast_hash": "607415b4f368ac5acbb0c0258f0ceb6d",
+    "mtime": 1782211913.0129094,
+    "ast_hash": "2efe7a9c3681bed1ad3324c81f797768",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/login/_components/LoginForm.tsx": {
@@ -145,8 +145,8 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/product/[id]/_components/ProductDetailClient.tsx": {
-    "mtime": 1781771993.9190824,
-    "ast_hash": "febebdb9066c4248b661a0d260cd365f",
+    "mtime": 1782220047.80774,
+    "ast_hash": "bfbd45edecaae3bd4f237a91156d52c0",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/product/[id]/page.tsx": {
@@ -250,8 +250,8 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/index.ts": {
-    "mtime": 1782196853.8623972,
-    "ast_hash": "2091dd636244b4138397f9960fe85bdd",
+    "mtime": 1782213433.499747,
+    "ast_hash": "59e3eebb8b343bb08ea1edc346558794",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/eslint.config.mjs": {
@@ -260,13 +260,13 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/lib/db-products.ts": {
-    "mtime": 1782196099.5182538,
-    "ast_hash": "739f5386e22030945b6bafd54e1f15d7",
+    "mtime": 1782212703.7986162,
+    "ast_hash": "761005fba81c343d495c0850d8611d77",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/lib/products.ts": {
-    "mtime": 1781876837.1188476,
-    "ast_hash": "f58619c9d02c7fd46755f6124b5d7d85",
+    "mtime": 1782212699.1477027,
+    "ast_hash": "82393f72a71a5a01160aa07de1ae693e",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/lib/utils.ts": {
@@ -435,13 +435,13 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/api/checkout/route.ts": {
-    "mtime": 1781775787.7568746,
-    "ast_hash": "57d8bc30a9b3d1a41d1d078581aad107",
+    "mtime": 1782212778.2542238,
+    "ast_hash": "c2b9de971cd701f5691e840ed560f271",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/checkout/_components/StripeRedirectClient.tsx": {
-    "mtime": 1781853109.0290184,
-    "ast_hash": "3f6475b4c78077d47b0fc85fef00b84e",
+    "mtime": 1782213294.163424,
+    "ast_hash": "19284b1893842f7ac7f2f53a2dfb2221",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/checkout/page.tsx": {
@@ -480,13 +480,13 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/components/shared/CartDrawer.tsx": {
-    "mtime": 1781869898.2564116,
-    "ast_hash": "bb955c8a8f358ec09f7f923b14a5213a",
+    "mtime": 1782220039.451566,
+    "ast_hash": "b5457718169efa8649ecd019202d483b",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/hooks/use-cart.tsx": {
-    "mtime": 1781853103.5459187,
-    "ast_hash": "99ec69726b99700c37095ef70f4b1b4f",
+    "mtime": 1782220034.448474,
+    "ast_hash": "67542678eea0f9d88342f35eca113498",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/supabase/migrations/20260618000000_add_orders_and_profile_fields.sql": {
@@ -570,8 +570,8 @@
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/app/stylist/_components/ProductDetailInspector.tsx": {
-    "mtime": 1781865192.880613,
-    "ast_hash": "8feb379d87df7602bbba23b8d8706dc0",
+    "mtime": 1782220053.8527083,
+    "ast_hash": "f91e458a31c901f2695d849ec6adcfe8",
     "semantic_hash": ""
   },
   "/Users/ztlab157/new-learning-projects/fashion-agent/supabase/migrations/20260619000002_decrement_product_stock.sql": {
@@ -602,6 +602,16 @@
   "/Users/ztlab157/new-learning-projects/fashion-agent/supabase/migrations/20260623150000_update_hybrid_search_similarity.sql": {
     "mtime": 1782208359.7560668,
     "ast_hash": "177a25833fe9a146ea0bc32d68dc3c74",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/components/shared/NavigationLoader.tsx": {
+    "mtime": 1782211905.8588727,
+    "ast_hash": "ef81e4102063f13e7cef96c4acf1cb4d",
+    "semantic_hash": ""
+  },
+  "/Users/ztlab157/new-learning-projects/fashion-agent/components/ui/QuantityInput.tsx": {
+    "mtime": 1782220243.2155838,
+    "ast_hash": "458da70f17fc401429ca3a09215d6aa1",
     "semantic_hash": ""
   }
 }
