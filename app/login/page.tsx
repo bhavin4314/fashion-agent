@@ -5,7 +5,7 @@ import { LoginForm } from "./_components/LoginForm";
 
 export const metadata: Metadata = {
   title: "Vistra | Login",
-  description: "Log in or sign up to Vistra to discover your personal style, curated by AI.",
+  description: "Log in or sign up to Vistra to discover your personal style, selected by AI.",
 };
 
 interface PageProps {
@@ -67,7 +67,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
         />
         <div className="absolute bottom-12 left-12 z-10">
           <p className="text-white font-headline-md text-headline-md opacity-90 tracking-tight">
-            Curated by AI. Designed for you.
+            Selected by AI. Designed for you.
           </p>
         </div>
         <div className="absolute inset-0 bg-black/5 pointer-events-none" />

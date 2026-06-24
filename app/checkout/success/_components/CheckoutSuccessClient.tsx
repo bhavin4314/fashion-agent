@@ -133,7 +133,7 @@ export function CheckoutSuccessClient() {
             <span className="font-black text-charcoal">
               {formatOrderId(order.id)}
             </span>{" "}
-            has been successfully placed and is being curated by our design team.
+            has been successfully placed and is being prepared by our design team.
           </p>
         </div>
 
@@ -182,7 +182,7 @@ export function CheckoutSuccessClient() {
           {/* Ordered Items */}
           <div className="p-6 md:p-8 border-b border-border-light">
             <h4 className="text-[10px] font-black text-charcoal uppercase tracking-widest mb-5">
-              Garments Curation
+              Garments Selection
             </h4>
             <div className="space-y-4">
               {items.map((item) => (

@@ -124,7 +124,7 @@ spacing:
 # Design System: Vistra Fashion Concierge
 
 ## Brand & Style
-The design system for this fashion concierge service is built on a foundation of "Warm Precision." It blends the high-end editorial feel of luxury fashion with the approachable, functional efficiency of a world-class travel platform. The UI must feel curated, not cluttered—evoking the sensation of a personal stylist who is both highly organized and effortlessly stylish.
+The design system for this fashion concierge service is built on a foundation of "Warm Precision." It blends the high-end editorial feel of luxury fashion with the approachable, functional efficiency of a world-class travel platform. The UI must feel carefully selected, not cluttered—evoking the sensation of a personal stylist who is both highly organized and effortlessly stylish.
 
 The design style is **Corporate Modern** with a **Minimalist** editorial edge. It prioritizes clarity, high-quality imagery, and generous whitespace to allow fashion photography to remain the focal point. The emotional response should be one of reliability, inspiration, and premium hospitality.
 

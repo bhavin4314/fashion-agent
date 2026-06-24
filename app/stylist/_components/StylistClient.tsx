@@ -282,9 +282,9 @@ export function StylistClient() {
             {/* Horizontal suggested queries pills */}
             <div className="flex flex-wrap gap-sm justify-center px-2">
               {[
-                "Find similar styles in silk under 300",
+                "Find similar styles in silk under 900",
                 "Recommend comfortable summer shirts",
-                "Complete this outfit for a gala under 400"
+                "Suggest a stylish vacation/trip outfit"
               ].map((pill, i) => (
                 <button
                   key={i}

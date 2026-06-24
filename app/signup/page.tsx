@@ -5,7 +5,7 @@ import { SignUpForm } from "./_components/SignUpForm";
 
 export const metadata: Metadata = {
   title: "Vistra | Sign Up",
-  description: "Create an account on Vistra to discover your personal style, curated by AI.",
+  description: "Create an account on Vistra to discover your personal style, selected by AI.",
 };
 
 interface PageProps {
@@ -42,7 +42,7 @@ export default async function SignUpPage({ searchParams }: PageProps) {
                 Create your account
               </h1>
               <p className="font-body-lg text-body-lg text-secondary leading-relaxed">
-                Join Vistra to discover your personal AI-curated style.
+                Join Vistra to discover your personal AI-selected style.
               </p>
             </div>
 
@@ -92,7 +92,7 @@ export default async function SignUpPage({ searchParams }: PageProps) {
           {/* Soft overlay for depth and text legibility */}
           <div className="absolute inset-0 editorial-overlay flex flex-col justify-end p-xxl pb-xxl">
             <p className="text-white font-display-lg text-display-lg max-w-[448px] drop-shadow-sm leading-tight">
-              Curated by AI. Designed for you.
+              Selected by AI. Designed for you.
             </p>
             <div className="mt-md w-16 h-1 bg-white opacity-40" />
           </div>

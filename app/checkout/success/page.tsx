@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Order Confirmed | Vistra",
-  description: "Your quiet luxury fashion curation order is confirmed.",
+  description: "Your quiet luxury fashion selection order is confirmed.",
 };
 
 export default function CheckoutSuccessPage() {

@@ -1,16 +1,16 @@
-# Graph Report - fashion-agent  (2026-06-23)
+# Graph Report - fashion-agent  (2026-06-24)
 
 ## Corpus Check
-- 111 files · ~236,932 words
+- 117 files · ~239,044 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 528 nodes · 886 edges · 37 communities (31 shown, 6 thin omitted)
+- 534 nodes · 899 edges · 37 communities (31 shown, 6 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4b76d272`
+- Built from commit: `6494ad59`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -55,26 +55,26 @@
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 25 edges
 2. `createClient()` - 22 edges
-3. `Antigravity — AI Agent Codebase Rules` - 17 edges
-4. `compilerOptions` - 16 edges
-5. `useCart()` - 15 edges
-6. `Navbar()` - 10 edges
+3. `useCart()` - 17 edges
+4. `Antigravity — AI Agent Codebase Rules` - 17 edges
+5. `compilerOptions` - 16 edges
+6. `Navbar()` - 11 edges
 7. `Product` - 10 edges
 8. `formatOrderId()` - 10 edges
 9. `Button` - 9 edges
 10. `4. Forms & Validation` - 9 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `CollectionClientProps` --references--> `Product`  [EXTRACTED]
-  app/collection/_components/CollectionClient.tsx → lib/products.ts
+- `ProductDetailInspectorProps` --references--> `Product`  [EXTRACTED]
+  app/stylist/_components/ProductDetailInspector.tsx → lib/products.ts
 - `AdminOrdersClient()` --calls--> `formatOrderId()`  [EXTRACTED]
   app/admin/orders/_components/AdminOrdersClient.tsx → lib/utils.ts
+- `runHybridSearch()` --calls--> `createClient()`  [EXTRACTED]
+  app/api/chat/route.ts → utils/supabase/server.ts
 - `CheckoutSuccessClient()` --calls--> `useCart()`  [EXTRACTED]
   app/checkout/success/_components/CheckoutSuccessClient.tsx → hooks/use-cart.tsx
-- `CheckoutSuccessClient()` --calls--> `formatOrderId()`  [EXTRACTED]
-  app/checkout/success/_components/CheckoutSuccessClient.tsx → lib/utils.ts
-- `ProductDetailClientProps` --references--> `Product`  [EXTRACTED]
-  app/product/[id]/_components/ProductDetailClient.tsx → lib/products.ts
+- `CollectionClientProps` --references--> `Product`  [EXTRACTED]
+  app/collection/_components/CollectionClient.tsx → lib/products.ts
 
 ## Import Cycles
 - None detected.
@@ -82,24 +82,24 @@
 ## Communities (37 total, 6 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.08
-Nodes (36): ChipOption, FormChips(), FormChipsProps, FormPassword(), FormPasswordProps, FormTextarea(), FormTextareaProps, cn() (+28 more)
+Cohesion: 0.09
+Nodes (29): categoryOptions, InventoryClientProps, sortOptions, statusOptions, archiveProductAction(), InventoryItem, AlertModal(), AlertModalProps (+21 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.08
-Nodes (30): InvoiceModal(), InvoiceModalProps, Order, OrderItem, ProfileClientProps, ProfileItem, defaultValues, SignUpForm() (+22 more)
+Cohesion: 0.09
+Nodes (21): AdminOrdersClient(), AdminOrdersClientProps, OrderItemDetail, OrderSummary, SelectedOrderDetails, statusOptions, InventoryClient(), useDebounce() (+13 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.08
-Nodes (35): CreateProductWizardClient(), CreateProductWizardClientProps, WizardContentProps, Step1Media(), Step1MediaProps, Step2Garment(), Step2GarmentProps, Step3Metadata() (+27 more)
+Nodes (35): CreateProductWizardClientProps, WizardContentProps, Step1Media(), Step1MediaProps, Step2Garment(), Step2GarmentProps, Step3Metadata(), Step3MetadataProps (+27 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.08
 Nodes (25): dependencies, ai, @ai-sdk/google, @ai-sdk/react, clsx, @hookform/resolvers, jspdf, lucide-react (+17 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.07
-Nodes (28): metadata, metadata, metadata, Navbar(), NavbarProps, ProductDetailClientProps, ProductDetailInspector(), ProductDetailInspectorProps (+20 more)
+Cohesion: 0.06
+Nodes (30): metadata, metadata, metadata, metadata, CartClient(), Navbar(), NavbarProps, ProductDetailInspector() (+22 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.10
@@ -114,8 +114,8 @@ Cohesion: 0.08
 Nodes (23): metadata, ActivityItem, AdminOverviewClient(), AdminOverviewClientProps, CategoryRevenue, CHART_DATA, FEATURED_ITEMS, FeaturedItem (+15 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.13
-Nodes (15): AdminOrdersClientProps, OrderItemDetail, OrderSummary, SelectedOrderDetails, statusOptions, getStatusBadgeClass(), getStatusDescription(), ORDER_STATUS_DESCRIPTIONS (+7 more)
+Cohesion: 0.08
+Nodes (27): fetchFilteredProductsAction(), FetchProductsParams, metadata, OrderDetail, OrderItemDetail, CollectionClient(), CollectionClientProps, CreateProductWizardClient() (+19 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.20
@@ -182,16 +182,16 @@ Cohesion: 0.50
 Nodes (3): Deploy on Vercel, Getting Started, Learn More
 
 ### Community 25 - "Community 25"
-Cohesion: 0.06
-Nodes (37): analyzeQuery(), CHAT_MODEL, checkFashionRelevance(), classifyQuery(), DBProductRecord, EMBEDDING_MODEL, filterProductsByType(), google (+29 more)
+Cohesion: 0.23
+Nodes (13): analyzeQuery(), CHAT_MODEL, checkFashionRelevance(), classifyQuery(), DBProductRecord, EMBEDDING_MODEL, filterProductsByType(), google (+5 more)
 
 ### Community 32 - "Community 32"
-Cohesion: 0.14
-Nodes (12): metadata, AdminLogoutButton(), defaultValues, LoginForm(), LoginFormProps, SidebarNav(), loginAction(), signOutAction() (+4 more)
+Cohesion: 0.07
+Nodes (32): metadata, AdminLogoutButton(), defaultValues, LoginForm(), LoginFormProps, SidebarNav(), defaultValues, SignUpForm() (+24 more)
 
 ### Community 33 - "Community 33"
-Cohesion: 0.18
-Nodes (10): CheckoutSuccessClient(), OrderDetail, OrderItemDetail, DBOrderItem, getOrderDetailsAction(), StripeAddress, StripeCheckoutSession, StripeShippingDetails (+2 more)
+Cohesion: 0.15
+Nodes (19): CheckoutSuccessClient(), InvoiceModal(), InvoiceModalProps, Order, OrderItem, ProfileClientProps, ProfileItem, TrackingTimeline() (+11 more)
 
 ### Community 34 - "Community 34"
 Cohesion: 0.25
@@ -202,24 +202,24 @@ Cohesion: 0.83
 Nodes (3): GET(), handleCleanup(), POST()
 
 ## Knowledge Gaps
-- **244 isolated node(s):** `Flags`, `FeatureFlagContextType`, `FeatureFlagContext`, `defaultFlags`, `Window` (+239 more)
+- **246 isolated node(s):** `Flags`, `FeatureFlagContextType`, `FeatureFlagContext`, `defaultFlags`, `Window` (+241 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `createClient()` connect `Community 25` to `Community 32`, `Community 1`, `Community 2`, `Community 33`, `Community 4`, `Community 7`, `Community 8`?**
+- **Why does `createClient()` connect `Community 8` to `Community 32`, `Community 0`, `Community 2`, `Community 1`, `Community 4`, `Community 33`, `Community 7`, `Community 25`?**
   _High betweenness centrality (0.060) - this node is a cross-community bridge._
 - **Why does `Antigravity — AI Agent Codebase Rules` connect `Community 9` to `Community 6`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 20`, `Community 21`, `Community 22`?**
   _High betweenness centrality (0.020) - this node is a cross-community bridge._
 - **Why does `createClient()` connect `Community 4` to `Community 2`, `Community 7`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+  _High betweenness centrality (0.016) - this node is a cross-community bridge._
 - **What connects `Flags`, `FeatureFlagContextType`, `FeatureFlagContext` to the rest of the system?**
-  _244 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _246 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.07982583454281568 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09059233449477352 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.08456659619450317 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09259259259259259 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.07536231884057971 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0797979797979798 - nodes in this community are weakly interconnected._

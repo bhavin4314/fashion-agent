@@ -6,7 +6,7 @@ import { StripeRedirectClient } from "./_components/StripeRedirectClient";
 
 export const metadata: Metadata = {
   title: "Checkout | Vistra",
-  description: "Secure payment gateway for your luxury fashion curation.",
+  description: "Secure payment gateway for your luxury fashion selection.",
 };
 
 export default async function CheckoutPage() {
@@ -16,7 +16,7 @@ export default async function CheckoutPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login?redirect=/checkout");
+    redirect("/login?redirect=/cart");
   }
 
   return (

@@ -284,7 +284,7 @@ export function ProfileClient({ profile, orders }: ProfileClientProps) {
         {/* Tab 2: Order History */}
         {activeTab === "orders" && (
           <section className="space-y-lg">
-            <h2 className="text-lg font-bold text-charcoal">Your Curation Orders</h2>
+            <h2 className="text-lg font-bold text-charcoal">Your Selection Orders</h2>
 
             {orders.length === 0 ? (
               <div className="bg-white border border-border-light rounded-xl p-xxl text-center">

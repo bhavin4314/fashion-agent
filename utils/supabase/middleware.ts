@@ -62,7 +62,10 @@ export async function updateSession(request: NextRequest) {
   if (isProtectedPath) {
     if (!user) {
       // User is not logged in, redirect to login page with preserved path & query parameters
-      const redirectUrl = pathname + url.search;
+      let redirectUrl = pathname + url.search;
+      if (pathname === "/checkout") {
+        redirectUrl = "/cart";
+      }
       return redirect(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
     }
 

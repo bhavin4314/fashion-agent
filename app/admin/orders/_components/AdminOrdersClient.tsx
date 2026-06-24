@@ -177,7 +177,7 @@ export function AdminOrdersClient({
   const handleSaveChanges = async () => {
     if (!selectedOrderId || !drawerOrder) return;
     setIsSaving(true);
-    const toastId = toast.loading("Updating order curation...");
+    const toastId = toast.loading("Updating order selection...");
 
     try {
       const result = await updateOrderStatusAction({
@@ -403,7 +403,7 @@ export function AdminOrdersClient({
                   {/* Items List Block */}
                   <div className="space-y-md">
                     <p className="text-[10px] font-black text-secondary uppercase tracking-widest border-b border-border-light pb-xs">
-                      Itemized Curation
+                      Itemized Selection
                     </p>
                     <div className="space-y-md">
                       {drawerItems.map((item) => (

@@ -4,8 +4,8 @@ import { createClient } from "@/utils/supabase/server";
 import { AdminOrdersClient } from "./_components/AdminOrdersClient";
 
 export const metadata: Metadata = {
-  title: "Order Curation | Admin",
-  description: "Secure order status updates and curation logs.",
+  title: "Order Selection | Admin",
+  description: "Secure order status updates and selection logs.",
 };
 
 interface DBOrderSummary {

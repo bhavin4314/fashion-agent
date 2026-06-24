@@ -6,7 +6,7 @@ import { mapDbProduct } from "@/lib/db-products";
 
 export const metadata: Metadata = {
   title: "Vistra | Explore Collection",
-  description: "Explore Vistra's curated premium fashion essentials.",
+  description: "Explore Vistra's selected premium fashion essentials.",
 };
 
 export default async function CollectionPage() {

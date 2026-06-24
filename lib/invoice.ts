@@ -160,7 +160,7 @@ export function generateInvoicePdf(order: InvoiceOrder, profile: InvoiceProfile)
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8.5);
   doc.setTextColor(163, 163, 163);
-  doc.text("Thank you for curating with Vistra. For support, reach out to milan-concierge@vistra.ai.", 15, 275);
+  doc.text("Thank you for shopping with Vistra. For support, reach out to milan-concierge@vistra.ai.", 15, 275);
   doc.text("This is a system generated document and does not require a physical signature.", 15, 280);
 
   return doc;

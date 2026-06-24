@@ -5,7 +5,7 @@ import { StylistClient } from "./_components/StylistClient";
 
 export const metadata: Metadata = {
   title: "Vistra | AI Stylist Assistant",
-  description: "Consult with your dedicated AI fashion stylist for premium outfit curations, smart sizes, and global trends.",
+  description: "Consult with your dedicated AI fashion stylist for premium outfit selections, smart sizes, and global trends.",
 };
 
 export default function StylistPage() {

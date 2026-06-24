@@ -9,7 +9,7 @@ import { mapDbProduct } from "@/lib/db-products";
 
 export const metadata: Metadata = {
   title: "Vistra | AI Fashion Concierge",
-  description: "Find your perfect, coordinated outfits curated by world-class AI.",
+  description: "Find your perfect, coordinated outfits selected by world-class AI.",
 };
 
 export default async function Home() {

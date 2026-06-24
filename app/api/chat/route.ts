@@ -19,35 +19,7 @@ if (!EMBEDDING_MODEL) {
   throw new Error("NEXT_PUBLIC_AI_EMBEDDING_MODEL is not defined in environment variables");
 }
 
-interface QueryAnalysis {
-  isRelevant: boolean;
-  categories: ("apparel" | "footwear" | "accessories" | "other")[];
-  productTypes: string[];
-}
 
-/**
- * Combined helper to determine fashion relevance and classify query details in one step.
- */
-async function analyzeQuery(query: string): Promise<QueryAnalysis> {
-  try {
-    const { output } = await generateText({
-      model: google(CHAT_MODEL),
-      output: Output.object({
-        schema: z.object({
-          isRelevant: z.boolean().describe("True if query is fashion, clothing, apparel, footwear, accessories, styling, wardrobe coordination, colors, materials, or fashion catalog related."),
-          categories: z.array(z.enum(["apparel", "footwear", "accessories", "other"])).describe("The general database categories representing the items requested"),
-          productTypes: z.array(z.string()).describe("The specific singular fashion items requested (e.g. ['shirt', 'watch'])"),
-        }),
-      }),
-      system: "You are an AI Fashion Concierge query analyzer. Determine if the query is relevant to a fashion store. Extract all general categories and specific fashion items requested.",
-      prompt: query,
-    });
-    return output;
-  } catch (e) {
-    console.error("Error analyzing query:", e);
-    return { isRelevant: true, categories: [], productTypes: [] };
-  }
-}
 
 /**
  * Checks if a user query matches common greetings or off-topic questions locally.
@@ -73,6 +45,19 @@ function isLocallyIntercepted(query: string): boolean {
   return isGreeting || isCommonOffTopic;
 }
 
+interface SearchFilters {
+  category?: string;
+  productType?: string;
+  gender?: string;
+  color?: string;
+  occasion?: string[];
+  materials?: string[];
+  aesthetics?: string[];
+  season?: string[];
+  fit?: string;
+  maxPrice?: number;
+}
+
 interface DBProductRecord {
   id: string | number;
   title: string;
@@ -82,14 +67,12 @@ interface DBProductRecord {
   similarity: number;
 }
 
-
-
 /**
  * Runs hybrid search using the Supabase RPC function.
  * If the function is not found or fails, it falls back to a standard database text query.
  */
-async function runHybridSearch(query: string, maxPrice?: number) {
-  console.log(">>> [runHybridSearch] Started with query:", query, "maxPrice:", maxPrice);
+async function runHybridSearch(query: string, filters: SearchFilters) {
+  console.log(">>> [runHybridSearch] Started with query:", query, "filters:", filters);
   try {
     const supabase = await createClient();
 
@@ -112,7 +95,16 @@ async function runHybridSearch(query: string, maxPrice?: number) {
       query_text: query,
       query_embedding: embedding,
       match_count: 8,
-      max_price: maxPrice || null,
+      filter_category: filters.category || null,
+      filter_product_type: filters.productType || null,
+      filter_gender: filters.gender || null,
+      filter_occasions: filters.occasion || null,
+      filter_materials: filters.materials || null,
+      filter_aesthetics: filters.aesthetics || null,
+      filter_seasons: filters.season || null,
+      filter_fit: filters.fit || null,
+      max_price: filters.maxPrice || null,
+      filter_color: filters.color || null,
     });
     
     if (error) {
@@ -121,29 +113,51 @@ async function runHybridSearch(query: string, maxPrice?: number) {
     }
 
     if (dbProducts) {
-      console.log(">>> [runHybridSearch] RPC returned:", dbProducts.length, "raw candidates.", dbProducts);
-      
-      // Filter out products with low similarity scores to exclude completely off-topic items
-      const filtered = (dbProducts as DBProductRecord[]).filter((p) => p.similarity >= MIN_SIMILARITY_THRESHOLD);
-      
-      console.log(
-        ">>>> [runHybridSearch] Filtered by similarity threshold:",
-        filtered.length, "items. Excluded:", dbProducts.length - filtered.length
-      );
-      
-      return filtered.map(mapDbProduct);
+      console.log(">>> [runHybridSearch] RPC returned:", dbProducts.length, "candidates.", dbProducts);
+      return (dbProducts as DBProductRecord[]).map(mapDbProduct);
     }
   } catch (err) {
     console.warn(">>> [runHybridSearch] Executing database text search fallback:", err);
     try {
       const supabase = await createClient();
       let dbQuery = supabase.from("products").select("*");
-      if (maxPrice) {
-        dbQuery = dbQuery.lte("price", maxPrice);
+      
+      // Apply filters to DB query fallback
+      if (filters.category) {
+        dbQuery = dbQuery.eq("category", filters.category);
       }
-      const { data: dbTextMatches } = await dbQuery
-        .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
-        .limit(8);
+      if (filters.gender) {
+        dbQuery = dbQuery.eq("gender", filters.gender);
+      }
+      if (filters.fit) {
+        dbQuery = dbQuery.eq("fit", filters.fit);
+      }
+      if (filters.maxPrice) {
+        dbQuery = dbQuery.lte("price", filters.maxPrice);
+      }
+      if (filters.occasion && filters.occasion.length > 0) {
+        dbQuery = dbQuery.overlaps("occasions", filters.occasion);
+      }
+      if (filters.materials && filters.materials.length > 0) {
+        dbQuery = dbQuery.overlaps("materials", filters.materials);
+      }
+      if (filters.aesthetics && filters.aesthetics.length > 0) {
+        dbQuery = dbQuery.overlaps("aesthetics", filters.aesthetics);
+      }
+      if (filters.season && filters.season.length > 0) {
+        dbQuery = dbQuery.overlaps("season", filters.season);
+      }
+      if (filters.color) {
+        dbQuery = dbQuery.or(`title.ilike.%${filters.color}%,description.ilike.%${filters.color}%`);
+      }
+      
+      if (filters.productType) {
+        dbQuery = dbQuery.or(`title.ilike.%${filters.productType}%,description.ilike.%${filters.productType}%`);
+      } else {
+        dbQuery = dbQuery.or(`title.ilike.%${query}%,description.ilike.%${query}%`);
+      }
+      
+      const { data: dbTextMatches } = await dbQuery.limit(8);
 
       if (dbTextMatches && dbTextMatches.length > 0) {
         return dbTextMatches.map(mapDbProduct);
@@ -178,18 +192,8 @@ export async function POST(req: Request) {
     const isIntercepted = isLocallyIntercepted(userQuery);
     console.log(">>> [POST /api/chat] Local check results - isIntercepted:", isIntercepted);
 
-    // 1. Guardrail & Classification: Check relevance and extract category/type in one LLM call
-    let analysis: QueryAnalysis = { isRelevant: true, categories: [], productTypes: [] };
     if (isIntercepted) {
-      analysis.isRelevant = false;
-    } else {
-      console.log(">>> [POST /api/chat] Running analyzeQuery via LLM model:", CHAT_MODEL);
-      analysis = await analyzeQuery(userQuery);
-      console.log(">>> [POST /api/chat] LLM analyzeQuery result:", analysis);
-    }
-
-    if (!analysis.isRelevant) {
-      console.log(">>> [POST /api/chat] Guardrail triggered. Streaming static out-of-scope response.");
+      console.log(">>> [POST /api/chat] Local intercept triggered. Streaming static out-of-scope response.");
       const staticMessage = "I am Vistra's AI Fashion Concierge. I am specialized in premium apparel, footwear, and accessories, and cannot assist with general conversations, greetings, or off-topic queries.\n\nFeel free to ask me for wardrobe styling coordination or catalog searches (e.g., 'linen shirts under 300').";
       
       const stream = createUIMessageStream({
@@ -209,7 +213,7 @@ export async function POST(req: Request) {
       return createUIMessageStreamResponse({ stream });
     }
 
-    console.log(">>> [POST /api/chat] Request is relevant. Streaming model response using:", CHAT_MODEL);
+    console.log(">>> [POST /api/chat] Request passed local intercept. Streaming model response using:", CHAT_MODEL);
 
     // 2. Stream stylist conversation with real-time hybrid search tool calling
     const modelMessages = await convertToModelMessages(messages);
@@ -233,54 +237,28 @@ CRITICAL INSTRUCTIONS:
 - If the searchInventory tool returns no products (an empty list), respond with a humble, user-friendly apology stating that the requested product is not available in our inventory at the moment. Do NOT use category-specific wording for the unavailability (e.g., do NOT say "I do not have any purses available"), but rather use a general, polite phrasing like "I am sorry, but the requested product is not available in our inventory at the moment. Please let me know if I can assist you with other styles." Do NOT suggest other products, and do NOT tell the user to click on other featured/above items.
 - Proactively, do NOT talk about sizes or ask the user to select or reserve sizes in the chat, and do NOT suggest sizing options.
 - HOWEVER, if the user explicitly asks about sizes, price, materials, or details for the products, you must answer their questions accurately using the search results or context (e.g., list the available sizes or the exact price).
-- If products are found, instruct the user that they can click on any product card in the recommended carousel to view details and sizes on the product page.`,
+- If products are found, instruct the user that they can click on any product card in the recommended carousel to view details and sizes on the product page.
+- If the user's query is completely unrelated to fashion, clothing, styling, or our catalog (off-topic / general knowledge), politely refuse to answer and state that you are Vistra's AI Fashion Concierge and can only assist with fashion-related queries.`,
       tools: {
         searchInventory: tool({
-          description: "Search the real-time fashion product inventory using hybrid search (semantic + keywords) to find matching items, optionally filtered by a price limit.",
+          description: "Search the real-time fashion product inventory using hybrid search (semantic + keywords) to find matching items, filtered by structured criteria.",
           inputSchema: z.object({
             query: z.string().describe("The search terms or style description (e.g. 'silk dress', 'linen shirt', 'grey suit')."),
-            maxPrice: z.number().optional().describe("Optional maximum price ceiling for budget constraints (e.g., 200 for items under ₹200).")
+            category: z.enum(["apparel", "footwear", "accessories"]).optional().describe("General category of the product."),
+            productType: z.string().optional().describe("Specific type of item (e.g. 'shirt', 'dress', 'shoes', 'jeans', 'watch')."),
+            gender: z.enum(["men", "women", "unisex"]).optional().describe("Target gender / fit category."),
+            occasion: z.array(z.string()).optional().describe("Array of occasions suitable for the product (e.g. ['wedding', 'formal', 'casual', 'sports'])."),
+            materials: z.array(z.string()).optional().describe("Array of materials (e.g. ['linen', 'cotton', 'leather', 'silk'])."),
+            aesthetics: z.array(z.string()).optional().describe("Array of aesthetics / style vibes (e.g. ['minimalist', 'retro', 'streetwear', 'classic'])."),
+            season: z.array(z.string()).optional().describe("Array of target seasons (e.g. ['summer', 'winter', 'spring', 'autumn'])."),
+            fit: z.string().optional().describe("Fit of the apparel item (e.g. 'slim fit', 'regular fit', 'oversized', 'loose fit')."),
+            maxPrice: z.number().optional().describe("Maximum price ceiling for budget constraints."),
+            color: z.string().optional().describe("Specific color filter (e.g. 'black', 'red', 'blue', 'white').")
           }),
-          execute: async ({ query, maxPrice }) => {
-            console.log(">>> [searchInventory Tool] Executing search for query:", query, "maxPrice:", maxPrice);
-            const results = await runHybridSearch(query, maxPrice);
+          execute: async (filters) => {
+            console.log(">>> [searchInventory Tool] Executing search with filters:", filters);
+            const results = await runHybridSearch(filters.query, filters);
             console.log(">>> [searchInventory Tool] Found", results.length, "results.");
-
-            if (results.length > 0) {
-              console.log(">>> [searchInventory Tool] Filtering results with LLM against user query:", userQuery);
-              try {
-                const { output } = await generateText({
-                  model: google(CHAT_MODEL),
-                  output: Output.object({
-                    schema: z.object({
-                      matchingIds: z.array(z.string()).describe("The list of product IDs from the candidates that are a genuine match for the user's specific request or follow-up question."),
-                    }),
-                  }),
-                  system: `You are an AI inventory validation assistant.
-Your job is to compare a user's shopping request or follow-up question with a list of search result candidates from our database.
-Determine which candidates are actual matches for the user's request.
-
-Guidelines:
-1. If the user is searching for a specific item (e.g., "shoes", "shirt", "jacket"), only match candidates that are of that type. Be conservative: do not match a shirt when they asked for shoes.
-2. If the user's request is a follow-up question (e.g. asking about sizes, price, colors, materials, or other details) for products currently being discussed (implied by the search query, e.g. "shoes" or "sneakers"), match the candidates that fit that search query type.
-3. Only match candidates that are relevant to what the user is looking for or asking about.`,
-                  prompt: `User Request: "${userQuery}"
-Search query used: "${query}"
-
-Candidate Products:
-${results.map((r, i) => `${i + 1}. ID: "${r.id}" | Title: "${r.title}" | Category: "${r.category}" | Description: "${r.description}"`).join("\n")}`,
-                });
-
-                console.log(">>> [searchInventory Tool] LLM Filter returned matching IDs:", output.matchingIds);
-                const filteredResults = results.filter((r) => output.matchingIds.includes(String(r.id)));
-                console.log(">>> [searchInventory Tool] Filtered from", results.length, "to", filteredResults.length);
-                return filteredResults;
-              } catch (filterErr) {
-                console.error(">>> [searchInventory Tool] Error filtering search results with LLM:", filterErr);
-                return results;
-              }
-            }
-
             return results;
           },
         }),
